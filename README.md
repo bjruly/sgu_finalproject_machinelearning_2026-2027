@@ -27,7 +27,7 @@ Chất lượng không khí và nồng độ bụi mịn ($\text{PM}_{2.5}$) là
 | :-: | :--- | :-: | :--- | :-: |
 | 1 | Trần Lê Gia Bảo | 3124411038 | Nhóm trưởng | 20% |
 | 2 | [Tên Sinh Viên 2] | [MSSV 2] | Thành viên /| 20% |
-| 3 | [Tên Sinh Viên 3] | [MSSV 3] | Thành viên /| 20% |
+| 3 | Đào Hữu Tài     | 3124411261 | Thành viên /| 20% |
 | 4 | [Tên Sinh Viên 4] | [MSSV 4] | Thành viên /| 20% |
 | 5 | [Tên Sinh Viên 5] | [MSSV 5] | Thành viên /| 20% |
 
