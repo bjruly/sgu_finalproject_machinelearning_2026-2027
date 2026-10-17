@@ -10,9 +10,9 @@ Machine Learning Final Project: Predicting PM2.5 and Air Quality using Beijing M
 
 ## 📌 Giới thiệu đồ án
 
-Chất lượng không khí và nồng độ bụi mịn ($\text{PM}_{2.5}$) là một trong những yếu tố ảnh hưởng trực tiếp và nghiêm trọng nhất đến sức khỏe cộng đồng, đặc biệt tại các đô thị lớn. 
+Chất lượng không khí và nồng độ bụi mịn PM 2.5 là một trong những yếu tố ảnh hưởng trực tiếp và nghiêm trọng nhất đến sức khỏe cộng đồng, đặc biệt tại các đô thị lớn. 
 
-Đồ án này tập trung nghiên cứu và xây dựng pipeline học máy (Machine Learning Pipeline) hoàn chỉnh nhằm giải quyết bài toán hồi quy (Regression) dự đoán chỉ số $\text{PM}_{2.5}$ dựa trên dữ liệu chuỗi thời gian khí tượng (nhiệt độ, áp suất, độ ẩm, hướng/tốc độ gió) và các chất ô nhiễm đi kèm ($\text{SO}_2$, $\text{NO}_2$, $\text{CO}$, $\text{O}_3$, $\text{PM}_{10}$).
+Đồ án này tập trung nghiên cứu và xây dựng pipeline học máy (Machine Learning Pipeline) hoàn chỉnh nhằm giải quyết bài toán hồi quy (Regression) dự đoán chỉ số PM 2.5 dựa trên dữ liệu chuỗi thời gian khí tượng (nhiệt độ, áp suất, độ ẩm, hướng/tốc độ gió) và các chất ô nhiễm đi kèm.
 
 ### 🎯 Mục tiêu chính:
 1. **Phân tích & Tiền xử lý dữ liệu (EDA):** Khám phá các mối liên hệ giữa điều kiện thời tiết, chất ô nhiễm và nồng độ $\text{PM}_{2.5}$; xử lý dữ liệu thiếu và trích xuất đặc trưng thời gian.
