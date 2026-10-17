@@ -25,6 +25,9 @@ Chất lượng không khí và nồng độ bụi mịn $\text{PM}_{2.5}$ là m
 Giảng viên hướng dẫn: TS.Đỗ Như Tài
 | STT | Họ và tên | Mã số sinh viên (MSSV) | Vai trò / Phân công nhiệm vụ | Tỷ lệ đóng góp (%) |
 | :-: | :--- | :-: | :--- | :-: |
+| 1 | Trần Lê Gia Bảo | 31244111037 | Nhóm trưởng / ... | 20% |
+| 2 | Tô Thành Nhân  | 3124411198 | Thành viên/ ... | 20% |
+| 3 | [Tên Sinh Viên 3] | [MSSV 3] | Thành viên / ... | 20% |
 | 1 | [Tên Sinh Viên 1] | [MSSV 1] | Nhóm trưởng / ... | 20% |
 | 2 | [Tô Thành Nhân] | [3124411198] | Thành viên/ ... | 20% |
 | 3 | Đào Hữu Tài | 3124411261 | Thành viên / ... | 20% |
