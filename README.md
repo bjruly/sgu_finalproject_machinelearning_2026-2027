@@ -26,7 +26,7 @@ Giảng viên hướng dẫn: TS.Đỗ Như Tài
 | STT | Họ và tên | Mã số sinh viên (MSSV) | Vai trò / Phân công nhiệm vụ | Tỷ lệ đóng góp (%) |
 | :-: | :--- | :-: | :--- | :-: |
 | 1 | Trần Lê Gia Bảo | 3124411038 | Nhóm trưởng | 20% |
-| 2 | [Tên Sinh Viên 2] | [MSSV 2] | Thành viên /| 20% |
+| 2 | [Tô Thành Nhân] | [3124411198] | Thành viên /| 20% |
 | 3 | [Tên Sinh Viên 3] | [MSSV 3] | Thành viên /| 20% |
 | 4 | [Tên Sinh Viên 4] | [MSSV 4] | Thành viên /| 20% |
 | 5 | [Tên Sinh Viên 5] | [MSSV 5] | Thành viên /| 20% |
