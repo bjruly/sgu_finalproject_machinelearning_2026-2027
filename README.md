@@ -27,7 +27,7 @@ Giảng viên hướng dẫn: TS.Đỗ Như Tài
 | :-: | :--- | :-: | :--- | :-: |
 | 1 | [Tên Sinh Viên 1] | [MSSV 1] | Nhóm trưởng / ... | 20% |
 | 2 | [Tô Thành Nhân] | [3124411198] | Thành viên/ ... | 20% |
-| 3 | [Tên Sinh Viên 3] | [MSSV 3] | Thành viên / ... | 20% |
+| 3 | Đào Hưu Tài | 3124411261 | Thành viên / ... | 20% |
 | 4 | [Tên Sinh Viên 4] | [MSSV 4] | Thành viên / ... | 20% |
 | 5 | [Tên Sinh Viên 5] | [MSSV 5] | Thành viên / ... | 20% |
 
