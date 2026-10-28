@@ -31,3 +31,40 @@ Giảng viên hướng dẫn: TS.Đỗ Như Tài
 | 4 | Huỳnh Nhật Quang | 3124411245 | Thành viên  | 20% |
 | 5 | Nguyễn Thanh Tuấn | 3124411337 | Thành viên | 20% |
 
+#Cấu trúc thư mục dự kiến
+air-quality-ml-project/
+│
+├── 📂 data/                         # [Dự kiến] Dữ liệu đồ án
+│   ├── raw/                         # Dữ liệu thô tải từ UCI (Beijing Multi-Site Air Quality)
+│   └── processed/                   # Dữ liệu sau khi làm sạch và trích xuất đặc trưng
+│
+├── 📂 notebooks/                    # [Dự kiến] Jupyter Notebooks cho EDA và thử nghiệm nhanh
+│   ├── 01_eda_and_preprocessing.ipynb
+│   ├── 02_model_training_baseline.ipynb
+│   └── 03_advanced_models_and_tuning.ipynb
+│
+├── 📂 src/                          # [Dự kiến] Mã nguồn chính (Source code modules)
+│   ├── __init__.py
+│   ├── data_loader.py               # Module đọc và làm sạch dữ liệu
+│   ├── features.py                  # Module trích xuất đặc trưng (Time features, scaling)
+│   ├── models.py                    # Định nghĩa và huấn luyện các mô hình (Regression, MLP, XGBoost)
+│   └── evaluate.py                  # Hàm tính toán metrics (MAE, RMSE, R2)
+│
+├── 📂 tests/                        # 
+│   ├── __init__.py
+│   ├── test_data_pipeline.py        # Kiểm thử dữ liệu: kiểm tra missing value, data types, data leakage
+│   ├── test_feature_engineering.py # Kiểm thử biến đổi đặc trưng và scaling
+│   ├── test_models_performance.py  # Kiểm thử ngưỡng hiệu năng của mô hình (Regression sanity check)
+│   └── test_integration.py          # Kiểm thử tích hợp toàn bộ pipeline từ Data -> Output
+│
+├── 📂 models/                       # [Dự kiến] Lưu trữ mô hình đã huấn luyện (.pkl, .joblib, .pt)
+├── 📂 outputs/                      # [Dự kiến] Biểu đồ EDA, kết quả test và báo cáo so sánh
+│   ├── figures/                     # Hình ảnh trực quan hóa, ma trận biểu đồ
+│   └── test_reports/                # Báo cáo chi tiết kết quả kiểm thử mô hình
+│
+├── 📂 docs/                         # [Dự kiến] Tài liệu đồ án (Proposal, Báo cáo tiến độ, Slide)
+│
+├── 📄 experiment_log.csv            # Nhật ký ghi nhận thực nghiệm (Models, Hyperparameters, Metrics)
+├── 📄 requirements.txt              # Danh sách thư viện Python phụ thuộc
+├── 📄 pytest.ini                    # File cấu hình framework kiểm thử Pytest
+└── 📄 README.md                     # Tài liệu hướng dẫn sử dụng đồ án
