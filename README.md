@@ -68,3 +68,15 @@ air-quality-ml-project/
 ├── 📄 requirements.txt              # Danh sách thư viện Python phụ thuộc
 ├── 📄 pytest.ini                    # File cấu hình framework kiểm thử Pytest
 └── 📄 README.md                     # Tài liệu hướng dẫn sử dụng đồ án
+
+## 📁 Tài liệu theo thư mục
+
+README trong từng thư mục mô tả mục đích và các tệp hiện có:
+
+- [data/README.md](data/README.md), [data/raw/README.md](data/raw/README.md), [data/processed/README.md](data/processed/README.md)
+- [notebooks/README.md](notebooks/README.md)
+- [src/README.md](src/README.md)
+- [tests/README.md](tests/README.md)
+- [models/README.md](models/README.md)
+- [outputs/README.md](outputs/README.md), [outputs/figures/README.md](outputs/figures/README.md), [outputs/test_reports/README.md](outputs/test_reports/README.md)
+- [docs/README.md](docs/README.md)
