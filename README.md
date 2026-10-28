@@ -48,26 +48,41 @@ python -m pytest -q
 
 **Trạng thái hiện tại:** các module trong `src/` và tệp kiểm thử trong `tests/` mới là khung, chưa có chức năng hoặc test case được triển khai; các notebook trong `notebooks/` cũng đang rỗng. Vì vậy hiện chưa thể chạy pipeline huấn luyện hay tái tạo kết quả mô hình. Pytest có thể báo `no tests ran` cho đến khi các test được viết.
 
-## Cấu trúc repository
+## Cấu trúc thư mục dự án
+
+Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Các module Python, notebook và test đã có tên nhưng hiện vẫn là khung, chưa được triển khai.
 
 ```text
 data/
-  raw/          Dữ liệu gốc PRSA theo trạm và các tệp bổ sung
-  processed/    Dữ liệu sau khi làm sạch/biến đổi
-notebooks/      Notebook EDA, baseline và mô hình nâng cao (hiện còn rỗng)
-src/            Module nạp dữ liệu, tạo đặc trưng, huấn luyện và đánh giá (khung)
-tests/          Kiểm thử pipeline, đặc trưng, mô hình và tích hợp (khung)
-models/         Nơi lưu mô hình đã huấn luyện
+├── raw/                                      Dữ liệu PRSA và các tệp bổ sung
+│   └── PRSA_Data_20130301-20170228/          CSV theo 12 trạm
+├── processed/                                Dữ liệu sau khi làm sạch/biến đổi
+notebooks/
+├── 01_eda_and_preprocessing.ipynb            EDA và tiền xử lý (chưa triển khai)
+├── 02_model_training_baseline.ipynb           Mô hình baseline (chưa triển khai)
+└── 03_advanced_models_and_tuning.ipynb        Mô hình nâng cao (chưa triển khai)
+src/
+├── data_loader.py                             Nạp và xử lý dữ liệu (khung)
+├── features.py                                Tạo đặc trưng (khung)
+├── models.py                                  Huấn luyện mô hình (khung)
+└── evaluate.py                                Đánh giá mô hình (khung)
+tests/
+├── test_data_pipeline.py                      Kiểm thử pipeline dữ liệu (khung)
+├── test_feature_engineering.py                Kiểm thử tạo đặc trưng (khung)
+├── test_models_performance.py                 Kiểm thử hiệu năng mô hình (khung)
+└── test_integration.py                        Kiểm thử tích hợp (khung)
+models/                                        Nơi lưu mô hình đã huấn luyện
 outputs/
-  figures/      Biểu đồ và hình ảnh kết quả
-  test_reports/ Báo cáo kiểm thử
-docs/           Tài liệu đồ án
-experiment_log.csv
-requirements.txt
-pytest.ini
+├── figures/                                   Biểu đồ và hình ảnh kết quả
+└── test_reports/                              Báo cáo kiểm thử
+docs/                                          Tài liệu đồ án
+experiment_log.csv                             Nhật ký thực nghiệm
+requirements.txt                               Danh sách thư viện Python
+pytest.ini                                     Cấu hình pytest
+README.md                                      Giới thiệu và hướng dẫn dự án
 ```
 
-README chi tiết theo thư mục: [`data/README.md`](data/README.md), [`notebooks/README.md`](notebooks/README.md), [`src/README.md`](src/README.md), [`tests/README.md`](tests/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md) và [`docs/README.md`](docs/README.md).
+README chi tiết theo thư mục: [`data/README.md`](data/README.md), [`data/raw/README.md`](data/raw/README.md), [`data/processed/README.md`](data/processed/README.md), [`notebooks/README.md`](notebooks/README.md), [`src/README.md`](src/README.md), [`tests/README.md`](tests/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md), [`outputs/figures/README.md`](outputs/figures/README.md), [`outputs/test_reports/README.md`](outputs/test_reports/README.md) và [`docs/README.md`](docs/README.md).
 
 ## Thành viên
 
