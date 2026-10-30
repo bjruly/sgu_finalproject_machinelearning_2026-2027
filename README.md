@@ -55,11 +55,11 @@ Sau khi cài dependencies và kích hoạt môi trường:
 python -m pytest -q
 ```
 
-**Trạng thái hiện tại:** các module trong `src/` và tệp kiểm thử trong `tests/` mới là khung, chưa có chức năng hoặc test case được triển khai; các notebook trong `notebooks/` cũng đang rỗng. Vì vậy hiện chưa thể chạy pipeline huấn luyện hay tái tạo kết quả mô hình. Pytest có thể báo `no tests ran` cho đến khi các test được viết.
+**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` đã có EDA và xuất bản dữ liệu chuẩn hóa còn giữ missing tại `data/processed/`; bước imputation/model-ready và pipeline huấn luyện chưa được triển khai. Các module trong `src/` và tệp kiểm thử trong `tests/` vẫn là khung; notebook baseline và notebook mô hình nâng cao còn rỗng. Pytest có thể báo `no tests ran` cho đến khi các test được viết.
 
 ## Cấu trúc thư mục dự án
 
-Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Các module Python, notebook và test đã có tên nhưng hiện vẫn là khung, chưa được triển khai.
+Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook EDA đã có nội dung khảo sát; các module Python, test và notebook mô hình vẫn đang là khung.
 
 ```text
 data/
@@ -67,7 +67,7 @@ data/
 │   └── PRSA_Data_20130301-20170228/          CSV theo 12 trạm
 ├── processed/                                Dữ liệu sau khi làm sạch/biến đổi
 notebooks/
-├── 01_eda_and_preprocessing.ipynb            EDA và tiền xử lý (chưa triển khai)
+├── 01_eda_and_preprocessing.ipynb            EDA và xuất CSV chuẩn hóa; imputation chưa triển khai
 ├── 02_model_training_baseline.ipynb           Mô hình baseline (chưa triển khai)
 └── 03_advanced_models_and_tuning.ipynb        Mô hình nâng cao (chưa triển khai)
 src/
