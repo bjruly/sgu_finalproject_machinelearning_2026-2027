@@ -93,17 +93,19 @@ README.md                                      Giới thiệu và hướng dẫn
 
 README chi tiết theo thư mục: [`data/README.md`](data/README.md), [`data/raw/README.md`](data/raw/README.md), [`data/processed/README.md`](data/processed/README.md), [`notebooks/README.md`](notebooks/README.md), [`src/README.md`](src/README.md), [`tests/README.md`](tests/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md), [`outputs/figures/README.md`](outputs/figures/README.md), [`outputs/test_reports/README.md`](outputs/test_reports/README.md) và [`docs/README.md`](docs/README.md).
 
-## Thành viên
+## Phân công công việc
 
 Giảng viên hướng dẫn: TS. Đỗ Như Tài
 
-| STT | Họ và tên | MSSV | Vai trò | Đóng góp |
-| :-: | :--- | :-: | :--- | :-: |
-| 1 | Trần Lê Gia Bảo | 3124411038 | Nhóm trưởng | 20% |
-| 2 | Tô Thành Nhân | 3124411198 | Thành viên | 20% |
-| 3 | Đào Hữu Tài | 3124411261 | Thành viên | 20% |
-| 4 | Huỳnh Nhật Quang | 3124411245 | Thành viên | 20% |
-| 5 | Nguyễn Thanh Tuấn | 3124411337 | Thành viên | 20% |
+| STT | Họ và tên | MSSV | Vai trò | Phần việc phụ trách |
+| :-: | :--- | :-: | :--- | :--- |
+| 1 | Trần Lê Gia Bảo | 3124411038 | Nhóm trưởng | Tổ chức repository và tài liệu theo proposal; khảo sát và phân tích dữ liệu (EDA); chuẩn hóa, xuất bản dữ liệu và ghi lại kết luận; xây dựng pipeline dữ liệu, tạo đặc trưng, chia tập theo thời gian và kiểm thử pipeline. Phạm vi phụ trách kết thúc ở pipeline dữ liệu, không bao gồm xây dựng, huấn luyện hay đánh giá mô hình. |
+| 2 | Tô Thành Nhân | 3124411198 | Thành viên | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật. |
+| 3 | Đào Hữu Tài | 3124411261 | Thành viên | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật. |
+| 4 | Huỳnh Nhật Quang | 3124411245 | Thành viên | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật. |
+| 5 | Nguyễn Thanh Tuấn | 3124411337 | Thành viên | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật. |
+
+Chi tiết phạm vi công việc của nhóm trưởng được ghi tại [`docs/phan-cong-cong-viec.docx`](docs/phan-cong-cong-viec.docx). Nhật ký EDA để các thành viên đọc lại quy trình và quyết định nằm tại [`outputs/eda/eda_worklog.md`](outputs/eda/eda_worklog.md); bảng kết luận nằm tại [`outputs/eda/eda_conclusions.csv`](outputs/eda/eda_conclusions.csv).
 
 ## Nguồn dữ liệu
 
