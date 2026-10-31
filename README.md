@@ -23,10 +23,10 @@ Kế hoạch chính là gộp dữ liệu của 12 trạm thành một bộ dữ
 
 ### Kế hoạch thực nghiệm theo proposal
 
-- Chia theo thời gian, không xáo trộn ngẫu nhiên: train/validation dự kiến từ 03/2013 đến 08/2016; test dự kiến từ 09/2016 đến 02/2017 và chỉ dùng đánh giá cuối sau khi chốt cấu hình.
+- Chia theo thời gian, không xáo trộn ngẫu nhiên: train/validation có target đến 08/2016; test có target từ 09/2016 đến 02/2017 và chỉ dùng đánh giá cuối sau khi chốt cấu hình. Pipeline chia theo thời điểm của target t+1 để nhãn đầu tiên của test không lọt vào train.
 - Dùng `TimeSeriesSplit` expanding-window với 5 fold trên phần train/validation. Khi gộp nhiều trạm, các bản ghi cùng mốc thời gian cần thuộc cùng một fold để tránh rò rỉ giữa trạm.
 - Tạo lag PM2.5 tại 1, 2, 3, 6, 12 và 24 giờ; rolling mean 6 và 24 giờ; thêm đặc trưng khí tượng, thời gian tuần hoàn sin/cos và trạm. Các lag/rolling chỉ được tính từ quá khứ và riêng theo trạm.
-- Không điền giá trị target bị thiếu; loại các dòng đó khỏi huấn luyện/đánh giá. Với feature, dự kiến forward-fill có giới hạn theo trạm, sau đó điền phần còn thiếu bằng median chỉ fit trên train và thêm cờ báo thiếu.
+- Không điền giá trị target bị thiếu; loại các dòng đó khỏi huấn luyện/đánh giá sau khi tạo lag/feature. Với feature, pipeline forward-fill tối đa 6 giờ theo trạm; numeric còn thiếu được median-impute cùng missing indicators khi transformer được fit trên train; `wd` còn thiếu dùng category `Unknown` rồi One-Hot.
 - Dùng One-Hot Encoding cho hướng gió và trạm. Chỉ StandardScaler cho Linear Regression; mô hình cây không cần scaling.
 - Các mốc chia và chi tiết tiền xử lý là kế hoạch ban đầu trong proposal, có thể điều chỉnh sau EDA; chưa phải kết quả thực nghiệm đã chạy.
 
@@ -55,11 +55,11 @@ Sau khi cài dependencies và kích hoạt môi trường:
 python -m pytest -q
 ```
 
-**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` đã có EDA và xuất bản dữ liệu chuẩn hóa còn giữ missing tại `data/processed/`; bước imputation/model-ready và pipeline huấn luyện chưa được triển khai. Các module trong `src/` và tệp kiểm thử trong `tests/` vẫn là khung; notebook baseline và notebook mô hình nâng cao còn rỗng. Pytest có thể báo `no tests ran` cho đến khi các test được viết.
+**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` đã có EDA và xuất dữ liệu chuẩn hóa. Trong `src/` đã triển khai nạp dữ liệu, chia tập theo thời gian, tạo target/đặc trưng quá khứ và bộ tiền xử lý có thể fit trên train; các test pipeline tương ứng nằm trong `tests/`. Mô hình, đánh giá kết quả và notebook baseline/nâng cao chưa được triển khai.
 
 ## Cấu trúc thư mục dự án
 
-Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook EDA đã có nội dung khảo sát; các module Python, test và notebook mô hình vẫn đang là khung.
+Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook EDA và pipeline dữ liệu/đặc trưng đã được triển khai; phần mô hình và đánh giá vẫn chưa được triển khai.
 
 ```text
 data/
@@ -71,15 +71,15 @@ notebooks/
 ├── 02_model_training_baseline.ipynb           Mô hình baseline (chưa triển khai)
 └── 03_advanced_models_and_tuning.ipynb        Mô hình nâng cao (chưa triển khai)
 src/
-├── data_loader.py                             Nạp và xử lý dữ liệu (khung)
-├── features.py                                Tạo đặc trưng (khung)
-├── models.py                                  Huấn luyện mô hình (khung)
-└── evaluate.py                                Đánh giá mô hình (khung)
+├── data_loader.py                             Nạp dữ liệu, chia thời gian và CV theo timestamp
+├── features.py                                Tạo target/đặc trưng và tiền xử lý train-only
+├── models.py                                  Huấn luyện mô hình (chưa triển khai)
+└── evaluate.py                                Đánh giá mô hình (chưa triển khai)
 tests/
-├── test_data_pipeline.py                      Kiểm thử pipeline dữ liệu (khung)
-├── test_feature_engineering.py                Kiểm thử tạo đặc trưng (khung)
-├── test_models_performance.py                 Kiểm thử hiệu năng mô hình (khung)
-└── test_integration.py                        Kiểm thử tích hợp (khung)
+├── test_data_pipeline.py                      Kiểm thử nạp dữ liệu và chia thời gian
+├── test_feature_engineering.py                Kiểm thử target, feature và preprocessing
+├── test_models_performance.py                 Chưa có test mô hình
+└── test_integration.py                        Kiểm thử tích hợp pipeline dữ liệu
 models/                                        Nơi lưu mô hình đã huấn luyện
 outputs/
 ├── figures/                                   Biểu đồ và hình ảnh kết quả

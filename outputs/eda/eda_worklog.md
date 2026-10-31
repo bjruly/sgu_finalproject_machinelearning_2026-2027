@@ -113,13 +113,23 @@ Tệp [`beijing_air_quality_standardized.csv`](../../data/processed/beijing_air_
 
 Tệp này có thể được mở bằng Excel, pandas hoặc công cụ bảng dữ liệu để đọc và kiểm tra. Không chỉnh sửa thủ công các giá trị trong đó; nếu phát hiện quy tắc làm sạch mới, hãy cập nhật notebook và tái tạo CSV từ dữ liệu gốc.
 
-## Việc chưa làm và bước tiếp theo
+## Cập nhật sau EDA: pipeline dữ liệu
 
-1. Xác minh điểm 999 với tài liệu nguồn và điểm Nongzhanguan 844 với các biến đo lân cận. Tạm thời cả hai vẫn được giữ.
-2. Quyết định chính thức cách xử lý các khoảng missing dài; không forward-fill xuyên qua mọi khoảng dài.
-3. Tạo pipeline chia dữ liệu theo thời gian trước khi fit imputer, encoder hoặc scaler. Theo proposal, train/validation dự kiến đến 08/2016, test từ 09/2016 đến 02/2017; validation expanding-window 5 fold. Khi chia dữ liệu nhiều trạm, cùng một timestamp phải nằm trong cùng fold.
-4. Tạo target PM2.5 ở giờ t+1 trong từng trạm; mọi lag/rolling chỉ dùng dữ liệu quá khứ và tính riêng theo trạm.
-5. Sau các quyết định trên, mới tạo bản model-ready trong pipeline và chạy baseline persistence/Linear Regression. CSV chuẩn hóa hiện tại không thay thế bước đó.
+Sau khi hoàn thành EDA, nhóm đã chốt và triển khai các quy tắc nền tảng trong `src/`:
+
+- Forward-fill feature tối đa 6 giờ liên tục, riêng theo trạm. Khoảng thiếu dài hơn vẫn được giữ để bộ tiền xử lý xử lý; target PM2.5 không được forward-fill hoặc impute.
+- `wd` là biến phân loại. Sau forward-fill giới hạn, phần còn thiếu được gán category `Unknown` rồi One-Hot, thay vì gán một hướng gió phổ biến.
+- Target là PM2.5 ở giờ kế tiếp của cùng trạm. `target_datetime` ghi thời điểm của nhãn, còn lag/rolling chỉ dùng số đo quá khứ.
+- Chia train/validation và test theo `target_datetime`, bắt đầu test từ 01/09/2016; dùng expanding-window CV theo timestamp để các trạm cùng giờ không bị chia sang hai phía khác nhau.
+- Numeric imputation, missing indicators, One-Hot và scaler (khi cần) được đóng gói trong transformer; các thống kê chỉ được học khi transformer fit trên phần train.
+
+Các quy tắc trên được kiểm tra bởi test pipeline và test tích hợp trên CSV chuẩn hóa. CSV chuẩn hóa vẫn là bản nguồn có missing; pipeline hiện tạo feature trong bộ nhớ và chưa huấn luyện mô hình hoặc ghi CSV model-ready.
+
+## Việc còn lại
+
+1. Xác minh giá trị PM2.5=999 với tài liệu nguồn và điểm Nongzhanguan=844 với các biến đo lân cận; hiện cả hai vẫn được giữ nguyên.
+2. Chạy/kiểm tra pipeline và test sau mọi thay đổi về dữ liệu hoặc quy tắc tiền xử lý.
+3. Bàn giao phần xây dựng, huấn luyện, lựa chọn và đánh giá mô hình cho các thành viên phụ trách giai đoạn modeling. Đây nằm ngoài phạm vi pipeline dữ liệu.
 
 ## Nguyên tắc giữ an toàn cho dữ liệu
 
