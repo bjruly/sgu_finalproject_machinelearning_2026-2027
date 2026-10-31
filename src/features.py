@@ -36,8 +36,8 @@ def add_features(df):
     dt = df["datetime"].dt
     df["hour_sin"], df["hour_cos"] = np.sin(2 * np.pi * dt.hour / 24), np.cos(2 * np.pi * dt.hour / 24)
     df["month_sin"], df["month_cos"] = np.sin(2 * np.pi * dt.month / 12), np.cos(2 * np.pi * dt.month / 12)
-    df["dayofweek"] = dt.dayofweek
-    df["is_weekend"] = (dt.dayofweek >= 5).astype(int)
+    df["dayofweek"] = dt.day_of_week
+    df["is_weekend"] = (dt.day_of_week >= 5).astype(int)
     return df
 
 
