@@ -1,0 +1,43 @@
+{
+  "model": "LinearRegression + build_preprocessor(scale=True)",
+  "created_at": "2026-11-01T23:30:09",
+  "sklearn_version": "1.7.2",
+  "target": "PM2.5 at t+1 (same station)",
+  "train_rows": 360954,
+  "train_target_period": [
+    "2013-03-01 01:00:00",
+    "2016-08-31 23:00:00"
+  ],
+  "test_start": "2016-09-01 00:00:00",
+  "feature_columns": [
+    "PM2.5",
+    "PM10",
+    "SO2",
+    "NO2",
+    "CO",
+    "O3",
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "RAIN",
+    "WSPM",
+    "PM2.5_lag_1",
+    "PM2.5_lag_2",
+    "PM2.5_lag_3",
+    "PM2.5_lag_6",
+    "PM2.5_lag_12",
+    "PM2.5_lag_24",
+    "PM2.5_rolling_mean_6",
+    "PM2.5_rolling_mean_24",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "station",
+    "wd"
+  ],
+  "cv": "TimeSeriesSplit expanding window, 5 folds, grouped by target timestamp",
+  "persistence_note": "y_hat(t+1) = PM2.5(t) (forward-filled <= 6h); fallback = train median"
+}

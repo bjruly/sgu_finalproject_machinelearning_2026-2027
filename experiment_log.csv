@@ -1,1 +1,5 @@
 experiment_id,model_name,dataset_version,mae,rmse,r2,notes
+baseline_persistence_cv5,Persistence,beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24,10.424,19.9665,0.9318,"Mean of 5 validation folds (TimeSeriesSplit, expanding window)."
+baseline_persistence_test,Persistence,beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24,11.5864,23.1133,0.9453,Test set (labels from 2016-09-01); model fit on all train/validation.
+baseline_linreg_cv5,Linear Regression,beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24,10.738,19.295,0.9363,"Mean of 5 validation folds (TimeSeriesSplit, expanding window)."
+baseline_linreg_test,Linear Regression,beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24,11.351,21.8027,0.9513,Test set (labels from 2016-09-01); model fit on all train/validation.
