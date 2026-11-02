@@ -57,6 +57,38 @@ python -m pytest -q
 
 **Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` đã có EDA và xuất dữ liệu chuẩn hóa; pipeline nạp, chia dữ liệu theo thời gian, tạo target/đặc trưng và tiền xử lý train-only đã được triển khai trong `src/`. Notebook `02_model_training_baseline.ipynb` đã huấn luyện và đánh giá Persistence cùng Linear Regression bằng 5-fold expanding-window validation, sau đó báo cáo kết quả test. Mô hình nâng cao và tuning chưa được triển khai.
 
+## Kế hoạch hoàn thiện đồ án trong 7 ngày
+
+Kế hoạch dưới đây bắt đầu từ ngày nhóm thống nhất triển khai. Hãy điền người phụ trách vào cột cuối trước khi bắt đầu; các nhãn **Thành viên A–D** là vai trò gợi ý, không phải phân công đã chốt. Phần EDA, pipeline dữ liệu và baseline đã có; trọng tâm còn lại là mô hình cây, so sánh kết quả, workbook Excel, báo cáo và kiểm tra bàn giao.
+
+| Ngày | Công việc và thứ tự | Đầu ra/tiêu chí hoàn thành | Người phụ trách |
+| :-: | :--- | :--- | :--- |
+| 1 | Họp phân công; mọi người đồng bộ môi trường và chạy `python -m pytest -q`. Chạy lại notebook baseline để xác nhận Persistence/Linear Regression và kiểm tra vị trí các kết quả đã lưu. Chốt phạm vi thử nghiệm Random Forest và Gradient Boosting, metric chính (RMSE), random seed và giới hạn thời gian chạy. | Test hiện có xanh; ghi rõ cấu hình và người nhận từng việc. Baseline đối chiếu được với [`models/baseline_metrics.csv`](models/baseline_metrics.csv). | Nhóm trưởng điều phối; cả nhóm xác nhận |
+| 2 | Thành viên A triển khai Random Forest; thành viên B triển khai Gradient Boosting. Dùng cùng feature, cùng 5 fold thời gian và cùng pipeline tiền xử lý; chỉ fit transformer trên train của từng fold. Bắt đầu bằng cấu hình nhỏ, giới hạn số tổ hợp để kịp lịch. | Có code/notebook tái chạy được; kết quả RMSE/MAE/R² cho từng fold; cấu hình, seed và thời gian chạy được ghi lại. | Thành viên A: Random Forest; Thành viên B: Gradient Boosting |
+| 3 | Hoàn tất các lượt thử nghiệm có giới hạn cho hai mô hình. Thành viên C kiểm tra việc tính metric, ghép kết quả với baseline và phát hiện lỗi leakage/khác biệt dữ liệu giữa các mô hình. Chọn cấu hình cuối chỉ bằng validation/CV. | Bảng CV đủ các mô hình và 5 fold; cấu hình cuối được chọn theo RMSE validation; không dùng test để chọn tham số. | A, B chạy mô hình; C rà soát kết quả |
+| 4 | Đóng băng cấu hình. Chạy đánh giá cuối trên test cho các mô hình đã chọn; tổng hợp Persistence, Linear Regression, Random Forest và Gradient Boosting trên cùng tập test. Phân tích sai số theo trạm, mùa và mức PM2.5. | Một lần chạy test cuối có metric, số mẫu và cấu hình rõ ràng; kết quả phân nhóm và biểu đồ có thể tái tạo. Không quay lại tinh chỉnh dựa trên kết quả test. | Thành viên C; nhóm trưởng kiểm tra quy trình |
+| 5 | Tạo workbook `outputs/model_comparison.xlsx` để nhóm và giảng viên xem kết quả. Gợi ý các sheet: `Summary` (CV và test tách rõ), `CV Folds`, `Test by Group`, `Configurations`, `Notes`. Định dạng đơn vị, làm rõ RMSE là metric chọn mô hình; kiểm tra số liệu Excel khớp với CSV nguồn. | Workbook mở được; có đủ bốn phương pháp, metrics MAE/RMSE/R², mean/std CV, số dòng, cấu hình và ghi chú phân biệt validation/test. Không nhập nhầm test vào bảng CV. | Thành viên C |
+| 6 | Hoàn thiện báo cáo và slide: bài toán/target t+1, nguồn dữ liệu, EDA, chia thời gian, chống leakage, xử lý missing, mô hình, cách chọn cấu hình, bảng so sánh và hạn chế. Thành viên D đối chiếu mọi con số với CSV/workbook và kiểm tra citation. | Báo cáo/slide có phương pháp và kết quả khớp artifact; nêu rõ hạn chế, không tuyên bố tương quan là nhân quả. | Thành viên D; A–C cung cấp nội dung phần mình |
+| 7 | Chạy lại toàn bộ test và notebook cần thiết từ trạng thái sạch; xác nhận workbook/biểu đồ/metrics được tái tạo; rà README, tên file, commit và repository trước khi nộp. Tập dượt trình bày và thống nhất câu trả lời cho câu hỏi về leakage, missing và lý do chọn mô hình. | `pytest` xanh; artifact đầy đủ và nhất quán; repository không chứa cache hoặc file môi trường; cả nhóm có thể giải thích kết quả. | Nhóm trưởng điều phối QA; cả nhóm nghiệm thu |
+
+### Gợi ý chia việc song song
+
+- **Nhóm trưởng — Trần Lê Gia Bảo:** điều phối tiến độ, hỗ trợ pipeline dữ liệu đã triển khai, rà soát chia tập/leakage, tích hợp nhánh và nghiệm thu; không mặc định nhận phần huấn luyện mô hình.
+- **Thành viên A:** Random Forest, ghi cấu hình và kết quả CV.
+- **Thành viên B:** Gradient Boosting, ghi cấu hình và kết quả CV.
+- **Thành viên C:** kiểm tra tính so sánh công bằng, tổng hợp metrics/error analysis và tạo workbook Excel.
+- **Thành viên D:** báo cáo, slide, citation và chuẩn bị trình bày; phối hợp với A–C để xác nhận số liệu.
+
+Nhóm có thể đổi người theo kỹ năng/thời gian, nhưng mỗi đầu việc cần một người chịu trách nhiệm chính và một người review. Công việc A/B có thể làm song song sau khi thống nhất giao diện dữ liệu và cách ghi kết quả; workbook chỉ chốt sau khi đã chọn cấu hình bằng CV và chạy đánh giá cuối. Nếu thời gian chạy vượt kế hoạch, giảm phạm vi tuning trước; không bỏ kiểm tra leakage, không thay đổi test để làm đẹp kết quả.
+
+### Điều kiện nghiệm thu cuối
+
+1. Baseline và hai mô hình cây được so sánh trên cùng target, feature set, folds thời gian và quy tắc tiền xử lý.
+2. Tất cả imputer/encoder/scaler được fit bên trong từng fold; các trạm cùng target timestamp không bị tách qua train/validation.
+3. Cấu hình được chọn bằng validation/CV; test chỉ dùng cho báo cáo đánh giá cuối. Baseline test đã được xem và ghi nhận, vì vậy không dùng test để điều chỉnh mô hình hoặc chọn cấu hình.
+4. Bảng trong workbook khớp với các CSV kết quả; nêu rõ đơn vị PM2.5 (µg/m³), số mẫu, metric và split.
+5. Notebook, báo cáo và slide có thể truy ngược kết quả về dữ liệu, cấu hình và nhật ký thực nghiệm trong repository.
+
 ## Cấu trúc thư mục dự án
 
 Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook EDA, pipeline dữ liệu và baseline đã có nội dung; mô hình nâng cao/tuning vẫn đang chờ triển khai.
