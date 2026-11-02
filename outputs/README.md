@@ -8,4 +8,4 @@ Nơi lưu các sản phẩm được tạo ra trong quá trình phân tích, hu�
 - [`figures/`](figures/README.md): biểu đồ và hình ảnh trực quan hóa.
 - [`test_reports/`](test_reports/README.md): báo cáo kết quả kiểm thử.
 
-Kết luận dạng bảng nằm trong [`eda/eda_conclusions.csv`](eda/eda_conclusions.csv); diễn giải từng bước, các quyết định và việc còn bỏ ngỏ được ghi trong [`eda/eda_worklog.md`](eda/eda_worklog.md). `figures/` và `test_reports/` hiện chưa có kết quả được sinh ra.
+Kết luận EDA dạng bảng nằm trong [`eda/eda_conclusions.csv`](eda/eda_conclusions.csv); nhật ký EDA giải thích quy trình ở [`eda/eda_worklog.md`](eda/eda_worklog.md). Kết quả phân tích sai số baseline nằm trong [`baseline_error_analysis.csv`](baseline_error_analysis.csv), còn các biểu đồ baseline được lưu trong [`figures/`](figures/README.md). `test_reports/` chưa có báo cáo được sinh ra.

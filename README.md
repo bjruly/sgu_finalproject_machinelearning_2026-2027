@@ -55,11 +55,11 @@ Sau khi cài dependencies và kích hoạt môi trường:
 python -m pytest -q
 ```
 
-**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` đã có EDA và xuất dữ liệu chuẩn hóa. Trong `src/` đã triển khai nạp dữ liệu, chia tập theo thời gian, tạo target/đặc trưng quá khứ và bộ tiền xử lý có thể fit trên train; các test pipeline tương ứng nằm trong `tests/`. Mô hình, đánh giá kết quả và notebook baseline/nâng cao chưa được triển khai.
+**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` đã có EDA và xuất dữ liệu chuẩn hóa; pipeline nạp, chia dữ liệu theo thời gian, tạo target/đặc trưng và tiền xử lý train-only đã được triển khai trong `src/`. Notebook `02_model_training_baseline.ipynb` đã huấn luyện và đánh giá Persistence cùng Linear Regression bằng 5-fold expanding-window validation, sau đó báo cáo kết quả test. Mô hình nâng cao và tuning chưa được triển khai.
 
 ## Cấu trúc thư mục dự án
 
-Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook EDA và pipeline dữ liệu/đặc trưng đã được triển khai; phần mô hình và đánh giá vẫn chưa được triển khai.
+Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook EDA, pipeline dữ liệu và baseline đã có nội dung; mô hình nâng cao/tuning vẫn đang chờ triển khai.
 
 ```text
 data/
@@ -68,7 +68,7 @@ data/
 ├── processed/                                Dữ liệu sau khi làm sạch/biến đổi
 notebooks/
 ├── 01_eda_and_preprocessing.ipynb            EDA và xuất CSV chuẩn hóa; imputation chưa triển khai
-├── 02_model_training_baseline.ipynb           Mô hình baseline (chưa triển khai)
+├── 02_model_training_baseline.ipynb           Baseline Persistence và Linear Regression
 └── 03_advanced_models_and_tuning.ipynb        Mô hình nâng cao (chưa triển khai)
 src/
 ├── data_loader.py                             Nạp dữ liệu, chia thời gian và CV theo timestamp
