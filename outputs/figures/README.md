@@ -4,11 +4,22 @@ Nơi lưu biểu đồ EDA, hình trực quan hóa dữ liệu, biểu đồ đ�
 
 ## Tệp hiện có
 
-- `baseline_cv_rmse_by_fold.png`: RMSE validation theo từng fold.
-- `baseline_error_by_group.png`: MAE/RMSE theo trạm, mùa và mức PM2.5.
-- `baseline_lr_coefficients.png`: hệ số Linear Regression trên các feature numeric đã chuẩn hóa.
-- `baseline_lr_permutation_importance.png`: permutation importance theo nhóm feature trên validation.
-- `baseline_pred_vs_actual.png`: dự đoán so với giá trị thực tế trên test.
-- `baseline_residuals.png`: phân bố residual trên dự đoán out-of-fold.
-- `baseline_rmse_by_month.png`: RMSE test theo tháng.
-- `baseline_timeseries_example.png`: ví dụ chuỗi giá trị thực tế và dự đoán trên test.
+Tám hình sau do [`02_model_training_baseline.ipynb`](../../notebooks/02_model_training_baseline.ipynb) tạo ra. Các hình về sai số đều tính trên dự đoán out-of-fold của 5 fold validation, không dùng test.
+
+| Tệp | Nội dung |
+|---|---|
+| `baseline_cv_rmse_by_fold.png` | RMSE validation của Persistence và Linear Regression theo từng fold expanding-window. |
+| `baseline_error_by_group.png` | RMSE theo trạm, theo mùa và theo mức PM2.5 thực tế. |
+| `baseline_pred_vs_actual.png` | Dự đoán so với thực tế (hexbin, thang log; trục giới hạn 0–500 µg/m³ để dễ nhìn). |
+| `baseline_residuals.png` | Phân bố residual (thực tế − dự đoán) và residual trung bình theo mức PM2.5. |
+| `baseline_timeseries_example.png` | Chuỗi thời gian ±72 giờ quanh đỉnh PM2.5 lớn nhất của fold cuối (thực tế, Persistence, Linear Regression). |
+| `baseline_rmse_by_month.png` | RMSE theo tháng trên vùng validation, kèm PM2.5 thực tế trung bình của tháng. |
+| `baseline_lr_coefficients.png` | Hệ số của các feature số trong Linear Regression (đã chuẩn hóa). |
+| `baseline_lr_permutation_importance.png` | Permutation importance theo nhóm feature của Linear Regression (một fold, mẫu 30.000 dòng). |
+
+- `.gitkeep`: tệp rỗng giúp Git lưu thư mục.
+
+## Lưu ý
+
+- Chạy lại notebook 02 với `SAVE_ARTIFACTS = True` sẽ ghi đè các tệp `baseline_*.png`.
+- Hình của các mô hình cây và hình phân tích cuối trên tập test chưa có trong thư mục này.
