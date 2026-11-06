@@ -4,7 +4,7 @@ Nơi lưu các Jupyter Notebook dùng để khám phá dữ liệu (EDA), tiền
 
 ## Các tệp hiện có
 
-- `01_eda_and_preprocessing.ipynb`: EDA 12 CSV PRSA; kiểm tra schema, thời gian, missing, phân bố PM2.5, xu hướng theo tháng/giờ/mùa và tương quan. Cuối notebook có bước xuất bản CSV chuẩn hóa nhưng không impute hoặc tiền xử lý thành dữ liệu model-ready.
+- `01_eda_and_preprocessing.ipynb`: EDA 12 CSV PRSA; kiểm tra schema, thời gian, missing, phân bố PM2.5, xu hướng theo tháng/giờ/mùa và tương quan bằng biểu đồ đã chuẩn hóa màu sắc/bố cục. Có hình so sánh missing và phân bố PM2.5 trước/sau pipeline hiện có (`ffill` giới hạn 6 giờ, `wd=Unknown`, median fit trên train/validation trước test); phần này chỉ tạo dữ liệu tạm để vẽ, tắt scaling để giữ đơn vị PM2.5, không impute target, không loại giá trị cao và không ghi đè CSV nguồn. Notebook 02 vẫn áp dụng scaler theo pipeline baseline. Cuối notebook xuất bản CSV chuẩn hóa còn nguyên missing để dùng ở notebook 02.
 - `02_model_training_baseline.ipynb`: huấn luyện và đánh giá hai baseline cho bài toán dự đoán PM2.5 giờ t+1:
   - **Persistence**: dự đoán PM2.5(t+1) = PM2.5(t), không học tham số.
   - **Linear Regression**: pipeline `build_preprocessor(scale=True)` + `LinearRegression`.
