@@ -33,7 +33,7 @@ Kế hoạch chính là gộp dữ liệu của 12 trạm thành một bộ dữ
 
 - Đã có EDA, tạo target t+1, PM2.5 lag 1/2/3/6/12/24, rolling mean 6/24, đặc trưng thời gian tuần hoàn, `station`/`wd`, forward-fill tối đa 6 giờ, train-fitted median imputation và missing indicators. Dữ liệu được chia theo thời gian và baseline chạy 5 fold expanding-window.
 - Chưa có trong pipeline hiện tại một số đặc trưng proposal dự kiến: độ lệch so với rolling mean, lag của các biến khí tượng, và cờ cuối tuần. Các phân tích EDA tự tương quan, phân bố log-scale và quan hệ gió cũng cần được xác nhận có đủ nội dung trước khi kết luận hoàn tất proposal.
-- Baseline Persistence/Linear Regression đã chạy. Random Forest, Gradient Boosting, tuning, so sánh cuối cùng và phân tích permutation importance cho các mô hình cây chưa hoàn thành.
+- Baseline Persistence/Linear Regression đã chạy và có file so sánh kết quả thực nghiệm (`outputs/baseline_model_comparison.xlsx`). Random Forest, Gradient Boosting, tuning, so sánh cuối cùng và phân tích permutation importance cho các mô hình cây chưa hoàn thành.
 - Proposal dự kiến có thể điều chỉnh mốc chia sau EDA; mốc đang dùng trong baseline là test target từ 01/09/2016. Mọi thay đổi so với proposal cần ghi rõ lý do và thống nhất trong nhóm. Test chỉ dùng để báo cáo cuối, không dùng chọn/tuning cấu hình.
 
 Proposal đầy đủ: [`docs/Nhom10_BeijingAirQuality_Proposal.pdf`](docs/Nhom10_BeijingAirQuality_Proposal.pdf).
@@ -63,7 +63,24 @@ Sau khi cài dependencies và kích hoạt môi trường:
 python -m pytest -q
 ```
 
-**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` có EDA và xuất bản dữ liệu chuẩn hóa còn missing; pipeline nạp, chia thời gian, tạo target/đặc trưng và tiền xử lý train-only đã được triển khai trong `src/`. Notebook `02_model_training_baseline.ipynb` đã huấn luyện và đánh giá persistence cùng Linear Regression bằng 5-fold expanding-window validation và báo cáo test. Random Forest, Gradient Boosting, RandomizedSearchCV và các phân tích/tổng hợp cuối theo proposal chưa được triển khai.
+**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` có EDA và xuất bản dữ liệu chuẩn hóa còn missing; pipeline nạp, chia thời gian, tạo target/đặc trưng và tiền xử lý train-only đã được triển khai trong `src/`. Notebook `02_model_training_baseline.ipynb` đã huấn luyện và đánh giá persistence cùng Linear Regression bằng 5-fold expanding-window validation và báo cáo test; mục 13 của notebook ghép (merge) các bảng kết quả rồi tự xuất file so sánh `outputs/baseline_model_comparison.xlsx` cùng bảng gộp `outputs/baseline_comparison_merged.csv`. Random Forest, Gradient Boosting, RandomizedSearchCV và các phân tích/tổng hợp cuối theo proposal chưa được triển khai.
+
+## Chạy notebook baseline
+
+Cần có `data/processed/beijing_air_quality_standardized.csv` (tạo từ notebook 01) và môi trường có Jupyter hoặc `ipykernel`. Mục 13 xuất file Excel bằng thư viện `openpyxl`; nếu `requirements.txt` chưa có thì cài thêm:
+
+```powershell
+python -m pip install openpyxl
+```
+
+Mở `notebooks/02_model_training_baseline.ipynb` rồi chọn `Restart & Run All` (khoảng 1–2 phút). Chạy từ thư mục gốc hay từ `notebooks/` đều được. Notebook ghi:
+
+- `models/baseline_linear_regression.joblib`, `models/baseline_metrics.csv`, `models/baseline_metadata.json`
+- `outputs/baseline_error_analysis.csv`, `outputs/baseline_model_comparison.xlsx`, `outputs/baseline_comparison_merged.csv`
+- `outputs/figures/baseline_*.png`
+- các dòng `baseline_*` trong `experiment_log.csv` (chạy lại sẽ ghi đè, không tạo dòng trùng)
+
+Nếu thiếu `openpyxl`, notebook vẫn chạy và chỉ bỏ qua file Excel (vẫn ghi CSV). Các mô hình sau nên ghi `experiment_log.csv` theo quy ước `<tên_thí_nghiệm>_cv5` (validation) và `<tên_thí_nghiệm>_test` (test) để sheet `Nhat_ky_thuc_nghiem` ở mục 13 tự gom chúng vào bảng xếp hạng chung. Chi tiết: [`notebooks/README.md`](notebooks/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md).
 
 ## Việc cần làm tiếp theo trong 7 ngày
 
@@ -76,7 +93,7 @@ python -m pytest -q
 | 3 | Huấn luyện Gradient Boosting Regressor. Thực hiện tuning bằng `RandomizedSearchCV` kết hợp `TimeSeriesSplit` cho ít nhất một mô hình; proposal dự kiến tinh chỉnh cả hai mô hình cây. Nếu Gradient Boosting chuẩn quá chậm, cân nhắc phương án thay thế mà proposal cho phép và ghi rõ lý do/cấu hình. | Log các lượt thử, tham số tìm kiếm, seed, điểm CV và thời gian chạy; chọn cấu hình bằng RMSE validation, có xem xét độ ổn định giữa folds. |
 | 4 | Tổng hợp kết quả CV của Persistence, Linear Regression, Random Forest và Gradient Boosting; chọn cấu hình cuối và khóa cấu hình trước khi dùng test. | Bảng so sánh CV trên cùng folds, có MAE/RMSE/R² và độ biến động; ghi rõ mô hình/cấu hình được chọn và lý do. Không điều chỉnh dựa trên test. |
 | 5 | Chạy đánh giá cuối trên tập test cho các mô hình/cấu hình đã khóa; baseline test đã có trong kết quả hiện tại nên không dùng lại để tinh chỉnh. | Một bộ kết quả test có số mẫu, khoảng thời gian, MAE/RMSE/R² và cấu hình; test chỉ phục vụ báo cáo cuối. |
-| 6 | Hoàn thiện phân tích theo proposal: so sánh dự đoán-thực tế, residual theo thời gian, sai số theo trạm/mùa/nhóm PM2.5 cao, train-validation/test để nhận diện overfit/underfit, permutation importance. Tạo workbook Excel từ các kết quả đã kiểm chứng. | Workbook `outputs/model_comparison.xlsx` tách rõ CV và test, gồm cấu hình và phân tích; số liệu khớp với CSV/log và biểu đồ. |
+| 6 | Hoàn thiện phân tích theo proposal: so sánh dự đoán-thực tế, residual theo thời gian, sai số theo trạm/mùa/nhóm PM2.5 cao, train-validation/test để nhận diện overfit/underfit, permutation importance. Tạo workbook Excel từ các kết quả đã kiểm chứng. | Workbook `outputs/model_comparison.xlsx` tách rõ CV và test, gồm cấu hình và phân tích; số liệu khớp với CSV/log và biểu đồ. Có thể mở rộng từ `outputs/baseline_model_comparison.xlsx` (mục 13 notebook 02) thay vì làm lại từ đầu. |
 | 7 | Hoàn thiện báo cáo DOCX và slide PPTX; chạy lại kiểm thử/notebook từ trạng thái sạch; rà citation, README, artifact và khả năng tái lập. | Báo cáo phản ánh đúng tiến độ thực tế; mã nguồn, log, bảng, hình và slide thống nhất; `pytest` và quy trình chạy lại thành công. |
 
 ### Cấu trúc báo cáo tham khảo từ tài liệu TLTK
@@ -111,7 +128,7 @@ data/
 ├── processed/                                Bản gộp/chuẩn hóa; giữ missing, chưa phải feature matrix
 notebooks/
 ├── 01_eda_and_preprocessing.ipynb            EDA, so sánh trước/sau pipeline và xuất CSV chuẩn hóa
-├── 02_model_training_baseline.ipynb           Baseline Persistence và Linear Regression
+├── 02_model_training_baseline.ipynb           Baseline Persistence và Linear Regression, merge kết quả và xuất file so sánh
 └── 03_advanced_models_and_tuning.ipynb        Mô hình nâng cao (chưa triển khai)
 src/
 ├── data_loader.py                             Nạp dữ liệu, chia thời gian và CV theo timestamp
@@ -124,11 +141,18 @@ tests/
 ├── test_models_performance.py                 Chưa có test mô hình
 └── test_integration.py                        Kiểm thử tích hợp pipeline dữ liệu
 models/                                        Nơi lưu mô hình đã huấn luyện
+├── baseline_linear_regression.joblib          Pipeline Linear Regression (baseline)
+├── baseline_metrics.csv                       MAE/RMSE/R² của các baseline (CV và test)
+└── baseline_metadata.json                     Thông tin nạp lại và truy vết mô hình
 outputs/
-├── figures/                                   Biểu đồ và hình ảnh kết quả
-└── test_reports/                              Báo cáo kiểm thử
+├── eda/                                       Nhật ký và kết luận EDA
+├── figures/                                   Biểu đồ và hình ảnh kết quả (hiện có baseline_*.png)
+├── test_reports/                              Báo cáo kiểm thử
+├── baseline_error_analysis.csv                Sai số baseline theo trạm, mùa, mức PM2.5
+├── baseline_model_comparison.xlsx             File so sánh kết quả thực nghiệm của baseline
+└── baseline_comparison_merged.csv             Các bảng so sánh đã merge, dạng một bảng dài
 docs/                                          Tài liệu đồ án
-experiment_log.csv                             Nhật ký thực nghiệm
+experiment_log.csv                             Nhật ký thực nghiệm (hiện có các dòng baseline)
 requirements.txt                               Danh sách thư viện Python
 pytest.ini                                     Cấu hình pytest
 README.md                                      Giới thiệu và hướng dẫn dự án
