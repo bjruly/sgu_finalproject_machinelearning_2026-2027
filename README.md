@@ -4,31 +4,39 @@
 
 ## Mục tiêu
 
-- Khám phá dữ liệu và xử lý các giá trị khuyết.
-- Phân tích mối liên hệ giữa PM2.5, các chất ô nhiễm khác và điều kiện khí tượng.
-- Xây dựng và so sánh các mô hình hồi quy:
-  - Baseline: persistence và Linear Regression.
-  - Mô hình cây: Random Forest Regressor và Gradient Boosting Regressor.
-- Chọn mô hình theo RMSE trên validation; đồng thời báo cáo MAE và R².
-- Phân tích sai số theo trạm, mùa và mức PM2.5; xem xét residual và permutation importance.
-- Tôn trọng thứ tự thời gian khi chia tập dữ liệu và chỉ fit các bước tiền xử lý trên tập huấn luyện để tránh rò rỉ dữ liệu.
+Mục tiêu là dự đoán liên tục nồng độ PM2.5 (µg/m³) tại giờ kế tiếp `t+1` cho cùng trạm, từ dữ liệu ô nhiễm, khí tượng và thời gian đến giờ `t`. Các câu hỏi nghiên cứu theo proposal:
+
+1. Random Forest và Gradient Boosting cải thiện bao nhiêu so với baseline Linear Regression?
+2. Nhóm đặc trưng nào (PM2.5 trễ, khí tượng, thời gian, trạm) đóng góp vào độ chính xác?
+3. Sai số thay đổi thế nào theo trạm, mùa và các đợt PM2.5 cao?
+
+Các phương pháp được đề xuất gồm Linear Regression làm baseline, Random Forest Regressor và Gradient Boosting Regressor để so sánh; persistence là mốc tham chiếu đơn giản. Chọn cấu hình theo RMSE validation, đồng thời báo cáo MAE và R². Phân tích kết quả gồm sai số theo trạm/mùa/PM2.5 cao, dự đoán so với thực tế, residual theo thời gian và permutation importance. Không dùng Accuracy cho bài toán hồi quy.
 
 ## Dữ liệu
 
 Bộ dữ liệu PRSA gồm 12 tệp CSV, mỗi tệp là dữ liệu theo giờ của một trạm trong khoảng 01/03/2013–28/02/2017. Các cột gồm thời gian, PM2.5, PM10, SO2, NO2, CO, O3 và các thông số khí tượng. Giá trị khuyết được ghi là `NA`.
 
-Dữ liệu thô nằm trong [`data/raw/`](data/raw/README.md); dữ liệu sau xử lý dự kiến được lưu trong [`data/processed/`](data/processed/README.md). Thư mục `data/raw/` hiện cũng có `data.csv`, `test.csv` với cấu trúc OHLCV và một ảnh JPG; mục đích của các tệp này trong đồ án chưa được xác định. Chúng không được mô tả ở đây là dữ liệu đầu vào của mô hình PM2.5.
+Dữ liệu thô nằm trong [`data/raw/`](data/raw/README.md); bản CSV chuẩn hóa được lưu trong [`data/processed/`](data/processed/README.md). Bản chuẩn hóa gộp 12 trạm, thêm `datetime` và sắp xếp theo thời gian nhưng vẫn giữ missing và giá trị cao; feature/imputation được thực hiện trong pipeline, không ghi đè bản này. Thư mục `data/raw/` hiện cũng có `data.csv`, `test.csv` với cấu trúc OHLCV và một ảnh JPG; mục đích của các tệp này trong đồ án chưa được xác định. Chúng không được mô tả ở đây là dữ liệu đầu vào của mô hình PM2.5.
 
-Kế hoạch chính là gộp dữ liệu của 12 trạm thành một bộ dữ liệu đa trạm và mã hóa `station` như một đặc trưng. Mỗi mẫu dự đoán PM2.5 ở giờ t+1 của cùng trạm; mô hình riêng theo trạm hoặc dự đoán chân trời dài hơn là hướng mở rộng.
+Kế hoạch chính là gộp dữ liệu của 12 trạm thành một bộ dữ liệu đa trạm và mã hóa `station` như một đặc trưng. Mỗi mẫu dự đoán PM2.5 ở giờ t+1 của cùng trạm; mô hình riêng theo trạm hoặc dự đoán chân trời dài hơn (ví dụ t+24) là hướng mở rộng nếu còn thời gian.
 
-### Kế hoạch thực nghiệm theo proposal
+### Phương pháp theo proposal
 
-- Chia theo thời gian, không xáo trộn ngẫu nhiên: train/validation có target đến 08/2016; test có target từ 09/2016 đến 02/2017 và chỉ dùng đánh giá cuối sau khi chốt cấu hình. Pipeline chia theo thời điểm của target t+1 để nhãn đầu tiên của test không lọt vào train.
-- Dùng `TimeSeriesSplit` expanding-window với 5 fold trên phần train/validation. Khi gộp nhiều trạm, các bản ghi cùng mốc thời gian cần thuộc cùng một fold để tránh rò rỉ giữa trạm.
-- Tạo lag PM2.5 tại 1, 2, 3, 6, 12 và 24 giờ; rolling mean 6 và 24 giờ; thêm đặc trưng khí tượng, thời gian tuần hoàn sin/cos và trạm. Các lag/rolling chỉ được tính từ quá khứ và riêng theo trạm.
-- Không điền giá trị target bị thiếu; loại các dòng đó khỏi huấn luyện/đánh giá sau khi tạo lag/feature. Với feature, pipeline forward-fill tối đa 6 giờ theo trạm; numeric còn thiếu được median-impute cùng missing indicators khi transformer được fit trên train; `wd` còn thiếu dùng category `Unknown` rồi One-Hot.
-- Dùng One-Hot Encoding cho hướng gió và trạm. Chỉ StandardScaler cho Linear Regression; mô hình cây không cần scaling.
-- Các mốc chia và chi tiết tiền xử lý là kế hoạch ban đầu trong proposal, có thể điều chỉnh sau EDA; chưa phải kết quả thực nghiệm đã chạy.
+- **EDA:** thống kê mô tả; kiểm tra kiểu dữ liệu, missing theo cột/trạm, bản ghi trùng theo cặp trạm-thời điểm và giá trị bất thường; khảo sát phân bố PM2.5 (kể cả log-scale), biến động theo giờ/tháng/mùa/năm, tự tương quan, tương quan với biến khí tượng/ô nhiễm và quan hệ với tốc độ/hướng gió.
+- **Missing và ngoại lệ:** không impute target; bỏ các dòng thiếu target khỏi huấn luyện/đánh giá. Với feature, forward-fill có giới hạn theo từng trạm rồi điền phần còn thiếu bằng median fit trên train, đồng thời tạo cờ missing. Không loại đợt PM2.5 cao nếu có thể là ô nhiễm thực tế; chỉ xử lý giá trị vô lý hoặc nghi lỗi cảm biến sau khi xác minh.
+- **Đặc trưng và mã hóa:** dự kiến có PM2.5 lag 1, 2, 3, 6, 12, 24 giờ; rolling mean 6/24 giờ và độ lệch so với rolling mean; lag các biến khí tượng chính; thời gian giờ/tháng/thứ trong tuần/cuối tuần; `station` và `wd`. Mã hóa tuần hoàn sin/cos cho giờ/tháng, One-Hot cho trạm/hướng gió. Tất cả lag/rolling tính riêng theo trạm, chỉ từ quá khứ.
+- **Chuẩn hóa:** chỉ dùng `StandardScaler` cho Linear Regression; mô hình cây không cần scaling. Imputer, encoder và scaler phải fit trên phần train của từng fold rồi mới transform validation/test.
+- **Chia tập:** theo trình tự thời gian, không shuffle. Dự kiến train + validation từ 03/2013 đến 08/2016, validation bằng `TimeSeriesSplit` expanding-window 5 fold; test từ 09/2016 đến 02/2017, chỉ đánh giá sau khi chốt cấu hình. Các trạm có cùng target timestamp phải cùng phía của mỗi fold. Test chủ yếu rơi vào thu-đông nên cần báo cáo theo tháng/mùa để xem xét khác biệt phân bố.
+- **Tuning và đánh giá:** dùng `RandomizedSearchCV` kết hợp `TimeSeriesSplit` để tinh chỉnh ít nhất một mô hình, dự kiến cả hai mô hình cây. Các tham số xem xét gồm `n_estimators`, `max_depth`, `min_samples_leaf`, `max_features` cho Random Forest; `n_estimators`, `learning_rate`, `max_depth`, `subsample` cho Gradient Boosting. Nếu Gradient Boosting của scikit-learn quá chậm trên toàn bộ dữ liệu, proposal cho phép cân nhắc `HistGradientBoostingRegressor` hoặc tập con có kiểm soát và phải ghi rõ. Chọn theo RMSE trung bình validation và độ ổn định giữa folds; báo cáo MAE/RMSE/R² tổng thể, theo trạm, mùa và nhóm PM2.5 cao; so sánh train với validation/test để nhận diện overfit/underfit. Cố định random seed để tái lập.
+
+### Đối chiếu với triển khai hiện tại
+
+- Đã có EDA, tạo target t+1, PM2.5 lag 1/2/3/6/12/24, rolling mean 6/24, đặc trưng thời gian tuần hoàn, `station`/`wd`, forward-fill tối đa 6 giờ, train-fitted median imputation và missing indicators. Dữ liệu được chia theo thời gian và baseline chạy 5 fold expanding-window.
+- Chưa có trong pipeline hiện tại một số đặc trưng proposal dự kiến: độ lệch so với rolling mean, lag của các biến khí tượng, và cờ cuối tuần. Các phân tích EDA tự tương quan, phân bố log-scale và quan hệ gió cũng cần được xác nhận có đủ nội dung trước khi kết luận hoàn tất proposal.
+- Baseline Persistence/Linear Regression đã chạy. Random Forest, Gradient Boosting, tuning, so sánh cuối cùng và phân tích permutation importance cho các mô hình cây chưa hoàn thành.
+- Proposal dự kiến có thể điều chỉnh mốc chia sau EDA; mốc đang dùng trong baseline là test target từ 01/09/2016. Mọi thay đổi so với proposal cần ghi rõ lý do và thống nhất trong nhóm. Test chỉ dùng để báo cáo cuối, không dùng chọn/tuning cấu hình.
+
+Proposal đầy đủ: [`docs/Nhom10_BeijingAirQuality_Proposal.pdf`](docs/Nhom10_BeijingAirQuality_Proposal.pdf).
 
 ## Thiết lập môi trường
 
@@ -55,58 +63,61 @@ Sau khi cài dependencies và kích hoạt môi trường:
 python -m pytest -q
 ```
 
-**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` đã có EDA và xuất dữ liệu chuẩn hóa; pipeline nạp, chia dữ liệu theo thời gian, tạo target/đặc trưng và tiền xử lý train-only đã được triển khai trong `src/`. Notebook `02_model_training_baseline.ipynb` đã huấn luyện và đánh giá Persistence cùng Linear Regression bằng 5-fold expanding-window validation, sau đó báo cáo kết quả test. Mô hình nâng cao và tuning chưa được triển khai.
+**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` có EDA và xuất bản dữ liệu chuẩn hóa còn missing; pipeline nạp, chia thời gian, tạo target/đặc trưng và tiền xử lý train-only đã được triển khai trong `src/`. Notebook `02_model_training_baseline.ipynb` đã huấn luyện và đánh giá persistence cùng Linear Regression bằng 5-fold expanding-window validation và báo cáo test. Random Forest, Gradient Boosting, RandomizedSearchCV và các phân tích/tổng hợp cuối theo proposal chưa được triển khai.
 
-## Kế hoạch hoàn thiện đồ án trong 7 ngày
+## Việc cần làm tiếp theo trong 7 ngày
 
-Kế hoạch dưới đây bắt đầu từ ngày nhóm thống nhất triển khai. Hãy điền người phụ trách vào cột cuối trước khi bắt đầu; các nhãn **Thành viên A–D** là vai trò gợi ý, không phải phân công đã chốt. Phần EDA, pipeline dữ liệu và baseline đã có; trọng tâm còn lại là mô hình cây, so sánh kết quả, workbook Excel, báo cáo và kiểm tra bàn giao.
+Đây là checklist đầu việc và đầu ra, không phải phân công nhân sự. Proposal đặt tiến độ dự kiến 5 tuần; mốc 7 ngày dưới đây là kế hoạch rút gọn để hoàn thiện các phần còn lại, không thay đổi yêu cầu phương pháp của proposal.
 
-| Ngày | Công việc và thứ tự | Đầu ra/tiêu chí hoàn thành | Người phụ trách |
-| :-: | :--- | :--- | :--- |
-| 1 | Họp phân công; mọi người đồng bộ môi trường và chạy `python -m pytest -q`. Chạy lại notebook baseline để xác nhận Persistence/Linear Regression và kiểm tra vị trí các kết quả đã lưu. Chốt phạm vi thử nghiệm Random Forest và Gradient Boosting, metric chính (RMSE), random seed và giới hạn thời gian chạy. | Test hiện có xanh; ghi rõ cấu hình và người nhận từng việc. Baseline đối chiếu được với [`models/baseline_metrics.csv`](models/baseline_metrics.csv). | Nhóm trưởng điều phối; cả nhóm xác nhận |
-| 2 | Thành viên A triển khai Random Forest; thành viên B triển khai Gradient Boosting. Dùng cùng feature, cùng 5 fold thời gian và cùng pipeline tiền xử lý; chỉ fit transformer trên train của từng fold. Bắt đầu bằng cấu hình nhỏ, giới hạn số tổ hợp để kịp lịch. | Có code/notebook tái chạy được; kết quả RMSE/MAE/R² cho từng fold; cấu hình, seed và thời gian chạy được ghi lại. | Thành viên A: Random Forest; Thành viên B: Gradient Boosting |
-| 3 | Hoàn tất các lượt thử nghiệm có giới hạn cho hai mô hình. Thành viên C kiểm tra việc tính metric, ghép kết quả với baseline và phát hiện lỗi leakage/khác biệt dữ liệu giữa các mô hình. Chọn cấu hình cuối chỉ bằng validation/CV. | Bảng CV đủ các mô hình và 5 fold; cấu hình cuối được chọn theo RMSE validation; không dùng test để chọn tham số. | A, B chạy mô hình; C rà soát kết quả |
-| 4 | Đóng băng cấu hình. Chạy đánh giá cuối trên test cho các mô hình đã chọn; tổng hợp Persistence, Linear Regression, Random Forest và Gradient Boosting trên cùng tập test. Phân tích sai số theo trạm, mùa và mức PM2.5. | Một lần chạy test cuối có metric, số mẫu và cấu hình rõ ràng; kết quả phân nhóm và biểu đồ có thể tái tạo. Không quay lại tinh chỉnh dựa trên kết quả test. | Thành viên C; nhóm trưởng kiểm tra quy trình |
-| 5 | Tạo workbook `outputs/model_comparison.xlsx` để nhóm và giảng viên xem kết quả. Gợi ý các sheet: `Summary` (CV và test tách rõ), `CV Folds`, `Test by Group`, `Configurations`, `Notes`. Định dạng đơn vị, làm rõ RMSE là metric chọn mô hình; kiểm tra số liệu Excel khớp với CSV nguồn. | Workbook mở được; có đủ bốn phương pháp, metrics MAE/RMSE/R², mean/std CV, số dòng, cấu hình và ghi chú phân biệt validation/test. Không nhập nhầm test vào bảng CV. | Thành viên C |
-| 6 | Hoàn thiện báo cáo và slide: bài toán/target t+1, nguồn dữ liệu, EDA, chia thời gian, chống leakage, xử lý missing, mô hình, cách chọn cấu hình, bảng so sánh và hạn chế. Thành viên D đối chiếu mọi con số với CSV/workbook và kiểm tra citation. | Báo cáo/slide có phương pháp và kết quả khớp artifact; nêu rõ hạn chế, không tuyên bố tương quan là nhân quả. | Thành viên D; A–C cung cấp nội dung phần mình |
-| 7 | Chạy lại toàn bộ test và notebook cần thiết từ trạng thái sạch; xác nhận workbook/biểu đồ/metrics được tái tạo; rà README, tên file, commit và repository trước khi nộp. Tập dượt trình bày và thống nhất câu trả lời cho câu hỏi về leakage, missing và lý do chọn mô hình. | `pytest` xanh; artifact đầy đủ và nhất quán; repository không chứa cache hoặc file môi trường; cả nhóm có thể giải thích kết quả. | Nhóm trưởng điều phối QA; cả nhóm nghiệm thu |
+| Ngày | Việc cần hoàn thành | Đầu ra/tiêu chí kiểm tra |
+| :-: | :--- | :--- |
+| 1 | Chốt cấu hình thực nghiệm theo proposal; xác nhận bộ feature và cách chia thời gian dùng chung. Rà soát pipeline hiện có để ghi rõ khác biệt so với feature dự kiến trong proposal trước khi so sánh mô hình. | Ghi nhận target, feature, split, CV folds, metric chính (RMSE), random seed và các khác biệt đã được thống nhất. Các mô hình dùng cùng dữ liệu/folds/preprocessing; mọi transformer chỉ fit trên train của từng fold. |
+| 2 | Huấn luyện Random Forest trên các fold thời gian dùng chung với baseline. | Notebook/mã chạy lại được; lưu MAE, RMSE, R² từng fold, cấu hình và thời gian chạy; kết quả không dùng test để chọn cấu hình. |
+| 3 | Huấn luyện Gradient Boosting Regressor. Thực hiện tuning bằng `RandomizedSearchCV` kết hợp `TimeSeriesSplit` cho ít nhất một mô hình; proposal dự kiến tinh chỉnh cả hai mô hình cây. Nếu Gradient Boosting chuẩn quá chậm, cân nhắc phương án thay thế mà proposal cho phép và ghi rõ lý do/cấu hình. | Log các lượt thử, tham số tìm kiếm, seed, điểm CV và thời gian chạy; chọn cấu hình bằng RMSE validation, có xem xét độ ổn định giữa folds. |
+| 4 | Tổng hợp kết quả CV của Persistence, Linear Regression, Random Forest và Gradient Boosting; chọn cấu hình cuối và khóa cấu hình trước khi dùng test. | Bảng so sánh CV trên cùng folds, có MAE/RMSE/R² và độ biến động; ghi rõ mô hình/cấu hình được chọn và lý do. Không điều chỉnh dựa trên test. |
+| 5 | Chạy đánh giá cuối trên tập test cho các mô hình/cấu hình đã khóa; baseline test đã có trong kết quả hiện tại nên không dùng lại để tinh chỉnh. | Một bộ kết quả test có số mẫu, khoảng thời gian, MAE/RMSE/R² và cấu hình; test chỉ phục vụ báo cáo cuối. |
+| 6 | Hoàn thiện phân tích theo proposal: so sánh dự đoán-thực tế, residual theo thời gian, sai số theo trạm/mùa/nhóm PM2.5 cao, train-validation/test để nhận diện overfit/underfit, permutation importance. Tạo workbook Excel từ các kết quả đã kiểm chứng. | Workbook `outputs/model_comparison.xlsx` tách rõ CV và test, gồm cấu hình và phân tích; số liệu khớp với CSV/log và biểu đồ. |
+| 7 | Hoàn thiện báo cáo DOCX và slide PPTX; chạy lại kiểm thử/notebook từ trạng thái sạch; rà citation, README, artifact và khả năng tái lập. | Báo cáo phản ánh đúng tiến độ thực tế; mã nguồn, log, bảng, hình và slide thống nhất; `pytest` và quy trình chạy lại thành công. |
 
-### Gợi ý chia việc song song
+### Cấu trúc báo cáo tham khảo từ tài liệu TLTK
 
-- **Nhóm trưởng — Trần Lê Gia Bảo:** điều phối tiến độ, hỗ trợ pipeline dữ liệu đã triển khai, rà soát chia tập/leakage, tích hợp nhánh và nghiệm thu; không mặc định nhận phần huấn luyện mô hình.
-- **Thành viên A:** Random Forest, ghi cấu hình và kết quả CV.
-- **Thành viên B:** Gradient Boosting, ghi cấu hình và kết quả CV.
-- **Thành viên C:** kiểm tra tính so sánh công bằng, tổng hợp metrics/error analysis và tạo workbook Excel.
-- **Thành viên D:** báo cáo, slide, citation và chuẩn bị trình bày; phối hợp với A–C để xác nhận số liệu.
+Khóa luận tham khảo trình bày theo mạch: mở đầu → cơ sở lý thuyết → dữ liệu và tiền xử lý → phân tích xu hướng → phương pháp → thiết lập/kết quả/đánh giá thực nghiệm → kết luận, hạn chế và hướng phát triển → tài liệu tham khảo/phụ lục. Có thể vận dụng cấu trúc đó cho đề tài Beijing, nhưng không cần sao chép nguyên số chương hoặc nội dung chuyên ngành:
 
-Nhóm có thể đổi người theo kỹ năng/thời gian, nhưng mỗi đầu việc cần một người chịu trách nhiệm chính và một người review. Công việc A/B có thể làm song song sau khi thống nhất giao diện dữ liệu và cách ghi kết quả; workbook chỉ chốt sau khi đã chọn cấu hình bằng CV và chạy đánh giá cuối. Nếu thời gian chạy vượt kế hoạch, giảm phạm vi tuning trước; không bỏ kiểm tra leakage, không thay đổi test để làm đẹp kết quả.
+1. **Thông tin đề tài và tiến độ:** tên đề tài, thành viên/đóng góp, mục tiêu và trạng thái thực tế.
+2. **Giới thiệu bài toán:** bối cảnh, ý nghĩa, Input/Output, target PM2.5 giờ `t+1`, loại bài toán hồi quy.
+3. **Dữ liệu và khám phá:** nguồn, số mẫu/thuộc tính, các trạm, phân bố, missing, xu hướng và các biểu đồ EDA.
+4. **Tiền xử lý và pipeline:** quy tắc xử lý missing/ngoại lệ, tạo feature, chia thời gian và biện pháp chống leakage.
+5. **Phương pháp thực nghiệm:** persistence/Linear Regression, Random Forest, Gradient Boosting; folds, tuning, metric và cấu hình.
+6. **Kết quả và thảo luận:** bảng so sánh CV/test, dự đoán-thực tế, sai số theo trạm/mùa/PM2.5 cao, residual, importance; nêu hạn chế và giải thích dựa trên số liệu.
+7. **Kết luận, hạn chế, hướng phát triển; tài liệu tham khảo và phụ lục:** đưa bảng/biểu đồ chi tiết theo trạm, cấu hình và kết quả bổ sung vào phụ lục để nội dung chính dễ theo dõi.
 
-### Điều kiện nghiệm thu cuối
+Tài liệu tham khảo: [KLTN_bao_cao_sau_hoi_dong.pdf](docs/TLTK/KLTN_bao_cao_sau_hoi_dong.pdf). Đây là khóa luận về dự đoán Pb/Zn trong bụi PM10 tại Hàn Quốc, khác dữ liệu và bài toán của nhóm. Chỉ tham khảo cách tổ chức và trình bày; không sử dụng số liệu/kết quả của khóa luận làm kết quả dự án Beijing. Xem thêm mô tả trong [`docs/README.md`](docs/README.md).
 
-1. Baseline và hai mô hình cây được so sánh trên cùng target, feature set, folds thời gian và quy tắc tiền xử lý.
-2. Tất cả imputer/encoder/scaler được fit bên trong từng fold; các trạm cùng target timestamp không bị tách qua train/validation.
-3. Cấu hình được chọn bằng validation/CV; test chỉ dùng cho báo cáo đánh giá cuối. Baseline test đã được xem và ghi nhận, vì vậy không dùng test để điều chỉnh mô hình hoặc chọn cấu hình.
-4. Bảng trong workbook khớp với các CSV kết quả; nêu rõ đơn vị PM2.5 (µg/m³), số mẫu, metric và split.
-5. Notebook, báo cáo và slide có thể truy ngược kết quả về dữ liệu, cấu hình và nhật ký thực nghiệm trong repository.
+### Điều kiện hoàn thành
+
+1. Ba phương pháp theo proposal (Linear Regression, Random Forest, Gradient Boosting) được so sánh công bằng trên cùng target, feature set, folds và quy tắc tiền xử lý; persistence được giữ làm mốc tham chiếu.
+2. Tuning sử dụng validation/CV; test chỉ dùng đánh giá cuối. Không chọn cấu hình theo kết quả test.
+3. Kết quả có MAE, RMSE, R²; phân tích theo các nhóm proposal; đơn vị, số mẫu và khoảng thời gian được ghi rõ.
+4. Báo cáo, slide, workbook, experiment log, mã nguồn và hình biểu đồ truy vết được và nhất quán.
 
 ## Cấu trúc thư mục dự án
 
-Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook EDA, pipeline dữ liệu và baseline đã có nội dung; mô hình nâng cao/tuning vẫn đang chờ triển khai.
+Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook EDA, pipeline dữ liệu và baseline đã có nội dung; hai mô hình cây và tuning theo proposal vẫn đang chờ triển khai.
 
 ```text
 data/
 ├── raw/                                      Dữ liệu PRSA và các tệp bổ sung
 │   └── PRSA_Data_20130301-20170228/          CSV theo 12 trạm
-├── processed/                                Dữ liệu sau khi làm sạch/biến đổi
+├── processed/                                Bản gộp/chuẩn hóa; giữ missing, chưa phải feature matrix
 notebooks/
-├── 01_eda_and_preprocessing.ipynb            EDA và xuất CSV chuẩn hóa; imputation chưa triển khai
+├── 01_eda_and_preprocessing.ipynb            EDA, so sánh trước/sau pipeline và xuất CSV chuẩn hóa
 ├── 02_model_training_baseline.ipynb           Baseline Persistence và Linear Regression
 └── 03_advanced_models_and_tuning.ipynb        Mô hình nâng cao (chưa triển khai)
 src/
 ├── data_loader.py                             Nạp dữ liệu, chia thời gian và CV theo timestamp
 ├── features.py                                Tạo target/đặc trưng và tiền xử lý train-only
-├── models.py                                  Huấn luyện mô hình (chưa triển khai)
-└── evaluate.py                                Đánh giá mô hình (chưa triển khai)
+├── models.py                                  Vị trí dự kiến cho triển khai mô hình (chưa triển khai)
+└── evaluate.py                                Vị trí dự kiến cho metric/đánh giá dùng chung
 tests/
 ├── test_data_pipeline.py                      Kiểm thử nạp dữ liệu và chia thời gian
 ├── test_feature_engineering.py                Kiểm thử target, feature và preprocessing
@@ -128,6 +139,8 @@ README chi tiết theo thư mục: [`data/README.md`](data/README.md), [`data/ra
 ## Phân công công việc
 
 Giảng viên hướng dẫn: TS. Đỗ Như Tài
+
+Phân công trong proposal là dự kiến ban đầu; bảng dưới đây ghi phạm vi nhóm đã thống nhất/cập nhật, không khẳng định các công việc chưa làm là đóng góp đã hoàn thành.
 
 | STT | Họ và tên | MSSV | Vai trò | Phần việc phụ trách |
 | :-: | :--- | :-: | :--- | :--- |
