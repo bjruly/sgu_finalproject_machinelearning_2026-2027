@@ -1,7 +1,8 @@
-pandas
-numpy
-scikit-learn
-matplotlib
-seaborn
-pytest
-joblib
+   pandas
+   numpy
+   scikit-learn
+   matplotlib
+   seaborn
+   pytest
+   joblib
+   openpyxl
