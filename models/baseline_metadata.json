@@ -1,6 +1,6 @@
 {
   "model": "LinearRegression + build_preprocessor(scale=True)",
-  "created_at": "2026-11-01T23:30:09",
+  "created_at": "2026-11-07T22:24:51",
   "sklearn_version": "1.7.2",
   "target": "PM2.5 at t+1 (same station)",
   "train_rows": 360954,
