@@ -1,0 +1,59 @@
+{
+  "model": "RandomForestRegressor",
+  "pipeline": "build_preprocessor(scale=False) + RandomForestRegressor",
+  "created_at": "2026-11-09T02:15:21",
+  "sklearn_version": "1.7.2",
+  "target": "PM2.5 at t+1 (same station)",
+  "train_validation_rows": 360954,
+  "test_start": "2016-09-01",
+  "feature_columns": [
+    "PM2.5",
+    "PM10",
+    "SO2",
+    "NO2",
+    "CO",
+    "O3",
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "RAIN",
+    "WSPM",
+    "PM2.5_lag_1",
+    "PM2.5_lag_2",
+    "PM2.5_lag_3",
+    "PM2.5_lag_6",
+    "PM2.5_lag_12",
+    "PM2.5_lag_24",
+    "PM2.5_rolling_mean_6",
+    "PM2.5_rolling_mean_24",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "station",
+    "wd"
+  ],
+  "random_forest_params": {
+    "n_estimators": 20,
+    "max_features": 0.7,
+    "max_depth": 16,
+    "min_samples_leaf": 5,
+    "random_state": 42,
+    "n_jobs": -1
+  },
+  "cv": "TimeSeriesSplit expanding window, 5 folds, grouped by target_datetime",
+  "cv_mean": {
+    "mae": 10.525594800799858,
+    "rmse": 20.17072420411218,
+    "r2": 0.9309140059047148
+  },
+  "cv_std": {
+    "mae": 2.541079997039083,
+    "rmse": 5.555087715599896,
+    "r2": 0.026037030169484034
+  },
+  "test_evaluated": false,
+  "dataset_version": "beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24"
+}

@@ -32,3 +32,20 @@ Mở notebook rồi chọn `Restart & Run All`. Chạy từ thư mục gốc hay
 - Các dòng `baseline_*` trong `experiment_log.csv`; mỗi dòng có `experiment_id` cố định nên chạy lại sẽ ghi đè dòng cũ, không tạo dòng trùng.
 
 Notebook 02 và 03 nên dùng cùng các fold, cùng hàm độ đo và cùng định dạng `experiment_id` (`<tên_thí_nghiệm>_cv5` cho validation, `<tên_thí_nghiệm>_test` cho test) để kết quả so sánh được với nhau. Chạy lại mục 13 của notebook 02 sau khi các mô hình khác ghi log theo quy ước này thì sheet `Nhat_ky_thuc_nghiem` tự gom chúng vào bảng xếp hạng.
+
+## Chạy notebook 03
+
+Điều kiện: đã có `<span>data/processed/beijing_air_quality_standardized.csv</span>` (tạo từ notebook 01), đã cài các thư viện trong `<span>requirements.txt</span>` và môi trường có Jupyter hoặc `<span>ipykernel</span>`.
+
+Mở `<span>03_advanced_models_and_tuning.ipynb</span>` rồi chọn `<span>Restart & Run All</span>`. Chạy từ thư mục gốc hay từ `<span>notebooks/</span>` đều được. Notebook sử dụng cùng quy trình chia dữ liệu và 5-Fold Cross-Validation với Notebook 02 để đảm bảo kết quả có thể so sánh.
+
+## Notebook 03 tạo ra
+
+* `<span>models/random_forest.joblib</span>`: mô hình Random Forest đã huấn luyện.
+* `<span>models/random_forest_metadata.json</span>`: thông tin cấu hình mô hình.
+* `<span>outputs/random_forest_cv_metrics.csv</span>`: kết quả đánh giá 5-Fold Cross-Validation.
+* Dòng `<span>random_forest_cv5</span>` trong `<span>experiment_log.csv</span>`; sử dụng `<span>experiment_id</span>` cố định để cập nhật kết quả khi chạy lại, không tạo dòng trùng.
+
+Notebook 02 và Notebook 03 cần sử dụng cùng các fold, cùng hàm tính MAE, RMSE, R² và cùng định dạng `<span>experiment_id</span>` để đảm bảo kết quả thực nghiệm có thể so sánh công bằng.
+
+Không sử dụng tập Test để lựa chọn mô hình hoặc tinh chỉnh siêu tham số.
