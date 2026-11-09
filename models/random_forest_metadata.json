@@ -1,0 +1,185 @@
+{
+  "model": "RandomForestRegressor",
+  "pipeline": "build_preprocessor(scale=False) + RandomForestRegressor",
+  "created_at": "2026-11-09T14:41:37",
+  "python_version": "3.13.9",
+  "sklearn_version": "1.7.2",
+  "pandas_version": "2.3.3",
+  "target": "PM2.5 at t+1 (same station)",
+  "dataset_version": "beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24",
+  "train_validation_rows": 360954,
+  "train_validation_target_period": [
+    "2013-03-01 01:00:00",
+    "2016-08-31 23:00:00"
+  ],
+  "test_start": "2016-09-01 00:00:00",
+  "test_rows_reserved": 51063,
+  "test_used_for_tuning": false,
+  "test_evaluated": false,
+  "feature_columns": [
+    "PM2.5",
+    "PM10",
+    "SO2",
+    "NO2",
+    "CO",
+    "O3",
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "RAIN",
+    "WSPM",
+    "PM2.5_lag_1",
+    "PM2.5_lag_2",
+    "PM2.5_lag_3",
+    "PM2.5_lag_6",
+    "PM2.5_lag_12",
+    "PM2.5_lag_24",
+    "PM2.5_rolling_mean_6",
+    "PM2.5_rolling_mean_24",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "station",
+    "wd"
+  ],
+  "random_state": 42,
+  "random_forest_params": {
+    "n_estimators": 20,
+    "max_features": 0.7,
+    "max_depth": 16,
+    "min_samples_leaf": 5,
+    "random_state": 42,
+    "n_jobs": -1
+  },
+  "cv": "TimeSeriesSplit expanding window, 5 folds, grouped by target_datetime; same src.cv_folds as Notebook 02",
+  "cv_fold_overview": [
+    {
+      "fold": 1,
+      "train_rows": 60258,
+      "validation_rows": 60595,
+      "train_start": "2013-03-01 01:00:00",
+      "train_end": "2013-09-30 00:00:00",
+      "validation_start": "2013-09-30 01:00:00",
+      "validation_end": "2014-05-01 17:00:00"
+    },
+    {
+      "fold": 2,
+      "train_rows": 120853,
+      "validation_rows": 59958,
+      "train_start": "2013-03-01 01:00:00",
+      "train_end": "2014-05-01 17:00:00",
+      "validation_start": "2014-05-01 18:00:00",
+      "validation_end": "2014-11-30 16:00:00"
+    },
+    {
+      "fold": 3,
+      "train_rows": 180811,
+      "validation_rows": 59858,
+      "train_start": "2013-03-01 01:00:00",
+      "train_end": "2014-11-30 16:00:00",
+      "validation_start": "2014-11-30 17:00:00",
+      "validation_end": "2015-07-02 02:00:00"
+    },
+    {
+      "fold": 4,
+      "train_rows": 240669,
+      "validation_rows": 60217,
+      "train_start": "2013-03-01 01:00:00",
+      "train_end": "2015-07-02 02:00:00",
+      "validation_start": "2015-07-02 03:00:00",
+      "validation_end": "2016-01-31 14:00:00"
+    },
+    {
+      "fold": 5,
+      "train_rows": 300886,
+      "validation_rows": 60068,
+      "train_start": "2013-03-01 01:00:00",
+      "train_end": "2016-01-31 14:00:00",
+      "validation_start": "2016-01-31 15:00:00",
+      "validation_end": "2016-08-31 23:00:00"
+    }
+  ],
+  "cv_fold_metrics": [
+    {
+      "fold": 1,
+      "mae": 14.9380661458,
+      "rmse": 29.8862663179,
+      "r2": 0.8925442204,
+      "runtime_seconds": 1.9307438,
+      "train_rows": 60258,
+      "validation_rows": 60595
+    },
+    {
+      "fold": 2,
+      "mae": 9.1973866576,
+      "rmse": 16.0491337779,
+      "r2": 0.9492656164,
+      "runtime_seconds": 4.5671755,
+      "train_rows": 120853,
+      "validation_rows": 59958
+    },
+    {
+      "fold": 3,
+      "mae": 10.1817759356,
+      "rmse": 18.994012755,
+      "r2": 0.9310205471,
+      "runtime_seconds": 6.4724189,
+      "train_rows": 180811,
+      "validation_rows": 59858
+    },
+    {
+      "fold": 4,
+      "mae": 9.7558228678,
+      "rmse": 18.6388892833,
+      "r2": 0.9596373185,
+      "runtime_seconds": 9.0464047,
+      "train_rows": 240669,
+      "validation_rows": 60217
+    },
+    {
+      "fold": 5,
+      "mae": 8.5549223972,
+      "rmse": 17.2853188865,
+      "r2": 0.9221023272,
+      "runtime_seconds": 12.0083117,
+      "train_rows": 300886,
+      "validation_rows": 60068
+    }
+  ],
+  "cv_metrics_mean": {
+    "mae": 10.525594800799858,
+    "rmse": 20.17072420411218,
+    "r2": 0.9309140059047148
+  },
+  "cv_metrics_std": {
+    "mae": 2.5410799970390823,
+    "rmse": 5.555087715599897,
+    "r2": 0.02603703016948408
+  },
+  "cv_runtime_seconds": [
+    1.930743800000073,
+    4.567175500000303,
+    6.472418899999866,
+    9.04640470000004,
+    12.008311699999922
+  ],
+  "cv_total_runtime_seconds": 34.1754463999996,
+  "final_fit_seconds": 14.212612800000443,
+  "saved_outputs": {
+    "model": "models\\random_forest.joblib",
+    "cv_metrics": "outputs\\random_forest_cv_metrics.csv",
+    "cv_summary": "outputs\\random_forest_cv_summary.csv",
+    "fold_overview": "outputs\\random_forest_fold_overview.csv",
+    "validation_oof_predictions": "outputs\\random_forest_validation_oof_predictions.csv",
+    "figures": [
+      "outputs/figures/random_forest_cv_rmse_by_fold.png",
+      "outputs/figures/random_forest_cv_metrics_by_fold.png",
+      "outputs/figures/random_forest_feature_importance.png",
+      "outputs/figures/random_forest_pred_vs_actual.png",
+      "outputs/figures/random_forest_residuals.png"
+    ]
+  }
+}

@@ -32,3 +32,56 @@ Mở notebook rồi chọn `Restart & Run All`. Chạy từ thư mục gốc hay
 - Các dòng `baseline_*` trong `experiment_log.csv`; mỗi dòng có `experiment_id` cố định nên chạy lại sẽ ghi đè dòng cũ, không tạo dòng trùng.
 
 Notebook 02 và 03 nên dùng cùng các fold, cùng hàm độ đo và cùng định dạng `experiment_id` (`<tên_thí_nghiệm>_cv5` cho validation, `<tên_thí_nghiệm>_test` cho test) để kết quả so sánh được với nhau. Chạy lại mục 13 của notebook 02 sau khi các mô hình khác ghi log theo quy ước này thì sheet `Nhat_ky_thuc_nghiem` tự gom chúng vào bảng xếp hạng.
+
+
+## Chạy Notebook 03
+
+**Điều kiện trước khi chạy:**
+
+- Đã có file `data/processed/beijing_air_quality_standardized.csv` (được tạo từ Notebook 01).
+- Đã cài đặt các thư viện trong `requirements.txt`.
+- Môi trường đã có Jupyter Notebook hoặc `ipykernel`.
+
+Mở file `03_advanced_models_and_tuning.ipynb`, sau đó chọn **Restart & Run All** để chạy toàn bộ notebook.
+
+Có thể chạy notebook từ thư mục gốc của dự án hoặc thư mục `notebooks/`. Notebook tự xác định đường dẫn dự án và sử dụng cùng quy trình chia dữ liệu theo thời gian, cùng 5-Fold Cross-Validation với Notebook 02 (Baseline), nhằm đảm bảo kết quả đánh giá giữa hai mô hình có thể so sánh công bằng.
+
+## Các đầu ra được tạo bởi Notebook 03
+
+Sau khi chạy thành công, notebook tạo hoặc cập nhật các tệp sau:
+
+**1. Mô hình và thông tin cấu hình**
+
+- `models/random_forest.joblib`: Mô hình Random Forest sau khi huấn luyện trên tập Train + Validation.
+- `models/random_forest_metadata.json`: Thông tin cấu hình mô hình, kết quả đánh giá, thời gian chạy và thông tin các Fold.
+
+**2. Kết quả đánh giá**
+
+- `outputs/random_forest_cv_metrics.csv`: Các chỉ số MAE, RMSE, R² và thời gian chạy của từng Fold.
+- `outputs/random_forest_cv_summary.csv`: Tổng hợp giá trị trung bình và độ lệch chuẩn của các chỉ số đánh giá.
+- `outputs/random_forest_fold_overview.csv`: Thông tin tổng quan về dữ liệu Train và Validation của từng Fold.
+- `outputs/random_forest_validation_oof_predictions.csv`: Lưu giá trị PM2.5 thực tế (`y_true`), giá trị dự đoán (`y_pred`) và sai số (`residual`) trên từng Fold Validation. Dữ liệu này được sử dụng để phân tích kết quả dự đoán và vẽ biểu đồ.
+
+**3. Biểu đồ trực quan**
+
+Các biểu đồ được xuất dưới định dạng PNG vào thư mục `outputs/figures/`:
+
+- `random_forest_cv_rmse_by_fold.png`: RMSE theo từng Fold.
+- `random_forest_cv_metrics_by_fold.png`: MAE, RMSE và R² theo từng Fold.
+- `random_forest_feature_importance.png`: Mức độ quan trọng của các đặc trưng.
+- `random_forest_pred_vs_actual.png`: So sánh giá trị PM2.5 thực tế và dự đoán.
+- `random_forest_residuals.png`: Phân phối sai số dự đoán.
+
+**4. Ghi nhận thí nghiệm**
+
+Notebook ghi kết quả vào `experiment_log.csv` với `experiment_id` cố định là `random_forest_cv5`. Khi chạy lại, notebook cập nhật kết quả của thí nghiệm này thay vì tạo thêm dòng trùng lặp, đồng thời giữ lại các kết quả thí nghiệm khác.
+
+## Nguyên tắc đảm bảo tính công bằng trong thực nghiệm
+
+- Notebook 02 và Notebook 03 sử dụng cùng cách chia dữ liệu theo thời gian và cùng 5 Fold Cross-Validation.
+- Sử dụng cùng cách tính các chỉ số MAE, RMSE và R² để đảm bảo tính nhất quán.
+- Không sử dụng tập Test để lựa chọn mô hình hoặc tinh chỉnh siêu tham số.
+- Các kết quả Cross-Validation chỉ được tính trên tập Train + Validation.
+- Tập Test được giữ riêng để phục vụ đánh giá cuối cùng sau khi hoàn tất quá trình lựa chọn mô hình.
+
+**Lưu ý:** File OOF chỉ lưu dự đoán trên các Fold Validation, không chứa kết quả dự đoán trên tập Test.
