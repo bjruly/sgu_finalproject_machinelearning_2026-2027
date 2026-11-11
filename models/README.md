@@ -43,9 +43,6 @@ predictions = model.predict(X)
 - Chạy lại notebook 02 sẽ **ghi đè** các tệp `baseline_*` trong thư mục này.
 - Random Forest và Gradient Boosting có các tệp riêng, xem các phần bên dưới.
 
-
-
-
 ## Các tệp Random Forest (Notebook 03)
 
 Sau khi chạy [`03_advanced_models_and_tuning.ipynb`](../notebooks/03_advanced_models_and_tuning.ipynb) với `SAVE_ARTIFACTS = True`, thư mục có thêm:
@@ -72,7 +69,7 @@ model = joblib.load("models/random_forest.joblib")
 - Các tệp `.joblib` phụ thuộc phiên bản scikit-learn; tham khảo metadata tương ứng hoặc dùng lại môi trường đã chạy notebook.
 - Chạy lại Notebook 02 sẽ cập nhật các artifact `baseline_*`; chạy lại Notebook 03 sẽ cập nhật `random_forest.*`.
 - Notebook 03 chỉ dùng Train/Validation cho CV và fit mô hình cuối. Test được giữ riêng, không dùng để tuning, chọn cấu hình hoặc đánh giá trong notebook này.
-- Gradient Boosting do Notebook 04 tạo (xem phần bên dưới); các artifact tuning chưa được tạo.
+- Gradient Boosting do Notebook 04 tạo (xem phần bên dưới); các mô hình đã tinh chỉnh (`*_tuned`) do Notebook 05 tạo, xem phần cuối file.
 
 ## Các tệp Gradient Boosting (Notebook 04)
 
@@ -98,3 +95,29 @@ model = joblib.load("models/gradient_boosting.joblib")
 - Tệp `.joblib` phụ thuộc phiên bản scikit-learn (lần chạy ghi nhận: 1.7.2).
 - Chạy lại Notebook 04 sẽ ghi đè `gradient_boosting.*`.
 - Đây là cấu hình chưa tuning; Test chưa được dùng.
+
+## Các tệp đã tinh chỉnh (Notebook 05)
+
+Sau khi chạy [`05_tuning.ipynb`](../notebooks/05_tuning.ipynb) với `SAVE_ARTIFACTS = True`, thư mục có thêm:
+
+- `gradient_boosting_tuned.joblib`, `random_forest_tuned.joblib`: pipeline của bộ tham số tốt nhất (chọn bằng `RandomizedSearchCV`, RMSE trung bình 5 fold thấp nhất), fit trên toàn bộ Train/Validation. Không chứa mô hình fit trên Test.
+- `gradient_boosting_tuned_metadata.json`, `random_forest_tuned_metadata.json`: truy vết gồm tham số tốt nhất, khoảng tìm kiếm, số bộ tham số đã thử (`n_iter`), cấu hình trước tinh chỉnh, hạt giống, phiên bản Python/scikit-learn/pandas, metrics CV và `test_evaluated: false`.
+
+Các tệp `gradient_boosting.*` (Notebook 04) và `random_forest.*` (Notebook 03) là cấu hình **trước** tinh chỉnh và không bị Notebook 05 ghi đè.
+
+### Nạp lại mô hình đã tinh chỉnh
+
+```python
+import joblib
+
+gb_tuned = joblib.load("models/gradient_boosting_tuned.joblib")
+rf_tuned = joblib.load("models/random_forest_tuned.joblib")
+```
+
+`X` đưa vào `predict` phải có đúng các cột `FEATURE_COLUMNS` trong `src/features.py`; tiền xử lý đã nằm trong pipeline.
+
+### Lưu ý về các mô hình đã tinh chỉnh
+
+- Trước khi dùng kết quả, mở file `*_tuned_metadata.json` kiểm tra `tuning.n_iter` (mặc định 20 cho Gradient Boosting, 8 cho Random Forest). Nếu là 2 thì đó là lần chạy thử.
+- Chạy lại Notebook 05 sẽ ghi đè `*_tuned.*`.
+- Test chưa được dùng; cần chốt cấu hình rồi mới đánh giá Test đúng một lần.

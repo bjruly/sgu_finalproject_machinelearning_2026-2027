@@ -23,7 +23,6 @@ Tệp CSV `baseline_error_analysis.csv` lưu bằng `utf-8-sig` để Excel hi�
 
 Kết luận dạng bảng của EDA nằm trong [`eda/eda_conclusions.csv`](eda/eda_conclusions.csv); diễn giải từng bước, các quyết định và việc còn bỏ ngỏ được ghi trong [`eda/eda_worklog.md`](eda/eda_worklog.md).
 
-
 ## Kết quả Random Forest (Notebook 03)
 
 Sau khi chạy [`03_advanced_models_and_tuning.ipynb`](../notebooks/03_advanced_models_and_tuning.ipynb) với `SAVE_ARTIFACTS = True`, các tệp sau được tạo/cập nhật ở cấp `outputs/`:
@@ -53,12 +52,27 @@ Sau khi Notebook 03 ghi log, có thể chạy lại mục 13 của Notebook 02 �
 
 Sau khi chạy [`04_gradient_boosting.ipynb`](../notebooks/04_gradient_boosting.ipynb) với `SAVE_ARTIFACTS = True`, các tệp sau được tạo/cập nhật ở cấp `outputs/`:
 
-| Tệp | Nội dung |
-| --- | --- |
-| `gradient_boosting_cv_metrics.csv` | MAE, RMSE, R², `runtime_seconds`, `train_rows`, `validation_rows` và `train_rmse` (RMSE trên chính phần train, dùng kiểm tra overfit) cho từng fold. |
-| `gradient_boosting_cv_summary.csv` | Trung bình và độ lệch chuẩn của MAE, RMSE, R² qua 5 fold. |
+| Tệp                                                 | Nội dung                                                                                                                                                                    |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gradient_boosting_cv_metrics.csv`                 | MAE, RMSE, R², `runtime_seconds`, `train_rows`, `validation_rows` và `train_rmse` (RMSE trên chính phần train, dùng kiểm tra overfit) cho từng fold.         |
+| `gradient_boosting_cv_summary.csv`                 | Trung bình và độ lệch chuẩn của MAE, RMSE, R² qua 5 fold.                                                                                                            |
 | `gradient_boosting_validation_oof_predictions.csv` | Dự đoán OOF validation: fold, station, datetime, target_datetime, y_true, y_pred, residual. Không chứa Test. Khoảng 28 MB; đặt `SAVE_OOF = False` để không ghi. |
 
 Notebook 04 ghi bản ghi `gradient_boosting_cv5` vào `experiment_log.csv` (thay thế bản ghi cùng `experiment_id`, giữ nguyên các dòng khác). Workbook baseline không tự cập nhật; muốn đưa Random Forest và Gradient Boosting vào bảng xếp hạng, chạy lại mục 13 của Notebook 02.
 
 Như Random Forest, notebook 04 không dự đoán hoặc đánh giá Test, và không dùng Test để chọn cấu hình.
+
+## Kết quả tinh chỉnh (Notebook 05)
+
+Sau khi chạy [`05_tuning.ipynb`](../notebooks/05_tuning.ipynb) với `SAVE_ARTIFACTS = True`, các tệp sau được tạo/cập nhật ở cấp `outputs/`:
+
+| Tệp                                                                                         | Nội dung                                                                                                                                                                                                                                                                                                                                         |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tuning_gradient_boosting_search_results.csv`, `tuning_random_forest_search_results.csv` | Bảng toàn bộ các bộ tham số đã thử bằng `RandomizedSearchCV`: giá trị từng tham số, RMSE từng fold, RMSE trung bình 5 fold (`rmse_mean_5`), RMSE trung bình fold 2-5 (`rmse_mean_fold2_5`), độ lệch chuẩn và thời gian huấn luyện mỗi fold. Sắp theo `rmse_mean_5` tăng dần, dòng đầu là bộ tốt nhất. |
+| `gradient_boosting_tuned_cv_metrics.csv`, `random_forest_tuned_cv_metrics.csv`           | Chấm lại bộ tham số tốt nhất theo từng fold: MAE, RMSE, R², `runtime_seconds`, `train_rows`, `validation_rows`, `train_rmse`.                                                                                                                                                                                                     |
+| `gradient_boosting_tuned_cv_summary.csv`, `random_forest_tuned_cv_summary.csv`           | Trung bình và độ lệch chuẩn của MAE, RMSE, R² qua 5 fold.                                                                                                                                                                                                                                                                                 |
+| `*_tuned_validation_oof_predictions.csv`                                                   | Dự đoán OOF validation của mô hình đã tinh chỉnh; chỉ có khi `SAVE_OOF = True`, không chứa Test.                                                                                                                                                                                                                                   |
+
+Notebook 05 ghi các bản ghi `gradient_boosting_tuned_cv5` và `random_forest_tuned_cv5` vào `experiment_log.csv` (thay thế bản ghi cùng `experiment_id`, giữ nguyên các dòng khác). Notebook 05 không ghi đè các tệp `*_cv_metrics.csv` của Notebook 03 và 04, vì đó là kết quả "trước tinh chỉnh" dùng để so sánh.
+
+Cột `notes` của dòng log ghi `n_iter` đã dùng; nếu `n_iter=2` thì đó là lần chạy thử, chưa dùng được cho báo cáo. Như các notebook trước, notebook 05 không dự đoán hoặc đánh giá Test.
