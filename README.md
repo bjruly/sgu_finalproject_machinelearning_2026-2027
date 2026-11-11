@@ -34,7 +34,7 @@ Kế hoạch chính là gộp dữ liệu của 12 trạm thành một bộ dữ
 
 - Đã có EDA, tạo target t+1, PM2.5 lag 1/2/3/6/12/24, rolling mean 6/24, đặc trưng thời gian tuần hoàn, `station`/`wd`, forward-fill tối đa 6 giờ, train-fitted median imputation và missing indicators. Dữ liệu được chia theo thời gian và baseline chạy 5 fold expanding-window.
 - Chưa có trong pipeline hiện tại một số đặc trưng proposal dự kiến: độ lệch so với rolling mean, lag của các biến khí tượng, và cờ cuối tuần. Các phân tích EDA tự tương quan, phân bố log-scale và quan hệ gió cũng cần được xác nhận có đủ nội dung trước khi kết luận hoàn tất proposal.
-- Baseline Persistence/Linear Regression đã chạy và có file so sánh kết quả thực nghiệm (`outputs/baseline_model_comparison.xlsx`). Random Forest (`03_advanced_models_and_tuning.ipynb`) và Gradient Boosting (`04_gradient_boosting.ipynb`, dùng `HistGradientBoostingRegressor`) đã chạy 5-fold CV với cấu hình cố định, chưa tuning và chưa dùng test. Notebook `05_tuning.ipynb` đã tinh chỉnh bằng `RandomizedSearchCV` cho cả hai mô hình cây trên cùng 5 fold (Gradient Boosting thử 20 bộ tham số, Random Forest thử 8 bộ), không dùng tập Test. So sánh cuối cùng, đánh giá test và permutation importance cho các mô hình cây chưa hoàn thành.Tuning bằng `RandomizedSearchCV`, so sánh cuối cùng, đánh giá test và permutation importance cho các mô hình cây chưa hoàn thành.
+- Baseline Persistence/Linear Regression đã chạy và có file so sánh kết quả thực nghiệm (`outputs/baseline_model_comparison.xlsx`). Random Forest (`03_random_forest.ipynb`) và Gradient Boosting (`04_gradient_boosting.ipynb`, dùng `HistGradientBoostingRegressor`) đã chạy 5-fold CV với cấu hình cố định, chưa tuning và chưa dùng test. Notebook `05_tuning.ipynb` đã tinh chỉnh bằng `RandomizedSearchCV` cho cả hai mô hình cây trên cùng 5 fold (Gradient Boosting thử 20 bộ tham số, Random Forest thử 8 bộ), không dùng tập Test. So sánh cuối cùng, đánh giá test và permutation importance cho các mô hình cây chưa hoàn thành.Tuning bằng `RandomizedSearchCV`, so sánh cuối cùng, đánh giá test và permutation importance cho các mô hình cây chưa hoàn thành.
 - Proposal dự kiến có thể điều chỉnh mốc chia sau EDA; mốc đang dùng trong baseline là test target từ 01/09/2016. Mọi thay đổi so với proposal cần ghi rõ lý do và thống nhất trong nhóm. Test chỉ dùng để báo cáo cuối, không dùng chọn/tuning cấu hình.
 
 Proposal đầy đủ: [`docs/Nhom10_BeijingAirQuality_Proposal.pdf`](docs/Nhom10_BeijingAirQuality_Proposal.pdf).
@@ -64,7 +64,7 @@ Sau khi cài dependencies và kích hoạt môi trường:
 python -m pytest -q
 ```
 
-**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` có EDA và xuất bản dữ liệu chuẩn hóa còn missing; pipeline nạp, chia thời gian, tạo target/đặc trưng và tiền xử lý train-only đã được triển khai trong `src/`. Notebook `02_model_training_baseline.ipynb` đã huấn luyện và đánh giá persistence cùng Linear Regression bằng 5-fold expanding-window validation và báo cáo test; mục 13 của notebook ghép (merge) các bảng kết quả rồi tự xuất file so sánh `outputs/baseline_model_comparison.xlsx` cùng bảng gộp `outputs/baseline_comparison_merged.csv`. Notebook `03_advanced_models_and_tuning.ipynb` huấn luyện Random Forest và notebook `04_gradient_boosting.ipynb` huấn luyện Gradient Boosting (`HistGradientBoostingRegressor`); cả hai dùng cùng 5 fold với baseline, cấu hình cố định (chưa tuning) và chưa đụng tới tập test. Notebook `05_tuning.ipynb` thực hiện `RandomizedSearchCV` cho hai mô hình cây trên cùng 5 fold (Gradient Boosting thử 20 bộ, Random Forest thử 8 bộ) và không dùng tập Test. Các phân tích/tổng hợp cuối theo proposal chưa được triển khai.
+**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` có EDA và xuất bản dữ liệu chuẩn hóa còn missing; pipeline nạp, chia thời gian, tạo target/đặc trưng và tiền xử lý train-only đã được triển khai trong `src/`. Notebook `02_model_training_baseline.ipynb` đã huấn luyện và đánh giá persistence cùng Linear Regression bằng 5-fold expanding-window validation và báo cáo test; mục 13 của notebook ghép (merge) các bảng kết quả rồi tự xuất file so sánh `outputs/baseline_model_comparison.xlsx` cùng bảng gộp `outputs/baseline_comparison_merged.csv`. Notebook `03_random_forest.ipynb` huấn luyện Random Forest và notebook `04_gradient_boosting.ipynb` huấn luyện Gradient Boosting (`HistGradientBoostingRegressor`); cả hai dùng cùng 5 fold với baseline, cấu hình cố định (chưa tuning) và chưa đụng tới tập test. Notebook `05_tuning.ipynb` thực hiện `RandomizedSearchCV` cho hai mô hình cây trên cùng 5 fold (Gradient Boosting thử 20 bộ, Random Forest thử 8 bộ) và không dùng tập Test. Các phân tích/tổng hợp cuối theo proposal chưa được triển khai.
 
 ## Chạy notebook baseline
 
@@ -85,7 +85,7 @@ Nếu thiếu `openpyxl`, notebook vẫn chạy và chỉ bỏ qua file Excel (v
 
 ## Chạy notebook Random Forest và Gradient Boosting
 
-Cần có `data/processed/beijing_air_quality_standardized.csv` và, để mục so sánh chạy được, các file kết quả của notebook trước: `outputs/baseline_comparison_merged.csv` (notebook 02) và `outputs/random_forest_cv_metrics.csv` (notebook 03). Mở `notebooks/03_advanced_models_and_tuning.ipynb` hoặc `notebooks/04_gradient_boosting.ipynb` rồi chọn `Restart & Run All`; mỗi notebook chạy khoảng vài chục giây đến vài phút. Chi tiết đầu ra: [`notebooks/README.md`](notebooks/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md).
+Cần có `data/processed/beijing_air_quality_standardized.csv` và, để mục so sánh chạy được, các file kết quả của notebook trước: `outputs/baseline_comparison_merged.csv` (notebook 02) và `outputs/random_forest_cv_metrics.csv` (notebook 03). Mở `notebooks/03_random_forest.ipynb` hoặc `notebooks/04_gradient_boosting.ipynb` rồi chọn `Restart & Run All`; mỗi notebook chạy khoảng vài chục giây đến vài phút. Chi tiết đầu ra: [`notebooks/README.md`](notebooks/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md).
 
 ## Kết quả hiện tại (validation, chưa dùng test)
 
@@ -126,7 +126,7 @@ Lưu ý khi đọc bảng:
 | Ngày | Việc                                                              | Trạng thái                                                                                                                                            |
 | :---: | :----------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
 |   1   | Chốt cấu hình, rà soát pipeline                               | Đã có pipeline dùng chung; các khác biệt feature so với proposal vẫn còn (xem phần Đối chiếu ở trên)                                    |
-|   2   | Random Forest trên 5 fold                                         | Xong (`03_advanced_models_and_tuning.ipynb`), `n_estimators=20`, chưa tuning                                                                       |
+|   2   | Random Forest trên 5 fold                                         | Xong (`03_random_forest.ipynb`), `n_estimators=20`, chưa tuning                                                                       |
 |   3   | Gradient Boosting + `RandomizedSearchCV`                         | Xong: Gradient Boosting (`04_gradient_boosting.ipynb`, bản Hist) và tinh chỉnh cả hai mô hình cây (`05_tuning.ipynb`, 20 và 8 bộ tham số) |
 | 4–7 | Tổng hợp CV, test cuối, phân tích, workbook, báo cáo, slide | Chưa làm                                                                                                                                              |
 
@@ -163,7 +163,7 @@ data/
 notebooks/
 ├── 01_eda_and_preprocessing.ipynb            EDA, so sánh trước/sau pipeline và xuất CSV chuẩn hóa
 ├── 02_model_training_baseline.ipynb           Baseline Persistence và Linear Regression, merge kết quả và xuất file so sánh
-├── 03_advanced_models_and_tuning.ipynb        Random Forest, 5 fold CV (chưa tuning, chưa dùng test)
+├── 03_random_forest.ipynb        Random Forest, 5 fold CV (chưa tuning, chưa dùng test)
 ├── 04_gradient_boosting.ipynb                 Gradient Boosting (HistGradientBoosting), 5 fold CV (chưa tuning)
 └── 05_tuning.ipynb                            RandomizedSearchCV cho Gradient Boosting và Random Forest               Gradient Boosting (HistGradientBoosting), 5 fold CV (chưa tuning)
 src/

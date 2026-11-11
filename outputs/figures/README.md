@@ -26,7 +26,7 @@ Nơi lưu biểu đồ EDA, hình trực quan hóa dữ liệu, biểu đồ đ�
 
 # Hình Random Forest – Notebook 03
 
-Sau khi chạy [`03_advanced_models_and_tuning.ipynb`](../../notebooks/03_advanced_models_and_tuning.ipynb) với `SAVE_ARTIFACTS = True`, có thêm 5 hình:
+Sau khi chạy [`03_random_forest.ipynb`](../../notebooks/03_random_forest.ipynb) với `SAVE_ARTIFACTS = True`, có thêm 5 hình:
 
 | Tệp                                     | Nội dung                                                                 |
 | ---------------------------------------- | ------------------------------------------------------------------------- |

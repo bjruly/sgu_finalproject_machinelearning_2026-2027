@@ -13,7 +13,7 @@ Nơi lưu các Jupyter Notebook dùng để khám phá dữ liệu (EDA), tiền
   - Phân tích sai số theo trạm, mùa, mức PM2.5 và theo tháng; residual; hệ số và permutation importance theo nhóm feature của Linear Regression.
   - Có mục đánh giá trên tập test, điều khiển bằng cờ `RUN_FINAL_TEST`.
   - Mục 13 ghép (`merge`) các bảng kết quả của hai mô hình, ghép thêm với nhật ký `experiment_log.csv`, rồi **xuất file so sánh kết quả thực nghiệm** (Excel và CSV).
-- `03_advanced_models_and_tuning.ipynb`: huấn luyện **Random Forest** (`n_estimators=20`, `max_depth=16`, `min_samples_leaf=5`, `max_features=0.7`) bằng 5-fold CV dùng chung với baseline; lưu mô hình, metrics, dự đoán OOF, hình và dòng `random_forest_cv5` trong `experiment_log.csv`. Chưa có `RandomizedSearchCV` dù tên notebook nhắc tới tuning; không đánh giá trên test.
+- `03_random_forest.ipynb`: huấn luyện **Random Forest** (`n_estimators=20`, `max_depth=16`, `min_samples_leaf=5`, `max_features=0.7`) bằng 5-fold CV dùng chung với baseline; lưu mô hình, metrics, dự đoán OOF, hình và dòng `random_forest_cv5` trong `experiment_log.csv`. Chưa có `RandomizedSearchCV` dù tên notebook nhắc tới tuning; không đánh giá trên test.
 - `04_gradient_boosting.ipynb`: huấn luyện **Gradient Boosting** bằng `HistGradientBoostingRegressor` (`max_iter=200`, `learning_rate=0.1`, `early_stopping=False`, còn lại mặc định) trên cùng 5 fold. Có so sánh 4 mô hình theo từng fold (kèm trung bình fold 2–5), kiểm tra overfit (`train_rmse` so với `rmse`), sai số theo mùa/mức PM2.5, so sánh với Random Forest; lưu mô hình, metrics, OOF, 4 hình và dòng `gradient_boosting_cv5`. Chưa tuning, không đánh giá trên test.
 - `05_tuning.ipynb`: tinh chỉnh tham số bằng `RandomizedSearchCV` cho Gradient Boosting (mặc định thử 20 bộ tham số) và Random Forest (mặc định thử 8 bộ) trên đúng 5 fold dùng chung (`cv=folds`), chọn bộ có RMSE trung bình 5 fold thấp nhất. Sau đó chấm lại bộ tốt nhất (MAE, RMSE, R², `train_rmse`), so sánh trước và sau tinh chỉnh, lưu mô hình `*_tuned`, bảng các lần thử và ghi các dòng `*_tuned_cv5` vào `experiment_log.csv`. Không dùng tập Test.
 
@@ -44,7 +44,7 @@ Notebook 02 và 03 nên dùng cùng các fold, cùng hàm độ đo và cùng đ
 - Đã cài đặt các thư viện trong `requirements.txt`.
 - Môi trường đã có Jupyter Notebook hoặc `ipykernel`.
 
-Mở file `03_advanced_models_and_tuning.ipynb`, sau đó chọn **Restart & Run All** để chạy toàn bộ notebook.
+Mở file `03_random_forest.ipynb`, sau đó chọn **Restart & Run All** để chạy toàn bộ notebook.
 
 Có thể chạy notebook từ thư mục gốc của dự án hoặc thư mục `notebooks/`. Notebook tự xác định đường dẫn dự án và sử dụng cùng quy trình chia dữ liệu theo thời gian, cùng 5-Fold Cross-Validation với Notebook 02 (Baseline), nhằm đảm bảo kết quả đánh giá giữa hai mô hình có thể so sánh công bằng.
 

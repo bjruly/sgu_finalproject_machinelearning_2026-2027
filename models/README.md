@@ -45,7 +45,7 @@ predictions = model.predict(X)
 
 ## Các tệp Random Forest (Notebook 03)
 
-Sau khi chạy [`03_advanced_models_and_tuning.ipynb`](../notebooks/03_advanced_models_and_tuning.ipynb) với `SAVE_ARTIFACTS = True`, thư mục có thêm:
+Sau khi chạy [`03_random_forest.ipynb`](../notebooks/03_random_forest.ipynb) với `SAVE_ARTIFACTS = True`, thư mục có thêm:
 
 - `random_forest.joblib`: pipeline gồm preprocessing `build_preprocessor(scale=False)` và `RandomForestRegressor`, fit trên toàn bộ Train/Validation. Tệp này không chứa mô hình được fit trên Test.
 - `random_forest_metadata.json`: metadata để truy vết, gồm target, dataset version, feature columns, tham số Random Forest, random seed, phiên bản Python/scikit-learn/pandas, thời gian fit, thông tin 5 folds, metrics CV và danh sách artifact đã lưu.
