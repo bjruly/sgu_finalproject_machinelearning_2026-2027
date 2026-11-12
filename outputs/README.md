@@ -1,50 +1,65 @@
-# Thư mục `outputs`
+# Thư mục `outputs/figures`
 
-Nơi lưu các sản phẩm được tạo ra trong quá trình phân tích, huấn luyện và kiểm thử, không phải mã nguồn đầu vào.
+Nơi lưu biểu đồ EDA, hình trực quan hóa dữ liệu, biểu đồ đánh giá mô hình và các hình ảnh kết quả khác.
 
-## Thư mục con
+## Tệp hiện có
 
-- [`eda/`](eda/README.md): kết luận và kết quả khám phá dữ liệu.
-- [`figures/`](figures/README.md): biểu đồ và hình ảnh trực quan hóa; hiện có các hình của baseline từ notebook 02.
-- `test_reports/`: báo cáo kết quả kiểm thử; hiện chưa có báo cáo nào được sinh ra.
+- `.gitkeep`: tệp rỗng giúp Git lưu thư mục khi chưa có hình ảnh.
 
-## Tệp ở cấp thư mục
+| Tệp                                       | Nội dung                                                                                                              |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `baseline_cv_rmse_by_fold.png`           | RMSE validation của Persistence và Linear Regression theo từng fold expanding-window.                               |
+| `baseline_error_by_group.png`            | RMSE theo trạm, theo mùa và theo mức PM2.5 thực tế.                                                              |
+| `baseline_pred_vs_actual.png`            | Dự đoán so với thực tế (hexbin, thang log; trục giới hạn 0–500 µg/m³ để dễ nhìn).                      |
+| `baseline_residuals.png`                 | Phân bố residual (thực tế − dự đoán) và residual trung bình theo mức PM2.5.                                 |
+| `baseline_timeseries_example.png`        | Chuỗi thời gian ±72 giờ quanh đỉnh PM2.5 lớn nhất của fold cuối (thực tế, Persistence, Linear Regression). |
+| `baseline_rmse_by_month.png`             | RMSE theo tháng trên vùng validation, kèm PM2.5 thực tế trung bình của tháng.                                 |
+| `baseline_lr_coefficients.png`           | Hệ số của các feature số trong Linear Regression (đã chuẩn hóa).                                              |
+| `baseline_lr_permutation_importance.png` | Permutation importance theo nhóm feature của Linear Regression (một fold, mẫu 30.000 dòng).                       |
 
-- `baseline_error_analysis.csv`: sai số của hai baseline (Persistence và Linear Regression) trên dự đoán out-of-fold của 5 fold validation, không dùng test. Tạo bởi [`02_model_training_baseline.ipynb`](../notebooks/02_model_training_baseline.ipynb). Mỗi dòng là một nhóm × một mô hình, gồm các cột:
+- `.gitkeep`: tệp rỗng giúp Git lưu thư mục.
 
-  - `group_type`: loại nhóm, gồm `station` (12 trạm), `season` (Xuân/Hè/Thu/Đông theo tháng) và `pm25_level` (mức PM2.5 thực tế: 0–35, 35–75, 75–115, 115–150, 150–250, >250).
-  - `group`, `model`, `n`: tên nhóm, tên mô hình và số dòng trong nhóm.
-  - `mae`, `rmse`, `r2`: độ đo của nhóm đó. R² trong nhóm hẹp như `pm25_level` ít ý nghĩa, nên với nhóm này hãy nhìn MAE, RMSE và `mean_residual`.
-  - `mean_residual`: trung bình của (thực tế − dự đoán); **dương** nghĩa là mô hình dự đoán thấp hơn thực tế.
-- `baseline_model_comparison.xlsx`: file Excel **so sánh kết quả thực nghiệm** của Persistence và Linear Regression để đưa vào báo cáo, do mục 13 của notebook 02 tạo ra bằng các phép `merge`. Gồm các sheet `Tong_quan` (validation và test, kèm kết luận tự động), `Theo_fold`, `Theo_tram`, `Theo_mua`, `Theo_muc_PM25`, `Test_theo_thang` (chỉ có khi `RUN_FINAL_TEST = True`), `Nhat_ky_thuc_nghiem` (bảng xếp hạng gộp từ `experiment_log.csv`) và `Ghi_chu`; có biểu đồ. Cần `openpyxl` để tạo. Không sửa tay vì chạy lại notebook sẽ ghi đè.
-- `baseline_comparison_merged.csv`: toàn bộ các bảng đã merge trong một bảng dài (cột `scope`, `group`, `n` và các cột `mae_*`, `rmse_*`, `r2_*`; `_P` là Persistence, `_LR` là Linear Regression, `_diff` = LR − P, `_rel` là chênh lệch tương đối, `_better` là mô hình tốt hơn). Lưu bằng `utf-8-sig`.
+## Lưu ý
 
-Tệp CSV `baseline_error_analysis.csv` lưu bằng `utf-8-sig` để Excel hiển thị đúng tiếng Việt. Chạy lại notebook 02 sẽ ghi đè tệp.
+- Chạy lại notebook 02 với `SAVE_ARTIFACTS = True` sẽ ghi đè các tệp `baseline_*.png`.
+- Hình phân tích cuối trên tập test chưa có trong thư mục này.
 
-Kết luận dạng bảng của EDA nằm trong [`eda/eda_conclusions.csv`](eda/eda_conclusions.csv); diễn giải từng bước, các quyết định và việc còn bỏ ngỏ được ghi trong [`eda/eda_worklog.md`](eda/eda_worklog.md).
+# Hình Random Forest – Notebook 03
 
+Sau khi chạy [`03_random_forest.ipynb`](../../notebooks/03_random_forest.ipynb) với `SAVE_ARTIFACTS = True`, có thêm 5 hình:
 
-## Kết quả Random Forest (Notebook 03)
+| Tệp                                     | Nội dung                                                                 |
+| ---------------------------------------- | ------------------------------------------------------------------------- |
+| `random_forest_cv_rmse_by_fold.png`    | RMSE trên validation của từng fold.                                    |
+| `random_forest_cv_metrics_by_fold.png` | MAE, RMSE và R² theo từng validation fold.                             |
+| `random_forest_feature_importance.png` | Top 20 feature importance từ mô hình cuối fit trên Train/Validation. |
+| `random_forest_pred_vs_actual.png`     | Actual vs Predicted trên validation OOF của 5 folds.                    |
+| `random_forest_residuals.png`          | Phân bố residual (thực tế − dự đoán) trên validation OOF.        |
 
-Sau khi chạy [`03_advanced_models_and_tuning.ipynb`](../notebooks/03_advanced_models_and_tuning.ipynb) với `SAVE_ARTIFACTS = True`, các tệp sau được tạo/cập nhật ở cấp `outputs/`:
+Bốn hình đầu tiên liên quan đến kết quả validation OOF (trừ Feature Importance, lấy từ mô hình cuối fit trên Train/Validation); không hình nào sử dụng nhãn Test.
 
-| Tệp                                             | Nội dung                                                                                                                |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `random_forest_cv_metrics.csv`                 | MAE, RMSE, R², runtime_seconds, train_rows và validation_rows cho từng fold.                                          |
-| `random_forest_cv_summary.csv`                 | Trung bình và độ lệch chuẩn của MAE, RMSE, R² qua 5 folds.                                                       |
-| `random_forest_fold_overview.csv`              | Khoảng thời gian và số dòng train/validation của từng fold.                                                       |
-| `random_forest_validation_oof_predictions.csv` | Dự đoán OOF validation gồm fold, station, datetime, target_datetime, y_true, y_pred và residual. Không chứa Test. |
+## Lưu ý
 
-Các CSV được ghi bằng `utf-8-sig` để thuận tiện mở bằng Excel. Chạy lại Notebook 03 sẽ cập nhật các tệp cùng tên.
+- Chạy lại Notebook 02, 03 hoặc 04 với `SAVE_ARTIFACTS = True` sẽ cập nhật các hình có tiền tố tương ứng.
+- `.gitkeep` giúp Git lưu thư mục ngay cả khi chưa có hình.
 
-## Nhật ký thực nghiệm
+# Hình Gradient Boosting – Notebook 04
 
-Notebook 03 cập nhật `experiment_log.csv` ở thư mục gốc repository bằng bản ghi `random_forest_cv5`, sử dụng trung bình metrics của 5 validation folds. Nếu bản ghi cùng `experiment_id` đã tồn tại, notebook thay thế bản ghi đó và giữ nguyên các dòng baseline khác.
+Sau khi chạy [`04_gradient_boosting.ipynb`](../../notebooks/04_gradient_boosting.ipynb) với `SAVE_ARTIFACTS = True`, có thêm 4 hình, đều dùng kết quả validation OOF của 5 fold (không dùng nhãn Test):
 
-Sau khi Notebook 03 ghi log, có thể chạy lại mục 13 của Notebook 02 để workbook so sánh baseline tổng hợp thêm kết quả Random Forest từ `experiment_log.csv`. Workbook baseline hiện tại không tự cập nhật chỉ vì Notebook 03 chạy.
+| Tệp                                         | Nội dung                                                                                      |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `gradient_boosting_cv_rmse_by_fold.png`    | RMSE theo từng fold của Persistence, Linear Regression, Random Forest và Gradient Boosting. |
+| `gradient_boosting_pred_vs_actual.png`     | Thực tế so với dự đoán (hexbin, thang log) trên validation OOF.                         |
+| `gradient_boosting_residuals.png`          | Phân bố residual (thực tế − dự đoán).                                                  |
+| `gradient_boosting_rmse_by_pm25_level.png` | RMSE theo mức PM2.5 (kèm Random Forest nếu có file OOF của notebook 03).                  |
 
-## Nguyên tắc sử dụng kết quả
+Notebook 04 không có hình feature importance vì `HistGradientBoostingRegressor` không có sẵn chỉ số này; có thể dùng `permutation_importance` ở bước phân tích sau.
 
-- OOF predictions chỉ là dự đoán trên các validation folds, dùng cho phân tích sai số và trực quan hóa.
-- Notebook 03 không dự đoán hoặc đánh giá Test; không dùng Test để chọn cấu hình hay tuning.
-- Hình PNG do Notebook 03 tạo được mô tả tại [`figures/README.md`](figures/README.md).
+# Hình tinh chỉnh – Notebook 05
+
+Sau khi chạy [`05_tuning.ipynb`](../../notebooks/05_tuning.ipynb) với `SAVE_ARTIFACTS = True`, có thêm 1 hình, dùng kết quả validation của 5 fold (không dùng nhãn Test):
+
+| Tệp                        | Nội dung                                                                                                                        |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `tuning_rmse_by_fold.png` | RMSE theo từng fold của Gradient Boosting và Random Forest, trước và sau khi tinh chỉnh (mỗi mô hình một biểu đồ). |

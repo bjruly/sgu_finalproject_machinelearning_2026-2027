@@ -1,0 +1,170 @@
+{
+  "model": "Gradient Boosting Regressor (HistGradientBoostingRegressor)",
+  "pipeline": "build_preprocessor(scale=False) + HistGradientBoostingRegressor",
+  "created_at": "2026-11-11T08:45:46",
+  "python_version": "3.13.9",
+  "sklearn_version": "1.7.2",
+  "pandas_version": "2.3.3",
+  "target": "PM2.5 at t+1 (same station)",
+  "dataset_version": "beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24",
+  "train_validation_rows": 360954,
+  "train_validation_target_period": [
+    "2013-03-01 01:00:00",
+    "2016-08-31 23:00:00"
+  ],
+  "test_start": "2016-09-01 00:00:00",
+  "test_rows_reserved": 51063,
+  "test_used_for_tuning": false,
+  "test_evaluated": false,
+  "feature_columns": [
+    "PM2.5",
+    "PM10",
+    "SO2",
+    "NO2",
+    "CO",
+    "O3",
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "RAIN",
+    "WSPM",
+    "PM2.5_lag_1",
+    "PM2.5_lag_2",
+    "PM2.5_lag_3",
+    "PM2.5_lag_6",
+    "PM2.5_lag_12",
+    "PM2.5_lag_24",
+    "PM2.5_rolling_mean_6",
+    "PM2.5_rolling_mean_24",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "station",
+    "wd"
+  ],
+  "random_state": 42,
+  "tuning": {
+    "method": "RandomizedSearchCV",
+    "n_iter": 20,
+    "scoring": "neg_root_mean_squared_error",
+    "cv": "src.cv_folds(n_splits=5), expanding window, same folds as Notebooks 02-04",
+    "selection_rule": "lowest mean RMSE over 5 validation folds",
+    "search_space": {
+      "model__learning_rate": "loguniform(0.02, 0.3)",
+      "model__max_iter": [
+        100,
+        200,
+        300,
+        500
+      ],
+      "model__max_leaf_nodes": [
+        15,
+        31,
+        63,
+        127
+      ],
+      "model__min_samples_leaf": [
+        20,
+        50,
+        100,
+        200
+      ],
+      "model__l2_regularization": [
+        0.0,
+        0.1,
+        1.0,
+        10.0
+      ]
+    },
+    "untuned_params": {
+      "learning_rate": 0.1,
+      "max_iter": 200,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 20,
+      "l2_regularization": 0.0
+    },
+    "best_params": {
+      "model__l2_regularization": 1.0,
+      "model__learning_rate": 0.06936631172296444,
+      "model__max_iter": 100,
+      "model__max_leaf_nodes": 127,
+      "model__min_samples_leaf": 200
+    },
+    "search_seconds": 691.3657029999886
+  },
+  "cv_fold_metrics": [
+    {
+      "fold": 1,
+      "mae": 14.4314283968,
+      "rmse": 27.189166438,
+      "r2": 0.9110638671,
+      "runtime_seconds": 2.3867266,
+      "train_rows": 60258,
+      "validation_rows": 60595,
+      "train_rmse": 16.615268262
+    },
+    {
+      "fold": 2,
+      "mae": 9.2278247626,
+      "rmse": 15.9127043961,
+      "r2": 0.9501245089,
+      "runtime_seconds": 3.7258516,
+      "train_rows": 120853,
+      "validation_rows": 59958,
+      "train_rmse": 17.9737954323
+    },
+    {
+      "fold": 3,
+      "mae": 10.2961340305,
+      "rmse": 19.0763515994,
+      "r2": 0.9304212004,
+      "runtime_seconds": 5.1691576,
+      "train_rows": 180811,
+      "validation_rows": 59858,
+      "train_rmse": 17.0245419323
+    },
+    {
+      "fold": 4,
+      "mae": 10.0967000533,
+      "rmse": 20.7568797232,
+      "r2": 0.9499430837,
+      "runtime_seconds": 6.1522599,
+      "train_rows": 240669,
+      "validation_rows": 60217,
+      "train_rmse": 17.145270739
+    },
+    {
+      "fold": 5,
+      "mae": 8.5589134063,
+      "rmse": 17.2570503328,
+      "r2": 0.9223569078,
+      "runtime_seconds": 7.7001387,
+      "train_rows": 300886,
+      "validation_rows": 60068,
+      "train_rmse": 17.0830359704
+    }
+  ],
+  "cv_metrics_mean": {
+    "mae": 10.522200129894856,
+    "rmse": 20.038430497884804,
+    "r2": 0.9327819136128674
+  },
+  "cv_metrics_std": {
+    "mae": 2.2936937562426296,
+    "rmse": 4.396944424016819,
+    "r2": 0.017184285163407025
+  },
+  "cv_rmse_mean_fold2_5": 18.25074651285854,
+  "cv_total_runtime_seconds": 29.738733600010164,
+  "final_fit_seconds": 8.20744010002818,
+  "saved_outputs": {
+    "model": "models/gradient_boosting_tuned.joblib",
+    "cv_metrics": "outputs/gradient_boosting_tuned_cv_metrics.csv",
+    "cv_summary": "outputs/gradient_boosting_tuned_cv_summary.csv",
+    "search_results": "outputs/tuning_gradient_boosting_search_results.csv",
+    "validation_oof_predictions": null
+  }
+}

@@ -22,12 +22,11 @@ Tám hình sau do [`02_model_training_baseline.ipynb`](../../notebooks/02_model_
 ## Lưu ý
 
 - Chạy lại notebook 02 với `SAVE_ARTIFACTS = True` sẽ ghi đè các tệp `baseline_*.png`.
-- Hình của các mô hình cây và hình phân tích cuối trên tập test chưa có trong thư mục này.
-
+- Hình phân tích cuối trên tập test chưa có trong thư mục này.
 
 # Hình Random Forest – Notebook 03
 
-Sau khi chạy [`03_advanced_models_and_tuning.ipynb`](../../notebooks/03_advanced_models_and_tuning.ipynb) với `SAVE_ARTIFACTS = True`, có thêm 5 hình:
+Sau khi chạy [`03_random_forest.ipynb`](../../notebooks/03_random_forest.ipynb) với `SAVE_ARTIFACTS = True`, có thêm 5 hình:
 
 | Tệp                                     | Nội dung                                                                 |
 | ---------------------------------------- | ------------------------------------------------------------------------- |
@@ -41,5 +40,26 @@ Bốn hình đầu tiên liên quan đến kết quả validation OOF (trừ Fea
 
 ## Lưu ý
 
-- Chạy lại Notebook 02 hoặc 03 với `SAVE_ARTIFACTS = True` sẽ cập nhật các hình có tiền tố tương ứng.
+- Chạy lại Notebook 02, 03 hoặc 04 với `SAVE_ARTIFACTS = True` sẽ cập nhật các hình có tiền tố tương ứng.
 - `.gitkeep` giúp Git lưu thư mục ngay cả khi chưa có hình.
+
+# Hình Gradient Boosting – Notebook 04
+
+Sau khi chạy [`04_gradient_boosting.ipynb`](../../notebooks/04_gradient_boosting.ipynb) với `SAVE_ARTIFACTS = True`, có thêm 4 hình, đều dùng kết quả validation OOF của 5 fold (không dùng nhãn Test):
+
+| Tệp                                         | Nội dung                                                                                      |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `gradient_boosting_cv_rmse_by_fold.png`    | RMSE theo từng fold của Persistence, Linear Regression, Random Forest và Gradient Boosting. |
+| `gradient_boosting_pred_vs_actual.png`     | Thực tế so với dự đoán (hexbin, thang log) trên validation OOF.                         |
+| `gradient_boosting_residuals.png`          | Phân bố residual (thực tế − dự đoán).                                                  |
+| `gradient_boosting_rmse_by_pm25_level.png` | RMSE theo mức PM2.5 (kèm Random Forest nếu có file OOF của notebook 03).                  |
+
+Notebook 04 không có hình feature importance vì `HistGradientBoostingRegressor` không có sẵn chỉ số này; có thể dùng `permutation_importance` ở bước phân tích sau.
+
+# Hình tinh chỉnh – Notebook 05
+
+Sau khi chạy [`05_tuning.ipynb`](../../notebooks/05_tuning.ipynb) với `SAVE_ARTIFACTS = True`, có thêm 1 hình, dùng kết quả validation của 5 fold (không dùng nhãn Test):
+
+| Tệp                        | Nội dung                                                                                                                        |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `tuning_rmse_by_fold.png` | RMSE theo từng fold của Gradient Boosting và Random Forest, trước và sau khi tinh chỉnh (mỗi mô hình một biểu đồ). |
