@@ -4,7 +4,7 @@ Nơi lưu biểu đồ EDA, hình trực quan hóa dữ liệu, biểu đồ đ�
 
 ## Tệp hiện có
 
-- `.gitkeep`: tệp rỗng giúp Git lưu thư mục khi chưa có hình ảnh.
+Tám hình sau do [`02_model_training_baseline.ipynb`](../../notebooks/02_model_training_baseline.ipynb) tạo ra. Các hình về sai số đều tính trên dự đoán out-of-fold của 5 fold validation, không dùng test.
 
 | Tệp                                       | Nội dung                                                                                                              |
 | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |

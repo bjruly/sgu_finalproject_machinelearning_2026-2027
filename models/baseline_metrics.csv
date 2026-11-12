@@ -1,0 +1,7 @@
+model,split,mae,rmse,r2,mae_std,rmse_std,r2_std,n_rows
+Persistence,cv_validation_mean_5fold,10.424,19.9665,0.9318,1.4544,2.7284,0.0169,300696
+Linear Regression,cv_validation_mean_5fold,10.738,19.295,0.9363,1.5403,2.6205,0.0156,300696
+Linear Regression (clip at 0),cv_validation_mean_5fold,10.6314,19.2227,0.9368,1.5106,2.6208,0.0155,300696
+Persistence,test,11.5864,23.1133,0.9453,,,,51063
+Linear Regression,test,11.351,21.8027,0.9513,,,,51063
+Linear Regression (clip at 0),test,11.2872,21.7463,0.9516,,,,51063

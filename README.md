@@ -4,14 +4,13 @@
 
 ## Mục tiêu
 
-- Khám phá dữ liệu và xử lý các giá trị khuyết.
-- Phân tích mối liên hệ giữa PM2.5, các chất ô nhiễm khác và điều kiện khí tượng.
-- Xây dựng và so sánh các mô hình hồi quy:
-  - Baseline: persistence và Linear Regression.
-  - Mô hình cây: Random Forest Regressor và Gradient Boosting Regressor.
-- Chọn mô hình theo RMSE trên validation; đồng thời báo cáo MAE và R².
-- Phân tích sai số theo trạm, mùa và mức PM2.5; xem xét residual và permutation importance.
-- Tôn trọng thứ tự thời gian khi chia tập dữ liệu và chỉ fit các bước tiền xử lý trên tập huấn luyện để tránh rò rỉ dữ liệu.
+Mục tiêu là dự đoán liên tục nồng độ PM2.5 (µg/m³) tại giờ kế tiếp `t+1` cho cùng trạm, từ dữ liệu ô nhiễm, khí tượng và thời gian đến giờ `t`. Các câu hỏi nghiên cứu theo proposal:
+
+1. Random Forest và Gradient Boosting cải thiện bao nhiêu so với baseline Linear Regression?
+2. Nhóm đặc trưng nào (PM2.5 trễ, khí tượng, thời gian, trạm) đóng góp vào độ chính xác?
+3. Sai số thay đổi thế nào theo trạm, mùa và các đợt PM2.5 cao?
+
+Các phương pháp được đề xuất gồm Linear Regression làm baseline, Random Forest Regressor và Gradient Boosting Regressor để so sánh; persistence là mốc tham chiếu đơn giản. Chọn cấu hình theo RMSE validation, đồng thời báo cáo MAE và R². Phân tích kết quả gồm sai số theo trạm/mùa/PM2.5 cao, dự đoán so với thực tế, residual theo thời gian và permutation importance. Không dùng Accuracy cho bài toán hồi quy.
 
 ## Dữ liệu
 
@@ -19,9 +18,9 @@ Bộ dữ liệu PRSA gồm 12 tệp CSV, mỗi tệp là dữ liệu theo giờ
 
 Dữ liệu thô nằm trong [`data/raw/`](data/raw/README.md); dữ liệu sau xử lý dự kiến được lưu trong [`data/processed/`](data/processed/README.md). Thư mục `data/raw/` hiện cũng có `data.csv`, `test.csv` với cấu trúc OHLCV và một ảnh JPG.
 
-Kế hoạch chính là gộp dữ liệu của 12 trạm thành một bộ dữ liệu đa trạm và mã hóa `station` như một đặc trưng. Mỗi mẫu dự đoán PM2.5 ở giờ t+1 của cùng trạm; mô hình riêng theo trạm hoặc dự đoán chân trời dài hơn là hướng mở rộng.
+Kế hoạch chính là gộp dữ liệu của 12 trạm thành một bộ dữ liệu đa trạm và mã hóa `station` như một đặc trưng. Mỗi mẫu dự đoán PM2.5 ở giờ t+1 của cùng trạm; mô hình riêng theo trạm hoặc dự đoán chân trời dài hơn (ví dụ t+24) là hướng mở rộng nếu còn thời gian.
 
-### Kế hoạch thực nghiệm theo proposal
+### Phương pháp theo proposal
 
 - **EDA:** thống kê mô tả; kiểm tra kiểu dữ liệu, missing theo cột/trạm, bản ghi trùng theo cặp trạm-thời điểm và giá trị bất thường; khảo sát phân bố PM2.5 (kể cả log-scale), biến động theo giờ/tháng/mùa/năm, tự tương quan, tương quan với biến khí tượng/ô nhiễm và quan hệ với tốc độ/hướng gió.
 - **Missing và ngoại lệ:** không impute target; bỏ các dòng thiếu target khỏi huấn luyện/đánh giá. Với feature, forward-fill có giới hạn theo từng trạm rồi điền phần còn thiếu bằng median fit trên train, đồng thời tạo cờ missing. Không loại đợt PM2.5 cao nếu có thể là ô nhiễm thực tế; chỉ xử lý giá trị vô lý hoặc nghi lỗi cảm biến sau khi xác minh.
@@ -152,7 +151,7 @@ Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook E
 data/
 ├── raw/                                      Dữ liệu PRSA và các tệp bổ sung
 │   └── PRSA_Data_20130301-20170228/          CSV theo 12 trạm
-├── processed/                                Dữ liệu sau khi làm sạch/biến đổi
+├── processed/                                Bản gộp/chuẩn hóa; giữ missing, chưa phải feature matrix
 notebooks/
 ├── 01_eda_and_preprocessing.ipynb            EDA, so sánh trước/sau pipeline và xuất CSV chuẩn hóa
 ├── 02_model_training_baseline.ipynb           Baseline Persistence và Linear Regression, merge kết quả và xuất file so sánh
@@ -162,8 +161,8 @@ notebooks/
 src/
 ├── data_loader.py                             Nạp dữ liệu, chia thời gian và CV theo timestamp
 ├── features.py                                Tạo target/đặc trưng và tiền xử lý train-only
-├── models.py                                  Huấn luyện mô hình (chưa triển khai)
-└── evaluate.py                                Đánh giá mô hình (chưa triển khai)
+├── models.py                                  Vị trí dự kiến cho triển khai mô hình (chưa triển khai)
+└── evaluate.py                                Vị trí dự kiến cho metric/đánh giá dùng chung
 tests/
 ├── test_data_pipeline.py                      Kiểm thử nạp dữ liệu và chia thời gian
 ├── test_feature_engineering.py                Kiểm thử target, feature và preprocessing
