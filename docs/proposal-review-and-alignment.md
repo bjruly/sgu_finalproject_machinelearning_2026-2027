@@ -56,11 +56,13 @@ Tại thời điểm rà soát:
 |---|---|---|
 | Persistence | Có kết quả validation 5 folds và test trong baseline. | Baseline tham chiếu không học tham số. |
 | Linear Regression | Có kết quả validation 5 folds và test trong baseline. | Baseline học được; dùng cùng pipeline tiền xử lý. |
-| Random Forest | Đã chạy 5-fold validation, chưa dùng test. RMSE trung bình CV khoảng **20.17** (độ lệch chuẩn khoảng **5.56**). | Kết quả hiện tại chưa vượt Linear Regression về RMSE validation (khoảng **19.30**). Không tuyên bố mô hình cây tốt hơn baseline khi chưa có bằng chứng. |
+| Random Forest cấu hình cố định | Đã chạy 5-fold validation, chưa dùng test. RMSE trung bình CV **20.17**, MAE **10.53**. | Kết quả chưa vượt Linear Regression về RMSE validation (**19.29**). |
+| Random Forest đã tuning | `RandomizedSearchCV` 8 lượt trên cùng 5 folds; RMSE trung bình CV **19.18**, MAE **10.13**; chưa dùng test. | Có RMSE CV thấp hơn Linear Regression một mức nhỏ; do cấu hình được chọn trên các folds này, cần trình bày như kết quả validation và không coi là ước lượng test độc lập. |
+| Gradient Boosting cấu hình cố định | Dùng `HistGradientBoostingRegressor`; 5-fold validation, RMSE **21.97**, MAE **11.07**; chưa dùng test. | Kết quả chưa vượt Linear Regression; nêu rõ biến thể Histogram Gradient Boosting và cấu hình cố định. |
+| Gradient Boosting đã tuning | `RandomizedSearchCV` 20 lượt trên cùng 5 folds; RMSE trung bình CV **20.04**, MAE **10.52**; chưa dùng test. | Có cải thiện so với cấu hình cố định nhưng vẫn chưa vượt Linear Regression về RMSE. |
 | Linear Regression cắt dự đoán âm về 0 | Có thêm dòng metrics như một biến thể phân tích. | Nêu đây là biến thể bổ sung, mô tả quy tắc clipping và xác định có/không đưa vào bảng xếp hạng chính; không làm lẫn với mô hình Linear Regression gốc. |
-| Gradient Boosting và tuning | Chưa có bằng chứng đã triển khai trong các artifacts hiện tại. | Ghi là công việc còn lại hoặc cập nhật sau khi chạy thực nghiệm. |
 
-Các con số trên là kết quả hiện được lưu trong artifacts của repository; nếu chạy lại notebook, dùng artifacts mới nhất và ghi lại cấu hình/môi trường để tránh báo cáo số đã lỗi thời.
+Các số CV trên lấy từ `experiment_log.csv` và là trung bình của 5 folds; kết quả test hiện có trong log chỉ dành cho Persistence và Linear Regression. Trước khi báo cáo cuối, chạy lại từ artifacts mới nhất và ghi cấu hình/môi trường để tránh số liệu lỗi thời.
 
 ## 4. Dàn ý báo cáo cuối kỳ phù hợp với dự án
 

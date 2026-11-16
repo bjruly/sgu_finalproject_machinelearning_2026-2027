@@ -16,7 +16,7 @@ Các phương pháp được đề xuất gồm Linear Regression làm baseline,
 
 Bộ dữ liệu PRSA gồm 12 tệp CSV, mỗi tệp là dữ liệu theo giờ của một trạm trong khoảng 01/03/2013–28/02/2017. Các cột gồm thời gian, PM2.5, PM10, SO2, NO2, CO, O3 và các thông số khí tượng. Giá trị khuyết được ghi là `NA`.
 
-Dữ liệu thô nằm trong [`data/raw/`](data/raw/README.md); dữ liệu sau xử lý dự kiến được lưu trong [`data/processed/`](data/processed/README.md). Thư mục `data/raw/` hiện cũng có `data.csv`, `test.csv` với cấu trúc OHLCV và một ảnh JPG.
+Dữ liệu thô nằm trong [`data/raw/`](data/raw/README.md), gồm 12 CSV PRSA theo trạm và hai CSV bổ sung `data.csv`, `test.csv` có cấu trúc OHLCV. Hai CSV này được giữ lại nhưng không thuộc bộ dữ liệu PM2.5 và không được pipeline sử dụng; ảnh JPG không liên quan đã được loại bỏ. Dữ liệu sau xử lý dự kiến được lưu trong [`data/processed/`](data/processed/README.md).
 
 Kế hoạch chính là gộp dữ liệu của 12 trạm thành một bộ dữ liệu đa trạm và mã hóa `station` như một đặc trưng. Mỗi mẫu dự đoán PM2.5 ở giờ t+1 của cùng trạm; mô hình riêng theo trạm hoặc dự đoán chân trời dài hơn (ví dụ t+24) là hướng mở rộng nếu còn thời gian.
 
@@ -56,7 +56,7 @@ Sau khi cài dependencies và kích hoạt môi trường:
 python -m pytest -q
 ```
 
-**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` có EDA và xuất bản dữ liệu chuẩn hóa còn missing; pipeline nạp, chia thời gian, tạo target/đặc trưng và tiền xử lý train-only đã được triển khai trong `src/`. Notebook `02_model_training_baseline.ipynb` đã huấn luyện và đánh giá persistence cùng Linear Regression bằng 5-fold expanding-window validation và báo cáo test; mục 13 của notebook ghép (merge) các bảng kết quả rồi tự xuất file so sánh `outputs/baseline_model_comparison.xlsx` cùng bảng gộp `outputs/baseline_comparison_merged.csv`. Notebook `03_random_forest.ipynb` huấn luyện Random Forest và notebook `04_gradient_boosting.ipynb` huấn luyện Gradient Boosting (`HistGradientBoostingRegressor`); cả hai dùng cùng 5 fold với baseline, cấu hình cố định (chưa tuning) và chưa đụng tới tập test. Notebook `05_tuning.ipynb` thực hiện `RandomizedSearchCV` cho hai mô hình cây trên cùng 5 fold (Gradient Boosting thử 20 bộ, Random Forest thử 8 bộ) và không dùng tập Test. Các phân tích/tổng hợp cuối theo proposal chưa được triển khai.
+**Trạng thái hiện tại:** notebook `01_eda_and_preprocessing.ipynb` có EDA và xuất bản dữ liệu chuẩn hóa còn missing; pipeline nạp, chia thời gian, tạo target/đặc trưng và tiền xử lý train-only đã được triển khai trong `src/`. Notebook `02_model_training_baseline.ipynb` đã huấn luyện và đánh giá persistence cùng Linear Regression bằng 5-fold expanding-window validation và báo cáo test; mục 13 ghép các bảng kết quả và xuất `outputs/baseline_model_comparison.xlsx` cùng `outputs/baseline_comparison_merged.csv`. Notebook `03_random_forest.ipynb` và `04_gradient_boosting.ipynb` đã chạy 5-fold validation với cấu hình cố định, chưa đánh giá trên test. Notebook `05_tuning.ipynb` đã dùng `RandomizedSearchCV` trên cùng 5 fold (20 lượt Gradient Boosting, 8 lượt Random Forest), không dùng test. Phân tích sai số đầy đủ và đánh giá test cuối cho các mô hình cây vẫn còn cần hoàn thiện.
 
 ## Chạy notebook baseline
 
@@ -106,8 +106,7 @@ Lưu ý khi đọc bảng:
 | Việc cần hoàn thành                                                                                                                                                                                                                                                                                                                        | Đầu ra/tiêu chí kiểm tra                                                                                                                                                                                                                                         |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Chốt cấu hình thực nghiệm theo proposal; xác nhận bộ feature và cách chia thời gian dùng chung. Rà soát pipeline hiện có để ghi rõ khác biệt so với feature dự kiến trong proposal trước khi so sánh mô hình.                                                                                                     | Ghi nhận target, feature, split, CV folds, metric chính (RMSE), random seed và các khác biệt đã được thống nhất. Các mô hình dùng cùng dữ liệu/folds/preprocessing; mọi transformer chỉ fit trên train của từng fold.                        |
-| Huấn luyện Random Forest trên các fold thời gian dùng chung với baseline.                                                                                                                                                                                                                                                               | Notebook/mã chạy lại được; lưu MAE, RMSE, R² từng fold, cấu hình và thời gian chạy; kết quả không dùng test để chọn cấu hình.                                                                                                                  |
-| Huấn luyện Gradient Boosting Regressor. Thực hiện tuning bằng `RandomizedSearchCV` kết hợp `TimeSeriesSplit` cho ít nhất một mô hình; proposal dự kiến tinh chỉnh cả hai mô hình cây. Nếu Gradient Boosting chuẩn quá chậm, cân nhắc phương án thay thế mà proposal cho phép và ghi rõ lý do/cấu hình. | Log các lượt thử, tham số tìm kiếm, seed, điểm CV và thời gian chạy; chọn cấu hình bằng RMSE validation, có xem xét độ ổn định giữa folds.                                                                                                    |
+| Đối chiếu và khóa cấu hình mô hình theo CV trước khi đánh giá cuối. Random Forest và `HistGradientBoostingRegressor` đã có kết quả cấu hình cố định và tuned. | So sánh MAE/RMSE/R², độ biến động giữa folds, cấu hình và giới hạn của việc chọn tham số trên cùng folds; không dùng test để chọn mô hình. |
 | Tổng hợp kết quả CV của Persistence, Linear Regression, Random Forest và Gradient Boosting; chọn cấu hình cuối và khóa cấu hình trước khi dùng test.                                                                                                                                                                          | Bảng so sánh CV trên cùng folds, có MAE/RMSE/R² và độ biến động; ghi rõ mô hình/cấu hình được chọn và lý do. Không điều chỉnh dựa trên test.                                                                                             |
 | Chạy đánh giá cuối trên tập test cho các mô hình/cấu hình đã khóa; baseline test đã có trong kết quả hiện tại nên không dùng lại để tinh chỉnh.                                                                                                                                                                   | Một bộ kết quả test có số mẫu, khoảng thời gian, MAE/RMSE/R² và cấu hình; test chỉ phục vụ báo cáo cuối.                                                                                                                                           |
 | Hoàn thiện phân tích theo proposal: so sánh dự đoán-thực tế, residual theo thời gian, sai số theo trạm/mùa/nhóm PM2.5 cao, train-validation/test để nhận diện overfit/underfit, permutation importance. Tạo workbook Excel từ các kết quả đã kiểm chứng.                                                           | Workbook `outputs/model_comparison.xlsx` tách rõ CV và test, gồm cấu hình và phân tích; số liệu khớp với CSV/log và biểu đồ. Có thể mở rộng từ `outputs/baseline_model_comparison.xlsx` (mục 13 notebook 02) thay vì làm lại từ đầu. |
@@ -126,11 +125,11 @@ Tài liệu tham khảo: [KLTN_bao_cao_sau_hoi_dong.pdf](docs/TLTK/KLTN_bao_cao_
 
 ## Cấu trúc thư mục dự án
 
-Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook EDA, pipeline dữ liệu và baseline đã có nội dung; hai mô hình cây đã chạy 5-fold CV với cấu hình cố định; tuning đã chạy xong; đánh giá test và phân tích cuối vẫn đang chờ triển khai.tuning theo proposal, đánh giá test và phân tích cuối vẫn đang chờ triển khai.
+Sơ đồ dưới đây thể hiện thư mục và tệp hiện có. Notebook EDA, pipeline dữ liệu, baseline, hai mô hình cây và tuning đã có kết quả; đánh giá test cuối cho mô hình cây và phân tích sai số tổng hợp vẫn đang chờ triển khai.
 
 ```text
 data/
-├── raw/                                      Dữ liệu PRSA và các tệp bổ sung
+├── raw/                                      Dữ liệu PRSA gốc theo 12 trạm
 │   └── PRSA_Data_20130301-20170228/          CSV theo 12 trạm
 ├── processed/                                Bản gộp/chuẩn hóa; giữ missing, chưa phải feature matrix
 notebooks/
@@ -138,7 +137,7 @@ notebooks/
 ├── 02_model_training_baseline.ipynb           Baseline Persistence và Linear Regression, merge kết quả và xuất file so sánh
 ├── 03_random_forest.ipynb        Random Forest, 5 fold CV (chưa tuning, chưa dùng test)
 ├── 04_gradient_boosting.ipynb                 Gradient Boosting (HistGradientBoosting), 5 fold CV (chưa tuning)
-└── 05_tuning.ipynb                            RandomizedSearchCV cho Gradient Boosting và Random Forest               Gradient Boosting (HistGradientBoosting), 5 fold CV (chưa tuning)
+└── 05_tuning.ipynb                            RandomizedSearchCV cho Gradient Boosting và Random Forest
 src/
 ├── data_loader.py                             Nạp dữ liệu, chia thời gian và CV theo timestamp
 ├── features.py                                Tạo target/đặc trưng và tiền xử lý train-only
