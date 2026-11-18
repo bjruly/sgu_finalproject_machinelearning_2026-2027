@@ -18,7 +18,7 @@ RMSE (µg/m³). Đây là số ghi lại tại thời điểm viết; nếu ch�
 | Mô hình         | CV 5 fold (validation) |  Test |
 | ----------------- | ---------------------: | ----: |
 | Persistence       |                  19.97 | 23.11 |
-| Linear Regression |                  19.30 | 21.80 |
+| Linear Regression |                  19.29 | 21.80 |
 
 Mô hình `Linear Regression (clip at 0)` trong `baseline_metrics.csv` là cùng mô hình nhưng cắt các dự đoán âm về 0 khi tính độ đo; tệp `.joblib` lưu mô hình gốc không cắt.
 
@@ -124,3 +124,19 @@ rf_tuned = joblib.load("models/random_forest_tuned.joblib")
 - Trước khi dùng kết quả, mở file `*_tuned_metadata.json` kiểm tra `tuning.n_iter` (mặc định 20 cho Gradient Boosting, 8 cho Random Forest). Nếu là 2 thì đó là lần chạy thử.
 - Chạy lại Notebook 05 sẽ ghi đè `*_tuned.*`.
 - Test chưa được dùng; cần chốt cấu hình rồi mới đánh giá Test đúng một lần.
+
+## Các tệp MLP (notebook 06 và 07)
+
+- `mlp.joblib` và `mlp_metadata.json` lưu MLP gốc từ [notebook 06](../notebooks/06_mlp_regression.ipynb). Mạng có hai lớp ẩn với 64 và 32 nơ-ron.
+- `mlp_tuned.joblib` và `mlp_tuned_metadata.json` lưu MLP đã tinh chỉnh từ [notebook 07](../notebooks/07_mlp_tuning.ipynb). Cấu hình được chọn trong lần chạy đã lưu gồm `hidden_layer_sizes=(32, 16)`, `learning_rate_init=0.003`, `alpha=0.0001`, `batch_size=256` và `max_iter=40`.
+- Pipeline MLP chuẩn hóa đặc trưng số. Bộ bọc `TransformedTargetRegressor` chuẩn hóa giá trị mục tiêu khi fit và trả dự đoán theo µg/m³.
+
+## Mô hình dùng trong notebook 08
+
+[Notebook 08](../notebooks/08_final_evaluation.ipynb) nạp bốn tệp đã huấn luyện từ `models/`:
+
+- `baseline_linear_regression.joblib` — notebook 02
+- `random_forest_tuned.joblib` và `gradient_boosting_tuned.joblib` — notebook 05
+- `mlp_tuned.joblib` — notebook 07
+
+Persistence được tính trực tiếp theo quy tắc giờ hiện tại. Nếu thiếu file Linear Regression sau khi clone, dùng notebook 02 với `SAVE_ARTIFACTS = True` để lưu file vì repo đưa file này vào `.gitignore`. Notebook 08 nạp file ở `LINEAR_MODEL_PATH`. Bảng điểm test được lưu ở `outputs/final_test_metrics.csv`.

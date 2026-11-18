@@ -1,6 +1,6 @@
 # Thư mục `src`
 
-Nơi chứa mã nguồn Python của dự án. Phần pipeline dữ liệu và tạo đặc trưng đã được triển khai; các mô hình và đánh giá chưa thuộc phạm vi phần việc hiện tại.
+Nơi chứa mã nguồn Python của dự án. Pipeline đọc dữ liệu, chia tập theo thời gian và tạo đặc trưng được dùng chung trong các notebook. Phần huấn luyện, tinh chỉnh và đánh giá nằm trong [notebook 02–08](../notebooks/README.md).
 
 ## Các tệp
 
@@ -13,8 +13,6 @@ Nơi chứa mã nguồn Python của dự án. Phần pipeline dữ liệu và t
   - `add_features(data, ffill_limit=6)`: tạo target PM2.5 giờ kế tiếp trong cùng trạm từ giá trị gốc và cột `target_datetime`; forward-fill feature tối đa 6 giờ theo trạm; giữ hướng gió thiếu còn lại thành `Unknown`; tạo lag PM2.5, rolling mean quá khứ và mã hóa chu kỳ giờ/tháng/thứ.
   - `split_xy(data)`: lấy các feature được định nghĩa và target, không đưa `No`, thời gian thô hoặc target vào X.
   - `build_preprocessor(scale=False)`: tạo median imputation và cờ missing cho mọi feature numeric, One-Hot cho `station`/`wd`; scaler chỉ thêm khi `scale=True`. Median được học khi gọi `.fit()` trên dữ liệu train, không phải toàn bộ dataset.
-- `models.py`: dành cho mô hình; chưa triển khai trong phạm vi pipeline dữ liệu.
-- `evaluate.py`: dành cho metric và đánh giá; chưa triển khai trong phạm vi pipeline dữ liệu.
 
 ## Trình tự sử dụng
 
@@ -33,4 +31,4 @@ preprocessor = build_preprocessor()
 preprocessor.fit(X_train_validation.iloc[folds[0][0]])
 ```
 
-`add_features` phải chạy trước khi lọc các target thiếu để các lag vẫn được tính trên chuỗi thời gian đầy đủ. Test chỉ được giữ riêng đến khi nhóm chốt cấu hình; không fit transformer trên test. Xem [`tests/README.md`](../tests/README.md) để biết các bảo đảm được kiểm thử.
+`add_features` phải chạy trước khi lọc các target thiếu để các lag vẫn được tính trên chuỗi thời gian đầy đủ. Sau khi chốt cấu hình từ validation, [notebook 08](../notebooks/08_final_evaluation.ipynb) dùng tập test để đánh giá cuối. Các transformer đã fit trên dữ liệu huấn luyện nằm trong pipeline được nạp lại. Xem [`tests/README.md`](../tests/README.md) để biết các bảo đảm được kiểm thử.

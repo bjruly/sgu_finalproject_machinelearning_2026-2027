@@ -22,7 +22,7 @@ Tám hình sau do [`02_model_training_baseline.ipynb`](../../notebooks/02_model_
 ## Lưu ý
 
 - Chạy lại notebook 02 với `SAVE_ARTIFACTS = True` sẽ ghi đè các tệp `baseline_*.png`.
-- Hình phân tích cuối trên tập test chưa có trong thư mục này.
+- Biểu đồ tổng hợp trên tập test nằm ở phần notebook 08 bên dưới.
 
 # Hình Random Forest – Notebook 03
 
@@ -63,3 +63,17 @@ Sau khi chạy [`05_tuning.ipynb`](../../notebooks/05_tuning.ipynb) với `SAVE_
 | Tệp                        | Nội dung                                                                                                                        |
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `tuning_rmse_by_fold.png` | RMSE theo từng fold của Gradient Boosting và Random Forest, trước và sau khi tinh chỉnh (mỗi mô hình một biểu đồ). |
+
+## Biểu đồ MLP và tinh chỉnh (notebook 06–07)
+
+| Tệp | Nội dung |
+| --- | --- |
+| `mlp_cv_rmse_by_fold.png` | RMSE validation theo fold của MLP gốc và các mô hình đối chiếu có dữ liệu. |
+| `mlp_pred_vs_actual.png` | Quan hệ giữa PM2.5 thực tế và dự đoán validation. |
+| `mlp_residuals.png` | Phân bố sai số dự đoán validation. |
+| `mlp_rmse_by_pm25_level.png` | RMSE validation theo mức PM2.5 thực tế. |
+| `mlp_tuning_rmse_by_fold.png` | So sánh MLP trước và sau tinh chỉnh trên cùng 5 fold. |
+
+## Biểu đồ đánh giá cuối (notebook 08)
+
+[`final_test_rmse.png`](final_test_rmse.png) so sánh RMSE của 5 mô hình trên cùng 51.063 mẫu test. Hình dùng số liệu từ [`final_test_metrics.csv`](../final_test_metrics.csv).

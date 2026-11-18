@@ -1,6 +1,6 @@
 # Thư mục `notebooks`
 
-Nơi lưu các Jupyter Notebook dùng để khám phá dữ liệu (EDA), tiền xử lý, thử nghiệm mô hình và tinh chỉnh siêu tham số.
+Nơi lưu các Jupyter Notebook dùng để khám phá dữ liệu (EDA), tiền xử lý, thử nghiệm mô hình tinh chỉnh siêu tham số và đánh giá cuối trên tập test.
 
 ## Các tệp hiện có
 
@@ -13,9 +13,12 @@ Nơi lưu các Jupyter Notebook dùng để khám phá dữ liệu (EDA), tiền
   - Phân tích sai số theo trạm, mùa, mức PM2.5 và theo tháng; residual; hệ số và permutation importance theo nhóm feature của Linear Regression.
   - Có mục đánh giá trên tập test, điều khiển bằng cờ `RUN_FINAL_TEST`.
   - Mục 13 ghép (`merge`) các bảng kết quả của hai mô hình, ghép thêm với nhật ký `experiment_log.csv`, rồi **xuất file so sánh kết quả thực nghiệm** (Excel và CSV).
-- `03_random_forest.ipynb`: huấn luyện **Random Forest** (`n_estimators=20`, `max_depth=16`, `min_samples_leaf=5`, `max_features=0.7`) bằng 5-fold CV dùng chung với baseline; lưu mô hình, metrics, dự đoán OOF, hình và dòng `random_forest_cv5` trong `experiment_log.csv`. Chưa có `RandomizedSearchCV` dù tên notebook nhắc tới tuning; không đánh giá trên test.
+- `03_random_forest.ipynb`: huấn luyện **Random Forest** (`n_estimators=20`, `max_depth=16`, `min_samples_leaf=5`, `max_features=0.7`) bằng 5-fold CV dùng chung với baseline; lưu mô hình, metrics, dự đoán OOF, hình và dòng `random_forest_cv5` trong `experiment_log.csv`. Cấu hình này dùng để đối chiếu với kết quả tinh chỉnh ở notebook 05.
 - `04_gradient_boosting.ipynb`: huấn luyện **Gradient Boosting** bằng `HistGradientBoostingRegressor` (`max_iter=200`, `learning_rate=0.1`, `early_stopping=False`, còn lại mặc định) trên cùng 5 fold. Có so sánh 4 mô hình theo từng fold (kèm trung bình fold 2–5), kiểm tra overfit (`train_rmse` so với `rmse`), sai số theo mùa/mức PM2.5, so sánh với Random Forest; lưu mô hình, metrics, OOF, 4 hình và dòng `gradient_boosting_cv5`. Chưa tuning, không đánh giá trên test.
 - `05_tuning.ipynb`: tinh chỉnh tham số bằng `RandomizedSearchCV` cho Gradient Boosting (mặc định thử 20 bộ tham số) và Random Forest (mặc định thử 8 bộ) trên đúng 5 fold dùng chung (`cv=folds`), chọn bộ có RMSE trung bình 5 fold thấp nhất. Sau đó chấm lại bộ tốt nhất (MAE, RMSE, R², `train_rmse`), so sánh trước và sau tinh chỉnh, lưu mô hình `*_tuned`, bảng các lần thử và ghi các dòng `*_tuned_cv5` vào `experiment_log.csv`. Không dùng tập Test.
+- `06_mlp_regression.ipynb` — Huấn luyện MLP gốc cấu hình `(64, 32)` và chấm trên 5 fold validation.
+- `07_mlp_tuning.ipynb` — Tinh chỉnh 5 siêu tham số của MLP và chọn theo RMSE validation trung bình.
+- `08_final_evaluation.ipynb` — Chấm 5 mô hình trên cùng 51.063 mẫu test và xuất bảng điểm, biểu đồ, nhật ký.
 
 ## Chạy notebook 02
 
@@ -24,7 +27,7 @@ Nơi lưu các Jupyter Notebook dùng để khám phá dữ liệu (EDA), tiền
 Mở notebook rồi chọn `Restart & Run All`. Chạy từ thư mục gốc hay từ `notebooks/` đều được; thời gian khoảng 1–2 phút. Hai cờ ở mục 1:
 
 - `SAVE_ARTIFACTS`: `True` thì ghi mô hình, bảng và hình ra đĩa; `False` thì chỉ chạy thử.
-- `RUN_FINAL_TEST`: `True` thì đánh giá baseline trên tập test (mục 11). Baseline không có siêu tham số nào chọn dựa trên test; không quay lại sửa baseline sau khi xem số test.
+- `RUN_FINAL_TEST`: `True` thì đánh giá baseline trên tập test (mục 11). Đặt `False` nếu muốn tập trung phần chấm test ở notebook 08. Notebook 02 vẫn xuất bảng điểm validation và lưu mô hình khi `SAVE_ARTIFACTS = True`.
 
 ## Notebook 02 tạo ra
 
@@ -111,7 +114,7 @@ Notebook 04 theo cùng nguyên tắc công bằng như notebook 02 và 03: cùng
 **Điều kiện trước khi chạy:**
 
 - Có `data/processed/beijing_air_quality_standardized.csv` (từ notebook 01) và đã cài `requirements.txt`.
-- Có `outputs/random_forest_cv_metrics.csv` (notebook 03), `outputs/gradient_boosting_cv_metrics.csv` (notebook 04) và `experiment_log.csv`; thiếu file nào thì mục 8 báo lỗi vì không có kết quả "trước tinh chỉnh" để so sánh.
+- Có `outputs/random_forest_cv_metrics.csv` (notebook 03) và `outputs/gradient_boosting_cv_metrics.csv` (notebook 04) để mục 8 so sánh trước và sau tinh chỉnh. Notebook 05 đọc các kết quả trước đó từ `experiment_log.csv` khi file đã có.
 
 Mở `05_tuning.ipynb` và chọn `Restart & Run All`. Chạy rất lâu (ước tính khoảng 15 phút cho Gradient Boosting và khoảng 30 phút trở lên cho Random Forest với cấu hình mặc định). Các cờ ở mục 1:
 
@@ -133,3 +136,31 @@ Nếu mục 8 báo thiếu file kết quả, lấy file từ nhánh có notebook
 - Hai dòng `gradient_boosting_tuned_cv5` và `random_forest_tuned_cv5` trong `experiment_log.csv` (chạy lại thì thay thế dòng cũ, không tạo dòng trùng).
 
 Notebook 05 không ghi đè kết quả "trước tinh chỉnh" của notebook 03 và 04. Mục 11 của notebook là phần kết luận phải điền bằng số in ra khi chạy thật.
+
+## Chạy notebook 06 và 07
+
+- Chạy notebook 06 với CSV chuẩn hóa từ notebook 01 và `experiment_log.csv` đã có. Các bảng điểm từ notebook 02–04 giúp biểu đồ hiển thị thêm các mô hình đối chiếu. Bật `SAVE_ARTIFACTS = True` ở mục 9 để lưu `models/mlp.joblib`, metadata, bảng CV, bảng sai số theo nhóm và các biểu đồ `mlp_*.png`. `SAVE_OOF` điều khiển việc xuất CSV dự đoán chi tiết. Mã nhật ký là `mlp_cv5`.
+- Notebook 07 lấy mẫu 8 tổ hợp cho `hidden_layer_sizes`, `learning_rate_init`, `alpha`, `batch_size` và `max_iter`. Mỗi tổ hợp chạy trên cùng 5 fold. Notebook đọc `outputs/mlp_cv_metrics.csv` nếu phù hợp, hoặc tính lại kết quả MLP gốc để so sánh.
+- Khi `SAVE_ARTIFACTS = True`, notebook 07 lưu `models/mlp_tuned.joblib`, `models/mlp_tuned_metadata.json`, `outputs/tuning_mlp_search_results.csv`, `outputs/mlp_tuned_cv_metrics.csv`, `outputs/mlp_tuned_cv_summary.csv` và `outputs/figures/mlp_tuning_rmse_by_fold.png`. Tệp `outputs/mlp_tuned_validation_oof_predictions.csv` được xuất khi `SAVE_OOF = True`. Mã nhật ký là `mlp_tuned_cv5`.
+
+## Chạy notebook 08
+
+1. Kiểm tra CSV chuẩn hóa từ notebook 01 và bốn mô hình đã lưu. Linear Regression đến từ notebook 02, hai mô hình cây đã tinh chỉnh đến từ notebook 05, MLP đã tinh chỉnh đến từ notebook 07. Tên file được liệt kê trong [`models/README.md`](../models/README.md).
+2. Mở notebook 08 và chạy các ô từ đầu đến cuối. Notebook đọc 27 đặc trưng, nạp mô hình để dự đoán và tính MAE, RMSE, R² trên 51.063 mẫu có nhãn từ 01/09/2016 đến 28/02/2017. Persistence được tính trực tiếp từ PM2.5 giờ hiện tại, dùng trung vị train + validation khi thiếu giá trị.
+3. Nếu Linear Regression nằm ở nơi khác, chỉnh `LINEAR_MODEL_PATH` ở ô đầu. Nếu repo mới clone chưa có `models/baseline_linear_regression.joblib`, lưu mô hình từ notebook 02 rồi chạy notebook 08.
+4. Với `SAVE_ARTIFACTS = True`, notebook 08 ghi `outputs/final_test_metrics.csv`, `outputs/figures/final_test_rmse.png` và cập nhật 5 mã `*_test` trong `experiment_log.csv` theo `experiment_id`.
+
+## Bộ notebook chưa chạy trong `notebooks_unexecuted/`
+
+Thư mục [`notebooks_unexecuted/`](../notebooks_unexecuted/) nằm ở thư mục gốc của repo. Các file bên dưới đã được xóa output và số thứ tự chạy của các ô.
+
+- [`01_eda_and_preprocessing.ipynb`](../notebooks_unexecuted/01_eda_and_preprocessing.ipynb)
+- [`02_model_training_baseline.ipynb`](../notebooks_unexecuted/02_model_training_baseline.ipynb)
+- [`03_random_forest.ipynb`](../notebooks_unexecuted/03_random_forest.ipynb)
+- [`04_gradient_boosting.ipynb`](../notebooks_unexecuted/04_gradient_boosting.ipynb)
+- [`05_tuning.ipynb`](../notebooks_unexecuted/05_tuning.ipynb)
+- [`06_mlp_regression.ipynb`](../notebooks_unexecuted/06_mlp_regression.ipynb)
+- [`07_mlp_tuning.ipynb`](../notebooks_unexecuted/07_mlp_tuning.ipynb)
+- [`08_final_evaluation.ipynb`](../notebooks_unexecuted/08_final_evaluation.ipynb)
+
+Mở repo từ thư mục gốc trong VS Code và chạy lần lượt 01 → 08. Các notebook dùng cùng dữ liệu trong `data/`, cùng pipeline trong `src/` và lưu kết quả vào các thư mục chung `models/`, `outputs/`.
