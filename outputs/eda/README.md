@@ -1,4 +1,4 @@
-# EDA outputs
+# Kết quả khảo sát dữ liệu (EDA)
 
 Thư mục này lưu các kết luận và kết quả khảo sát dữ liệu khám phá (EDA).
 
@@ -7,4 +7,4 @@ Thư mục này lưu các kết luận và kết quả khảo sát dữ liệu k
 - [`eda_conclusions.csv`](eda_conclusions.csv): kết luận EDA đã đo từ 12 CSV PRSA, gồm chất lượng dữ liệu, missing, phân bố PM2.5, xu hướng mùa, tương quan và các lưu ý cho bước xử lý tiếp theo. Đây là kết quả mô tả dữ liệu thô, không phải dữ liệu đã làm sạch hoặc đã điền khuyết.
 - [`eda_worklog.md`](eda_worklog.md): nhật ký tiếng Việt giải thích phạm vi, quy trình, kết quả, cách hiểu các giá trị đáng ngờ, CSV chuẩn hóa và những quyết định còn cần thực hiện.
 
-Các bảng và ghi chú tại đây mô tả dữ liệu của 12 trạm. Kết quả đánh giá mô hình nằm trong [thư mục đầu ra](../README.md), với điểm test tổng hợp từ notebook 08.
+[Notebook 01](../../notebooks/01_eda_and_preprocessing.ipynb) hiển thị các biểu đồ EDA và xuất [CSV dữ liệu chuẩn hóa](../../data/processed/README.md). Kết quả đánh giá mô hình được ghi ở [thư mục đầu ra](../README.md).

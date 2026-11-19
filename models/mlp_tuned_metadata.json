@@ -109,9 +109,9 @@
   "saved_outputs": [
     "models/mlp_tuned.joblib",
     "models/mlp_tuned_metadata.json",
-    "outputs/tuning_mlp_search_results.csv",
-    "outputs/mlp_tuned_cv_metrics.csv",
-    "outputs/mlp_tuned_cv_summary.csv",
-    "outputs/figures/mlp_tuning_rmse_by_fold.png"
+    "outputs/notebooks/tables/tuning_mlp_search_results.csv",
+    "outputs/notebooks/tables/mlp_tuned_cv_metrics.csv",
+    "outputs/notebooks/tables/mlp_tuned_cv_summary.csv",
+    "outputs/notebooks/figures/mlp_tuning_rmse_by_fold.png"
   ]
 }

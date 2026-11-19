@@ -170,16 +170,16 @@
   "final_fit_seconds": 14.212612800000443,
   "saved_outputs": {
     "model": "models\\random_forest.joblib",
-    "cv_metrics": "outputs\\random_forest_cv_metrics.csv",
-    "cv_summary": "outputs\\random_forest_cv_summary.csv",
-    "fold_overview": "outputs\\random_forest_fold_overview.csv",
-    "validation_oof_predictions": "outputs\\random_forest_validation_oof_predictions.csv",
+    "cv_metrics": "outputs/notebooks/tables/random_forest_cv_metrics.csv",
+    "cv_summary": "outputs/notebooks/tables/random_forest_cv_summary.csv",
+    "fold_overview": "outputs/notebooks/tables/random_forest_fold_overview.csv",
+    "validation_oof_predictions": "outputs/notebooks/tables/random_forest_validation_oof_predictions.csv",
     "figures": [
-      "outputs/figures/random_forest_cv_rmse_by_fold.png",
-      "outputs/figures/random_forest_cv_metrics_by_fold.png",
-      "outputs/figures/random_forest_feature_importance.png",
-      "outputs/figures/random_forest_pred_vs_actual.png",
-      "outputs/figures/random_forest_residuals.png"
+      "outputs/notebooks/figures/random_forest_cv_rmse_by_fold.png",
+      "outputs/notebooks/figures/random_forest_cv_metrics_by_fold.png",
+      "outputs/notebooks/figures/random_forest_feature_importance.png",
+      "outputs/notebooks/figures/random_forest_pred_vs_actual.png",
+      "outputs/notebooks/figures/random_forest_residuals.png"
     ]
   }
 }

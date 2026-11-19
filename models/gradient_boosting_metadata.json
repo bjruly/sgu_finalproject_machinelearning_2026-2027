@@ -167,14 +167,14 @@
   "final_fit_seconds": 7.563282300019637,
   "saved_outputs": {
     "model": "models\\gradient_boosting.joblib",
-    "cv_metrics": "outputs\\gradient_boosting_cv_metrics.csv",
-    "cv_summary": "outputs\\gradient_boosting_cv_summary.csv",
-    "validation_oof_predictions": "outputs\\gradient_boosting_validation_oof_predictions.csv",
+    "cv_metrics": "outputs/notebooks/tables/gradient_boosting_cv_metrics.csv",
+    "cv_summary": "outputs/notebooks/tables/gradient_boosting_cv_summary.csv",
+    "validation_oof_predictions": "outputs/notebooks/tables/gradient_boosting_validation_oof_predictions.csv",
     "figures": [
-      "outputs/figures/gradient_boosting_cv_rmse_by_fold.png",
-      "outputs/figures/gradient_boosting_pred_vs_actual.png",
-      "outputs/figures/gradient_boosting_residuals.png",
-      "outputs/figures/gradient_boosting_rmse_by_pm25_level.png"
+      "outputs/notebooks/figures/gradient_boosting_cv_rmse_by_fold.png",
+      "outputs/notebooks/figures/gradient_boosting_pred_vs_actual.png",
+      "outputs/notebooks/figures/gradient_boosting_residuals.png",
+      "outputs/notebooks/figures/gradient_boosting_rmse_by_pm25_level.png"
     ]
   }
 }

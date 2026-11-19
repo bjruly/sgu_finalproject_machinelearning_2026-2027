@@ -1,0 +1,6 @@
+﻿scope,group,n,mae_P,mae_LR,mae_diff,mae_rel,mae_better,rmse_P,rmse_LR,rmse_diff,rmse_rel,rmse_better,r2_P,r2_LR,r2_diff,r2_rel,r2_better,mean_residual_P,mean_residual_LR
+cv_fold,Fold 1,60595,12.73544,13.217534,0.482094,0.037854,Persistence,24.151602,23.392765,-0.758837,-0.03142,Linear Regression,0.929826,0.934166,0.00434,0.004668,Linear Regression,,
+cv_fold,Fold 2,59958,9.488932,9.814831,0.325899,0.034345,Persistence,17.207334,16.809358,-0.397977,-0.023128,Linear Regression,0.941679,0.944345,0.002667,0.002832,Linear Regression,,
+cv_fold,Fold 3,59858,10.7844,11.070028,0.285629,0.026485,Persistence,20.82897,20.060816,-0.768154,-0.036879,Linear Regression,0.917049,0.923054,0.006006,0.006549,Linear Regression,,
+cv_fold,Fold 4,60217,10.105767,10.340223,0.234455,0.0232,Persistence,19.624605,18.842326,-0.782279,-0.039862,Linear Regression,0.955255,0.958751,0.003496,0.00366,Linear Regression,,
+cv_fold,Fold 5,60068,9.005427,9.24758,0.242153,0.02689,Persistence,18.020234,17.369706,-0.650528,-0.0361,Linear Regression,0.915338,0.92134,0.006002,0.006557,Linear Regression,,

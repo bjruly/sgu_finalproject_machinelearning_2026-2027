@@ -1,6 +1,6 @@
 # Thư mục `docs`
 
-Nơi tập hợp proposal, báo cáo tiến độ/cuối kỳ, slide và các tài liệu tham khảo của đồ án.
+Nơi tập hợp proposal, báo cáo và slide giữa kỳ, phân công công việc cùng tài liệu tham khảo của đồ án.
 
 ## Tệp hiện có
 
@@ -14,4 +14,6 @@ Nơi tập hợp proposal, báo cáo tiến độ/cuối kỳ, slide và các t�
 
 ## Nguồn kết quả cho báo cáo cuối kỳ
 
-Dùng [bảng điểm test](../outputs/final_test_metrics.csv) và [biểu đồ RMSE test](../outputs/figures/final_test_rmse.png) từ notebook 08. [Nhật ký thực nghiệm](../experiment_log.csv) ghi các lần đánh giá validation và test theo mã thí nghiệm.
+- Dùng hồ sơ [thực nghiệm 01](../outputs/experiments/experiments01/README.md), [thực nghiệm 02](../outputs/experiments/experiments02/README.md) và [thực nghiệm 03](../outputs/experiments/experiments03/README.md) để trình bày kết quả validation và so sánh trước, sau tinh chỉnh.
+- Dùng [hồ sơ đánh giá cuối](../outputs/experiments/final_test/README.md), [bảng điểm test](../outputs/notebooks/tables/final_test_metrics.csv) và [biểu đồ RMSE test](../outputs/notebooks/figures/final_test_rmse.png) từ notebook 08 khi trình bày kết quả trên tập test.
+- [Nhật ký thực nghiệm](../experiment_log.csv) lưu các dòng validation và test theo mã `experiment_id`.

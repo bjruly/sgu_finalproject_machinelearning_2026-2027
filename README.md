@@ -40,13 +40,16 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+python -m pip install ipykernel
 ```
 
 Nếu PowerShell không cho phép kích hoạt môi trường ảo, có thể gọi Python trong môi trường trực tiếp:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt ipykernel
 ```
+
+Trong VS Code, mở thư mục gốc của đồ án và chọn Python trong `.venv` làm kernel của notebook.
 
 ## Chạy kiểm thử
 
@@ -62,56 +65,63 @@ Bộ kiểm thử tự động kiểm tra đọc dữ liệu, chia theo thời g
 
 ## Chạy notebook baseline
 
-Cần có `data/processed/beijing_air_quality_standardized.csv` (tạo từ notebook 01) và môi trường có Jupyter hoặc `ipykernel`. Mục 13 xuất file Excel bằng thư viện `openpyxl`; nếu `requirements.txt` chưa có thì cài thêm:
+Cần có `data/processed/beijing_air_quality_standardized.csv` từ notebook 01. `openpyxl` trong `requirements.txt` dùng để xuất Excel ở mục 13.
 
-```powershell
-python -m pip install openpyxl
-```
-
-Mở `notebooks/02_model_training_baseline.ipynb`, chọn kernel của đồ án rồi chạy toàn bộ các ô. Đặt `SAVE_ARTIFACTS = True` để lưu mô hình và các đầu ra. Trong quy trình đánh giá tập trung ở notebook 08, đặt `RUN_FINAL_TEST = False` ở notebook 02. Notebook 02 có thể tạo:
+Mở `notebooks/02_model_training_baseline.ipynb`, chọn kernel của đồ án và chạy các ô theo thứ tự. Bật `SAVE_ARTIFACTS = True` để lưu mô hình, bảng và biểu đồ. Bản gửi đặt `RUN_FINAL_TEST = True` để notebook 02 có thể chấm thêm hai baseline trên test. Khi tái lập quy trình và muốn chấm test tập trung ở notebook 08, đặt `RUN_FINAL_TEST = False` trước khi chạy notebook 02. Notebook 02 có thể tạo:
 
 - `models/baseline_linear_regression.joblib`, `models/baseline_metrics.csv`, `models/baseline_metadata.json`
-- `outputs/baseline_error_analysis.csv`, `outputs/baseline_model_comparison.xlsx`, `outputs/baseline_comparison_merged.csv`
-- `outputs/figures/baseline_*.png`
+- `outputs/notebooks/tables/baseline_error_analysis.csv`, `outputs/notebooks/tables/baseline_model_comparison.xlsx`, `outputs/notebooks/tables/baseline_comparison_merged.csv`
+- `outputs/notebooks/figures/baseline_*.png`
 - các dòng `baseline_*` trong `experiment_log.csv` (chạy lại sẽ ghi đè, không tạo dòng trùng)
 
 Nếu thiếu `openpyxl`, notebook vẫn chạy và chỉ bỏ qua file Excel (vẫn ghi CSV). Các mô hình sau nên ghi `experiment_log.csv` theo quy ước `<tên_thí_nghiệm>_cv5` (validation) và `<tên_thí_nghiệm>_test` (test) để sheet `Nhat_ky_thuc_nghiem` ở mục 13 tự gom chúng vào bảng xếp hạng chung. Chi tiết: [`notebooks/README.md`](notebooks/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md).
 
 ## Chạy notebook Random Forest và Gradient Boosting
 
-Cần có `data/processed/beijing_air_quality_standardized.csv` và, để mục so sánh chạy được, các file kết quả của notebook trước: `outputs/baseline_comparison_merged.csv` (notebook 02) và `outputs/random_forest_cv_metrics.csv` (notebook 03). Mở `notebooks/03_random_forest.ipynb` hoặc `notebooks/04_gradient_boosting.ipynb` rồi chọn `Restart & Run All`; mỗi notebook chạy khoảng vài chục giây đến vài phút. Chi tiết đầu ra: [`notebooks/README.md`](notebooks/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md).
+Cần có `data/processed/beijing_air_quality_standardized.csv` và, để mục so sánh chạy được, các file kết quả của notebook trước: `outputs/notebooks/tables/baseline_comparison_merged.csv` (notebook 02) và `outputs/notebooks/tables/random_forest_cv_metrics.csv` (notebook 03). Mở `notebooks/03_random_forest.ipynb` hoặc `notebooks/04_gradient_boosting.ipynb` rồi chọn `Restart & Run All`; mỗi notebook chạy khoảng vài chục giây đến vài phút. Chi tiết đầu ra: [`notebooks/README.md`](notebooks/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md).
 
 ## Chạy notebook tinh chỉnh, MLP và đánh giá cuối
 
 Mở repo từ thư mục gốc rồi chạy notebook theo thứ tự 01 → 08. Với các notebook tạo mô hình, bật `SAVE_ARTIFACTS` để các bước sau dùng được tệp đã lưu.
 
 1. Chạy **05** để tinh chỉnh Random Forest và Gradient Boosting trên 5 fold theo thời gian. Notebook đọc bảng điểm từng fold từ 03 và 04.
-2. Chạy **06** để xây dựng MLP gốc và lưu `outputs/mlp_cv_metrics.csv` khi bật `SAVE_ARTIFACTS` ở mục 9.
+2. Chạy **06** để xây dựng MLP gốc và lưu `outputs/notebooks/tables/mlp_cv_metrics.csv` khi bật `SAVE_ARTIFACTS` ở mục 9.
 3. Chạy **07** để tinh chỉnh MLP. Bản thực nghiệm đã thử 8 tổ hợp trên 5 fold và lưu `models/mlp_tuned.joblib`.
-4. Chạy **08** khi đã có `baseline_linear_regression.joblib`, `random_forest_tuned.joblib`, `gradient_boosting_tuned.joblib` và `mlp_tuned.joblib` trong `models/`. Nếu clone repo và thiếu Linear Regression, tạo và lưu mô hình từ notebook 02 vì file này nằm trong `.gitignore`.
+4. Chạy **08** khi đã có `baseline_linear_regression.joblib`, `random_forest_tuned.joblib`, `gradient_boosting_tuned.joblib` và `mlp_tuned.joblib` trong `models/`. Bản ZIP đã có đủ bốn tệp. Nếu clone repo và thiếu Linear Regression do `.gitignore`, chép lại bản mô hình đã lưu từ [thực nghiệm 01](outputs/experiments/experiments01/models/) vào `models/` nếu có. Dùng notebook 02 với `SAVE_ARTIFACTS = True` để tạo lại khi không còn bản lưu.
 
 Xem mô tả từng notebook và đầu ra trong [`notebooks/README.md`](notebooks/README.md).
 
 ### Bộ notebook chưa chạy
 
-[`notebooks_unexecuted/`](notebooks_unexecuted/) nằm cạnh `notebooks/` ở thư mục gốc và chứa đủ 8 notebook từ 01 đến 08. Mỗi bản giữ nội dung Markdown và mã nguồn, với output và số thứ tự chạy của các ô đã được xóa.
+[`notebooks_unexecuted/`](notebooks_unexecuted/) nằm cạnh `notebooks/` ở thư mục gốc và chứa đủ 8 notebook từ 01 đến 08. Các bản này đã xóa output và số thứ tự chạy của các ô. Notebook 06 trong bộ này đang đặt `SAVE_ARTIFACTS = False` ở mục 9. Chuyển sang `True` khi cần xuất lại mô hình và kết quả MLP gốc.
 
 Để chạy lại toàn bộ quy trình, mở thư mục gốc của repo trong VS Code, chọn môi trường Python của đồ án và chạy lần lượt các file 01 → 08 trong `notebooks_unexecuted/`. Bật `SAVE_ARTIFACTS` ở các notebook tạo mô hình để notebook 08 có thể nạp mô hình đã lưu.
+
+## Hồ sơ thực nghiệm và đánh giá cuối
+
+Các notebook ghi biểu đồ vào [`outputs/notebooks/figures/`](outputs/notebooks/figures/README.md) và bảng vào [`outputs/notebooks/tables/`](outputs/notebooks/tables/). Nhóm tập hợp bảng Excel, CSV, hình và mô hình đã lưu theo từng đợt trong [`outputs/experiments/`](outputs/experiments/).
+
+| Hồ sơ                                                        | Notebook nguồn | Nội dung                                                                                         | Bảng đánh giá                                       |
+| -------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [Thực nghiệm 01](outputs/experiments/experiments01/README.md) | 02              | Persistence và Linear Regression trên validation                                                | [Excel](outputs/experiments/experiments01/danh_gia.xlsx) |
+| [Thực nghiệm 02](outputs/experiments/experiments02/README.md) | 03, 04, 06      | Random Forest, Gradient Boosting và MLP cấu hình ban đầu, đối chiếu với thực nghiệm 01 | [Excel](outputs/experiments/experiments02/danh_gia.xlsx) |
+| [Thực nghiệm 03](outputs/experiments/experiments03/README.md) | 05, 07          | Cấu hình đã tinh chỉnh, đối chiếu với thực nghiệm 01 và 02                            | [Excel](outputs/experiments/experiments03/danh_gia.xlsx) |
+| [Đánh giá cuối](outputs/experiments/final_test/README.md)   | 08              | Chấm 5 mô hình đã chốt cấu hình trên tập test                                           | [Excel](outputs/experiments/final_test/danh_gia.xlsx)    |
 
 ## Kết quả validation (5 fold theo thời gian)
 
 MAE và RMSE tính bằng µg/m³, càng thấp càng tốt. Nguồn số liệu là `experiment_log.csv` và notebook 04–07. Notebook 05 dùng `RandomizedSearchCV` với 20 tổ hợp cho Gradient Boosting và 8 cho Random Forest. Notebook 07 thử 8 tổ hợp cho MLP.
 
-| Mô hình                                                        |  RMSE TB 5 fold | RMSE TB fold 2–5 | MAE TB 5 fold |
-| :--------------------------------------------------------------- | --------------: | ----------------: | ------------: |
-| Persistence                                                      |           19,97 |             18,92 |         10,42 |
-| Linear Regression | 19,29 | 18,27 | 10,74 |
-| Random Forest (`n_estimators=20`)                              |           20,17 |   **17,74** |         10,53 |
-| Gradient Boosting (`HistGradientBoostingRegressor`, 200 vòng) |           21,97 |             18,19 |         11,07 |
-| Random Forest (đã tinh chỉnh) | **19,18** | 17,74 | **10,13** |
-| Gradient Boosting (đã tinh chỉnh) | 20,04 | 18,25 | 10,52 |
-| MLP gốc | 20,08 | 18,09 | 11,73 |
-| MLP (đã tinh chỉnh) | 19,63 | 18,00 | 11,07 |
+| Mô hình                                                        |  RMSE TB 5 fold | RMSE TB fold 2–5 |   MAE TB 5 fold |
+| :--------------------------------------------------------------- | --------------: | ----------------: | --------------: |
+| Persistence                                                      |           19,97 |             18,92 |           10,42 |
+| Linear Regression                                                |           19,29 |             18,27 |           10,74 |
+| Random Forest (`n_estimators=20`)                              |           20,17 |   **17,74** |           10,53 |
+| Gradient Boosting (`HistGradientBoostingRegressor`, 200 vòng) |           21,97 |             18,19 |           11,07 |
+| Random Forest (đã tinh chỉnh)                                 | **19,18** |             17,74 | **10,13** |
+| Gradient Boosting (đã tinh chỉnh)                             |           20,04 |             18,25 |           10,52 |
+| MLP gốc                                                         |           20,08 |             18,09 |           11,73 |
+| MLP (đã tinh chỉnh)                                           |           19,63 |             18,00 |           11,07 |
 
 Lưu ý khi đọc bảng:
 
@@ -124,20 +134,20 @@ Lưu ý khi đọc bảng:
 
 Notebook 08 đánh giá trên **51.063 mẫu**, với nhãn từ **01/09/2016 đến 28/02/2017**. Cấu hình của các mô hình đã được chốt từ validation. Bảng dưới đây xếp theo RMSE test.
 
-| Hạng | Mô hình | MAE (µg/m³) | RMSE (µg/m³) | R² |
-| ---: | --- | ---: | ---: | ---: |
-| 1 | Random Forest (đã tinh chỉnh) | 10,5906 | **20,9613** | 0,9550 |
-| 2 | Gradient Boosting (đã tinh chỉnh) | 10,8195 | 21,2957 | 0,9536 |
-| 3 | MLP (đã tinh chỉnh) | 11,1583 | 21,4967 | 0,9527 |
-| 4 | Linear Regression | 11,3510 | 21,8027 | 0,9513 |
-| 5 | Persistence | 11,5864 | 23,1133 | 0,9453 |
+| Hạng | Mô hình                            | MAE (µg/m³) |    RMSE (µg/m³) |    R² |
+| ----: | ------------------------------------ | ------------: | ----------------: | -----: |
+|     1 | Random Forest (đã tinh chỉnh)     |       10,5906 | **20,9613** | 0,9550 |
+|     2 | Gradient Boosting (đã tinh chỉnh) |       10,8195 |           21,2957 | 0,9536 |
+|     3 | MLP (đã tinh chỉnh)               |       11,1583 |           21,4967 | 0,9527 |
+|     4 | Linear Regression                    |       11,3510 |           21,8027 | 0,9513 |
+|     5 | Persistence                          |       11,5864 |           23,1133 | 0,9453 |
 
-Random Forest đã tinh chỉnh có RMSE thấp nhất, giảm **9,31%** so với Persistence. Bảng điểm và biểu đồ nằm tại [`outputs/final_test_metrics.csv`](outputs/final_test_metrics.csv) và [`outputs/figures/final_test_rmse.png`](outputs/figures/final_test_rmse.png). Các dòng `*_test` nằm trong [`experiment_log.csv`](experiment_log.csv).
+Random Forest đã tinh chỉnh có RMSE thấp nhất, giảm **9,31%** so với Persistence. Bảng điểm và biểu đồ nằm tại [`outputs/notebooks/tables/final_test_metrics.csv`](outputs/notebooks/tables/final_test_metrics.csv) và [`outputs/notebooks/figures/final_test_rmse.png`](outputs/notebooks/figures/final_test_rmse.png). Các dòng `*_test` nằm trong [`experiment_log.csv`](experiment_log.csv).
 
 ## Việc cần làm tiếp theo
 
 - Đưa bảng điểm, hình và nhận xét về validation/test vào báo cáo và slide cuối kỳ. Ghi rõ giới hạn của các lần tuning và phân tích sai số đã thực hiện theo proposal.
-- Hoàn thiện workbook kết quả tổng hợp nếu nhóm chọn dùng Excel để đối chiếu. Đối chiếu kết quả với CSV, nhật ký và biểu đồ.
+- Dùng các bảng Excel đã lưu theo từng đợt trong `outputs/experiments/` để đối chiếu với CSV, nhật ký và biểu đồ khi viết báo cáo.
 - Rà citation, tài liệu, cách tái lập và thống nhất nội dung báo cáo với kết quả đã lưu.
 
 Tài liệu tham khảo về cách trình bày báo cáo nằm trong [`docs/README.md`](docs/README.md).
@@ -185,7 +195,6 @@ tests/
 └── test_integration.py                        Kiểm thử tích hợp pipeline dữ liệu
 models/                                        Nơi lưu mô hình đã huấn luyện
 ├── baseline_linear_regression.joblib          Pipeline Linear Regression (baseline)
-├── baseline_metrics.csv                       MAE/RMSE/R² của các baseline (CV và test)
 ├── baseline_metadata.json                     Thông tin nạp lại và truy vết mô hình
 ├── random_forest.joblib                       Pipeline Random Forest (fit trên Train/Validation)
 ├── random_forest_metadata.json                Thông tin truy vết Random Forest
@@ -201,16 +210,14 @@ models/                                        Nơi lưu mô hình đã huấn l
 └── mlp_tuned_metadata.json                    Thông tin truy vết MLP đã tinh chỉnh
 outputs/
 ├── eda/                                       Nhật ký và kết luận EDA
-├── figures/                                   Biểu đồ validation, tuning và test
-├── baseline_error_analysis.csv                Sai số baseline theo trạm, mùa, mức PM2.5
-├── baseline_model_comparison.xlsx             File so sánh kết quả thực nghiệm của baseline
-├── baseline_comparison_merged.csv             Các bảng so sánh đã merge, dạng một bảng dài
-├── random_forest_*.csv                        Kết quả CV, tổng quan fold và dự đoán OOF của Random Forest
-├── gradient_boosting_*.csv                    Kết quả CV và dự đoán OOF của Gradient Boosting
-├── mlp_*.csv                                  Kết quả validation và phân tích sai số của MLP
-├── *_tuned_cv_*.csv                           Kết quả CV sau tinh chỉnh từ notebook 05 và 07
-├── tuning_*_search_results.csv                Các bộ tham số đã thử bằng RandomizedSearchCV
-└── final_test_metrics.csv                     MAE, RMSE và R² trên tập test
+├── notebooks/                                 Đầu ra trực tiếp từ notebook
+│   ├── figures/                               Biểu đồ validation, tinh chỉnh và test
+│   └── tables/                                Bảng CSV/Excel, gồm final_test_metrics.csv
+└── experiments/                               Hồ sơ kết quả theo từng đợt
+    ├── experiments01/                         Baseline trên validation
+    ├── experiments02/                         Ba mô hình với cấu hình ban đầu
+    ├── experiments03/                         So sánh trước và sau tinh chỉnh
+    └── final_test/                             Đánh giá cuối trên tập test
 docs/                                          Tài liệu đồ án
 experiment_log.csv                             Nhật ký validation (*_cv5) và test (*_test)
 requirements.txt                               Danh sách thư viện Python
@@ -218,19 +225,23 @@ pytest.ini                                     Cấu hình pytest
 README.md                                      Giới thiệu và hướng dẫn dự án
 ```
 
-README chi tiết theo thư mục: [`data/README.md`](data/README.md), [`data/raw/README.md`](data/raw/README.md), [`data/processed/README.md`](data/processed/README.md), [`notebooks/README.md`](notebooks/README.md), [`src/README.md`](src/README.md), [`tests/README.md`](tests/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md), [`outputs/figures/README.md`](outputs/figures/README.md) và [`docs/README.md`](docs/README.md).
+### Hướng dẫn theo thư mục
+
+- [Dữ liệu](data/README.md), [dữ liệu gốc](data/raw/README.md) và [dữ liệu chuẩn hóa](data/processed/README.md).
+- [Notebook](notebooks/README.md), [pipeline dữ liệu](src/README.md), [kiểm thử](tests/README.md) và [mô hình đã lưu](models/README.md).
+- [Đầu ra](outputs/README.md), [EDA](outputs/eda/README.md), [biểu đồ](outputs/notebooks/figures/README.md) và [tài liệu đồ án](docs/README.md).
 
 ## Phân công công việc
 
 Giảng viên hướng dẫn: TS. Đỗ Như Tài
 
-| STT | Họ và tên        |    MSSV    | Vai trò       | Phần việc phụ trách                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| :-: | :------------------ | :--------: | :------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-|  1  | Trần Lê Gia Bảo  | 3124411038 | Nhóm trưởng | Tổ chức repository và tài liệu theo proposal; khảo sát và phân tích dữ liệu (EDA); chuẩn hóa, xuất bản dữ liệu và ghi lại kết luận; xây dựng pipeline dữ liệu, tạo đặc trưng, chia tập theo thời gian và kiểm thử pipeline. Phạm vi phụ trách kết thúc ở pipeline dữ liệu, không bao gồm xây dựng, huấn luyện hay đánh giá mô hình.                                                                                                                                                         |
-|  2  | Tô Thành Nhân    | 3124411198 | Thành viên   | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật.                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-|  3  | Đào Hữu Tài     | 3124411261 | Thành viên   | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật.                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| STT | Họ và tên        |    MSSV    | Vai trò       | Phần việc phụ trách                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| :-: | :------------------ | :--------: | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  1  | Trần Lê Gia Bảo  | 3124411038 | Nhóm trưởng | Tổ chức repository và tài liệu theo proposal; khảo sát và phân tích dữ liệu (EDA); chuẩn hóa, xuất bản dữ liệu và ghi lại kết luận; xây dựng pipeline dữ liệu, tạo đặc trưng, chia tập theo thời gian và kiểm thử pipeline. Phạm vi phụ trách kết thúc ở pipeline dữ liệu, không bao gồm xây dựng, huấn luyện hay đánh giá mô hình.                                                                                                                        |
+|  2  | Tô Thành Nhân    | 3124411198 | Thành viên   | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+|  3  | Đào Hữu Tài     | 3124411261 | Thành viên   | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 |  4  | Huỳnh Nhật Quang  | 3124411245 | Thành viên   | Xây dựng và đánh giá mô hình Gradient Boosting (notebook 04, dùng HistGradientBoostingRegressor, 5-fold CV theo thời gian); tinh chỉnh tham số bằng RandomizedSearchCV cho Gradient Boosting và Random Forest (notebook 05, không dùng tập Test); lưu mô hình, kết quả CV và nhật ký thực nghiệm; cập nhật README của các phần này. Bổ sung và tinh chỉnh MLP (notebook 06–07), thực hiện đánh giá cuối cùng theo notebook 08 và ghi nhận kết quả thực nghiệm. |
-|  5  | Nguyễn Thanh Tuấn | 3124411337 | Thành viên   | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật.                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+|  5  | Nguyễn Thanh Tuấn | 3124411337 | Thành viên   | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 Chi tiết phạm vi công việc của nhóm trưởng được ghi tại [`docs/phan-cong-cong-viec.docx`](docs/phan-cong-cong-viec.docx). Nhật ký EDA để các thành viên đọc lại quy trình và quyết định nằm tại [`outputs/eda/eda_worklog.md`](outputs/eda/eda_worklog.md); bảng kết luận nằm tại [`outputs/eda/eda_conclusions.csv`](outputs/eda/eda_conclusions.csv).
 

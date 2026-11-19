@@ -1,11 +1,10 @@
 # Thư mục `models`
 
-Nơi lưu các mô hình đã huấn luyện và các thành phần cần thiết để nạp lại mô hình, ví dụ tệp `.joblib`, `.pkl` hoặc `.pt`, cùng bảng tóm tắt kết quả của các mô hình đó.
+Nơi lưu các pipeline đã huấn luyện dưới dạng `.joblib`, metadata dạng JSON và bảng điểm baseline. Notebook 08 nạp pipeline từ thư mục này. Các bản lưu theo đợt nằm trong [hồ sơ thực nghiệm](../outputs/experiments/).
 
 ## Tệp hiện có
 
 - `baseline_linear_regression.joblib`: pipeline Linear Regression (`build_preprocessor(scale=True)` + `LinearRegression`) đã fit trên **toàn bộ** tập train/validation (nhãn từ 01/03/2013 đến 31/08/2016). Tệp được tạo bởi [`02_model_training_baseline.ipynb`](../notebooks/02_model_training_baseline.ipynb).
-- `baseline_metrics.csv`: MAE, RMSE, R² của các baseline. Cột `split` có hai giá trị: `cv_validation_mean_5fold` (trung bình 5 fold validation, kèm `*_std` là độ lệch chuẩn giữa các fold) và `test` (tập test từ 01/09/2016, các cột `*_std` để trống). Cột `n_rows` là số dòng dùng để tính.
 - `baseline_metadata.json`: thông tin để nạp lại và truy vết mô hình: danh sách feature, khoảng thời gian train, mốc bắt đầu test, cách chia CV và phiên bản scikit-learn đã dùng.
 - `.gitkeep`: tệp rỗng giúp Git lưu thư mục.
 
@@ -13,7 +12,7 @@ Baseline **Persistence** (dự đoán PM2.5 giờ t+1 bằng PM2.5 giờ t) khô
 
 ## Kết quả baseline ở lần chạy gần nhất
 
-RMSE (µg/m³). Đây là số ghi lại tại thời điểm viết; nếu chạy lại notebook, `baseline_metrics.csv` là nguồn chính xác.
+RMSE (µg/m³). Đây là số ghi lại tại thời điểm viết; nếu chạy lại notebook, `outputs/notebooks/tables/baseline_metrics.csv` là nguồn chính xác.
 
 | Mô hình         | CV 5 fold (validation) |  Test |
 | ----------------- | ---------------------: | ----: |
@@ -122,8 +121,7 @@ rf_tuned = joblib.load("models/random_forest_tuned.joblib")
 ### Lưu ý về các mô hình đã tinh chỉnh
 
 - Trước khi dùng kết quả, mở file `*_tuned_metadata.json` kiểm tra `tuning.n_iter` (mặc định 20 cho Gradient Boosting, 8 cho Random Forest). Nếu là 2 thì đó là lần chạy thử.
-- Chạy lại Notebook 05 sẽ ghi đè `*_tuned.*`.
-- Test chưa được dùng; cần chốt cấu hình rồi mới đánh giá Test đúng một lần.
+- Chạy lại notebook 05 có thể cập nhật hai pipeline cây và metadata tương ứng. Các cấu hình được chốt từ CV trước khi notebook 08 chấm trên tập test.
 
 ## Các tệp MLP (notebook 06 và 07)
 
@@ -139,4 +137,4 @@ rf_tuned = joblib.load("models/random_forest_tuned.joblib")
 - `random_forest_tuned.joblib` và `gradient_boosting_tuned.joblib` — notebook 05
 - `mlp_tuned.joblib` — notebook 07
 
-Persistence được tính trực tiếp theo quy tắc giờ hiện tại. Nếu thiếu file Linear Regression sau khi clone, dùng notebook 02 với `SAVE_ARTIFACTS = True` để lưu file vì repo đưa file này vào `.gitignore`. Notebook 08 nạp file ở `LINEAR_MODEL_PATH`. Bảng điểm test được lưu ở `outputs/final_test_metrics.csv`.
+Persistence lấy PM2.5 giờ hiện tại, với trung vị nhãn train + validation làm giá trị dự phòng. Bản ZIP đã có đủ bốn pipeline. Nếu clone repo và thiếu Linear Regression do `.gitignore`, chép [bản lưu của thực nghiệm 01](../outputs/experiments/experiments01/models/baseline_linear_regression.joblib) vào `models/` nếu có, hoặc trỏ `LINEAR_MODEL_PATH` tới tệp đó. Khi không còn bản lưu, bật `SAVE_ARTIFACTS = True` trong notebook 02 để xuất lại. [Bảng điểm test](../outputs/notebooks/tables/final_test_metrics.csv) được lưu khi chạy notebook 08 với chế độ xuất file.

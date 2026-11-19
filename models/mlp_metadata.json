@@ -57,13 +57,13 @@
   "saved_outputs": [
     "models/mlp.joblib",
     "models/mlp_metadata.json",
-    "outputs/mlp_cv_metrics.csv",
-    "outputs/mlp_cv_summary.csv",
-    "outputs/mlp_error_by_group.csv",
-    "outputs/figures/mlp_cv_rmse_by_fold.png",
-    "outputs/figures/mlp_pred_vs_actual.png",
-    "outputs/figures/mlp_residuals.png",
-    "outputs/figures/mlp_rmse_by_pm25_level.png",
-    "outputs/mlp_validation_oof_predictions.csv"
+    "outputs/notebooks/tables/mlp_cv_metrics.csv",
+    "outputs/notebooks/tables/mlp_cv_summary.csv",
+    "outputs/notebooks/tables/mlp_error_by_group.csv",
+    "outputs/notebooks/figures/mlp_cv_rmse_by_fold.png",
+    "outputs/notebooks/figures/mlp_pred_vs_actual.png",
+    "outputs/notebooks/figures/mlp_residuals.png",
+    "outputs/notebooks/figures/mlp_rmse_by_pm25_level.png",
+    "outputs/notebooks/tables/mlp_validation_oof_predictions.csv"
   ]
 }

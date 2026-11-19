@@ -1,0 +1,180 @@
+{
+  "model": "HistGradientBoostingRegressor",
+  "pipeline": "build_preprocessor(scale=False) + HistGradientBoostingRegressor",
+  "reason_for_hist_version": "Bản chuẩn GradientBoostingRegressor chậm hơn nhiều trên dữ liệu này; dùng bản nhanh cùng họ.",
+  "created_at": "2026-11-10T19:56:14",
+  "python_version": "3.13.9",
+  "sklearn_version": "1.7.2",
+  "pandas_version": "2.3.3",
+  "target": "PM2.5 at t+1 (same station)",
+  "dataset_version": "beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24",
+  "train_validation_rows": 360954,
+  "train_validation_target_period": [
+    "2013-03-01 01:00:00",
+    "2016-08-31 23:00:00"
+  ],
+  "test_start": "2016-09-01 00:00:00",
+  "test_rows_reserved": 51063,
+  "test_used_for_tuning": false,
+  "test_evaluated": false,
+  "feature_columns": [
+    "PM2.5",
+    "PM10",
+    "SO2",
+    "NO2",
+    "CO",
+    "O3",
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "RAIN",
+    "WSPM",
+    "PM2.5_lag_1",
+    "PM2.5_lag_2",
+    "PM2.5_lag_3",
+    "PM2.5_lag_6",
+    "PM2.5_lag_12",
+    "PM2.5_lag_24",
+    "PM2.5_rolling_mean_6",
+    "PM2.5_rolling_mean_24",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "station",
+    "wd"
+  ],
+  "random_state": 42,
+  "gradient_boosting_params": {
+    "max_iter": 200,
+    "learning_rate": 0.1,
+    "early_stopping": false,
+    "random_state": 42
+  },
+  "cv": "TimeSeriesSplit expanding window, 5 folds, grouped by target_datetime; same src.cv_folds as Notebook 02",
+  "cv_fold_overview": [
+    {
+      "fold": 1,
+      "train_rows": 60258,
+      "validation_rows": 60595,
+      "train_start": "2013-03-01 01:00:00",
+      "train_end": "2013-09-30 00:00:00",
+      "validation_start": "2013-09-30 01:00:00",
+      "validation_end": "2014-05-01 17:00:00"
+    },
+    {
+      "fold": 2,
+      "train_rows": 120853,
+      "validation_rows": 59958,
+      "train_start": "2013-03-01 01:00:00",
+      "train_end": "2014-05-01 17:00:00",
+      "validation_start": "2014-05-01 18:00:00",
+      "validation_end": "2014-11-30 16:00:00"
+    },
+    {
+      "fold": 3,
+      "train_rows": 180811,
+      "validation_rows": 59858,
+      "train_start": "2013-03-01 01:00:00",
+      "train_end": "2014-11-30 16:00:00",
+      "validation_start": "2014-11-30 17:00:00",
+      "validation_end": "2015-07-02 02:00:00"
+    },
+    {
+      "fold": 4,
+      "train_rows": 240669,
+      "validation_rows": 60217,
+      "train_start": "2013-03-01 01:00:00",
+      "train_end": "2015-07-02 02:00:00",
+      "validation_start": "2015-07-02 03:00:00",
+      "validation_end": "2016-01-31 14:00:00"
+    },
+    {
+      "fold": 5,
+      "train_rows": 300886,
+      "validation_rows": 60068,
+      "train_start": "2013-03-01 01:00:00",
+      "train_end": "2016-01-31 14:00:00",
+      "validation_start": "2016-01-31 15:00:00",
+      "validation_end": "2016-08-31 23:00:00"
+    }
+  ],
+  "cv_fold_metrics": [
+    {
+      "fold": 1,
+      "mae": 17.4332778212,
+      "rmse": 37.1142651341,
+      "r2": 0.8342825711,
+      "runtime_seconds": 8.3400069,
+      "train_rows": 60258,
+      "validation_rows": 60595,
+      "train_rmse": 14.6330285554
+    },
+    {
+      "fold": 2,
+      "mae": 9.1331957669,
+      "rmse": 15.6712286711,
+      "r2": 0.9516267474,
+      "runtime_seconds": 3.9768764,
+      "train_rows": 120853,
+      "validation_rows": 59958,
+      "train_rmse": 16.7754404397
+    },
+    {
+      "fold": 3,
+      "mae": 10.1588727174,
+      "rmse": 18.7923739881,
+      "r2": 0.9324773329,
+      "runtime_seconds": 4.6036924,
+      "train_rows": 180811,
+      "validation_rows": 59858,
+      "train_rmse": 16.0584632328
+    },
+    {
+      "fold": 4,
+      "mae": 10.0412916807,
+      "rmse": 20.3364460634,
+      "r2": 0.9519503673,
+      "runtime_seconds": 7.1488217,
+      "train_rows": 240669,
+      "validation_rows": 60217,
+      "train_rmse": 16.3755785637
+    },
+    {
+      "fold": 5,
+      "mae": 8.6047863027,
+      "rmse": 17.9484426518,
+      "r2": 0.9160108406,
+      "runtime_seconds": 7.0458253,
+      "train_rows": 300886,
+      "validation_rows": 60068,
+      "train_rmse": 16.4313784875
+    }
+  ],
+  "cv_metrics_mean": {
+    "mae": 11.074284857786527,
+    "rmse": 21.972551301710745,
+    "r2": 0.9172695718347654
+  },
+  "cv_metrics_std": {
+    "mae": 3.6127584949639964,
+    "rmse": 8.630787669749628,
+    "r2": 0.048741347393189555
+  },
+  "cv_total_runtime_seconds": 37.16050549998181,
+  "final_fit_seconds": 7.563282300019637,
+  "saved_outputs": {
+    "model": "models\\gradient_boosting.joblib",
+    "cv_metrics": "outputs\\gradient_boosting_cv_metrics.csv",
+    "cv_summary": "outputs\\gradient_boosting_cv_summary.csv",
+    "validation_oof_predictions": "outputs\\gradient_boosting_validation_oof_predictions.csv",
+    "figures": [
+      "outputs/figures/gradient_boosting_cv_rmse_by_fold.png",
+      "outputs/figures/gradient_boosting_pred_vs_actual.png",
+      "outputs/figures/gradient_boosting_residuals.png",
+      "outputs/figures/gradient_boosting_rmse_by_pm25_level.png"
+    ]
+  }
+}
