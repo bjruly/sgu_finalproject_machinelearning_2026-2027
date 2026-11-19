@@ -1,0 +1,2 @@
+﻿rmse_mean_5,rmse_mean_fold2_5,rmse_std_5,rmse_fold1,rmse_fold2,rmse_fold3,rmse_fold4,rmse_fold5,mean_fit_seconds_per_fold,learning_rate,max_iter,max_leaf_nodes,min_samples_leaf,l2_regularization
+21.21921990193393,19.790293460176024,3.9500906161295974,26.934925668965523,17.190637052216903,20.411796098260993,23.276891400701963,18.28184928952424,1.3775777450001443,0.1,30,15,200,0.1
