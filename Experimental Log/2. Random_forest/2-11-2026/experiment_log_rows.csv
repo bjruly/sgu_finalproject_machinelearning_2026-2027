@@ -1,0 +1,2 @@
+﻿experiment_id,model_name,dataset_version,mae,rmse,r2,notes
+random_forest_cv5,Random Forest Regressor,beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24; features=v1 (Chỉ PM2.5 hiện tại); supplementary run 19-11-2026,10.772461,20.375871,0.929548,"Mean of 5 validation folds; shared expanding-window TimeSeriesSplit; CV runtime=2.75s; final fit=0.99s; Test not used for tuning or evaluation. Supplementary run 19-11-2026, feature set v1; not a restored historical run."

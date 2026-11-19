@@ -1,0 +1,2 @@
+﻿"experiment_id","model_name","dataset_version","mae","rmse","r2","notes"
+"random_forest_cv5","Random Forest Regressor","beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24","10.525595","20.170724","0.930914","Mean of 5 validation folds; shared expanding-window TimeSeriesSplit; CV runtime=34.18s; final fit=14.21s; Test not used for tuning or evaluation."

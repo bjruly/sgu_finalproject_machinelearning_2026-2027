@@ -1,0 +1,2 @@
+﻿"experiment_id","model_name","dataset_version","mae","rmse","r2","notes"
+"mlp_tuned_cv5","MLP - tuned","beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24","11.07182","19.631728","0.933902","Mean of 5 chronological validation folds. RandomizedSearchCV n_iter=8, scoring=neg_root_mean_squared_error, seed=42; best params: max_iter=40, learning_rate_init=0.003, hidden_layer_sizes=(32, 16), batch_size=256, alpha=0.0001; search runtime=931.0s; final fit=11.35s. Test not evaluated."

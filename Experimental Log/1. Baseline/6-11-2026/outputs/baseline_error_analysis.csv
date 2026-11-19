@@ -1,0 +1,45 @@
+﻿group_type,group,model,n,mae,rmse,r2,mean_residual
+station,Aotizhongxin,Persistence,24741,10.5861,20.704,0.935,0.0431
+station,Aotizhongxin,Linear Regression,24741,10.731,20.0556,0.939,-0.4684
+station,Changping,Persistence,24911,10.3352,21.2319,0.9095,0.0295
+station,Changping,Linear Regression,24911,10.6102,20.7364,0.9136,0.575
+station,Dingling,Persistence,25118,8.7466,19.0477,0.9313,0.0433
+station,Dingling,Linear Regression,25118,9.4479,19.0197,0.9315,1.3804
+station,Dongsi,Persistence,25080,10.985,20.4199,0.9424,0.0183
+station,Dongsi,Linear Regression,25080,11.09,19.6524,0.9466,0.4827
+station,Guanyuan,Persistence,25184,10.3579,18.7823,0.9445,0.0005
+station,Guanyuan,Linear Regression,25184,10.5656,18.2842,0.9474,-0.3332
+station,Gucheng,Persistence,25186,10.795,21.0531,0.9315,0.0477
+station,Gucheng,Linear Regression,25186,11.1177,20.4608,0.9353,-0.7897
+station,Huairou,Persistence,24974,9.0658,17.8282,0.9363,0.0126
+station,Huairou,Linear Regression,24974,9.4024,17.6569,0.9375,0.5324
+station,Nongzhanguan,Persistence,25097,10.9798,20.9318,0.9402,0.0398
+station,Nongzhanguan,Linear Regression,25097,10.9582,20.1529,0.9446,-0.0625
+station,Shunyi,Persistence,25087,10.9131,20.7125,0.933,0.0533
+station,Shunyi,Linear Regression,25087,10.9215,19.9133,0.9381,0.7744
+station,Tiantan,Persistence,25006,10.7113,19.2608,0.9413,0.0258
+station,Tiantan,Linear Regression,25006,10.7538,18.5817,0.9454,0.3882
+station,Wanliu,Persistence,25295,10.4136,20.0228,0.9389,0.0174
+station,Wanliu,Linear Regression,25295,10.6899,19.3699,0.9429,-1.1496
+station,Wanshouxigong,Persistence,25017,11.2458,21.1554,0.9372,0.0759
+station,Wanshouxigong,Linear Regression,25017,11.3719,20.5784,0.9406,-0.0984
+season,Xuân,Persistence,77638,10.5438,19.496,0.916,0.0198
+season,Xuân,Linear Regression,77638,10.8301,19.0524,0.9198,0.6924
+season,Hè,Persistence,77813,8.4101,14.2237,0.9126,-0.0027
+season,Hè,Linear Regression,77813,8.5463,13.9576,0.9158,-0.5208
+season,Thu,Persistence,68918,9.8579,18.0472,0.9564,0.0677
+season,Thu,Linear Regression,68918,10.1449,17.4788,0.9591,-0.3419
+season,Đông,Persistence,76327,12.8821,26.6146,0.934,0.0551
+season,Đông,Linear Regression,76327,13.0224,25.7598,0.9382,0.5356
+pm25_level,0–35,Persistence,112846,5.533,12.4098,-0.9922,-1.7901
+pm25_level,0–35,Linear Regression,112846,6.4595,12.3893,-0.9857,-2.2415
+pm25_level,35–75,Persistence,72798,9.7884,16.8642,-1.1283,-0.8973
+pm25_level,35–75,Linear Regression,72798,9.6472,16.2337,-0.9721,-2.7611
+pm25_level,75–115,Persistence,46434,12.224,19.4363,-1.8736,0.6266
+pm25_level,75–115,Linear Regression,46434,11.4546,18.1843,-1.5153,-0.3217
+pm25_level,115–150,Persistence,24698,14.3242,22.6489,-4.1007,1.9394
+pm25_level,115–150,Linear Regression,24698,13.5441,21.1053,-3.4291,2.4572
+pm25_level,150–250,Persistence,30572,17.4595,27.674,0.052,3.1097
+pm25_level,150–250,Linear Regression,30572,17.2618,26.3144,0.1428,6.4466
+pm25_level,>250,Persistence,13348,25.7367,47.4535,0.6491,7.9006
+pm25_level,>250,Linear Regression,13348,27.9911,48.2022,0.6379,18.1055
