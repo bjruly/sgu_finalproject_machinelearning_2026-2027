@@ -20,7 +20,7 @@ Mỗi khối gồm 5 bước: tạo thư mục, chép notebook, chép output, ch
 ### 02: Baseline
 
 ```powershell
-$d = "Experimental Log\baseline\v1"
+$d = "Experimental Log\1. aseline\v1"
 mkdir "$d\outputs\figures"
 copy notebooks\02_model_training_baseline.ipynb $d
 copy outputs\baseline_* "$d\outputs"
