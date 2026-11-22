@@ -76,6 +76,31 @@ def summarize_predictions(predictions):
     return metrics
 
 
+def trimmed_sensitivity(predictions, fractions=(0.0, 0.001, 0.005, 0.01)):
+    """Sensitivity of the model ranking to the largest-error rows (report only).
+
+    Rule fixed in advance: rank rows by the mean absolute error across all
+    models, drop the top ``fraction`` of rows (the same rows for every model),
+    and recompute the metrics. It never selects or changes a model.
+    """
+    pooled = np.mean([(predictions.y_true - predictions[c]).abs() for c in PREDICTION_COLUMNS], axis=0)
+    order = np.argsort(-pooled, kind="stable")
+    rows = []
+    for fraction in fractions:
+        if not 0 <= fraction < 1:
+            raise ValueError("fractions must be in [0, 1).")
+        kept = predictions.iloc[np.sort(order[int(round(len(predictions) * fraction)):])]
+        part = []
+        for key, label in MODEL_LABELS.items():
+            scores = regression_metrics(kept.y_true, kept[f"pred_{key}"])
+            part.append({"trimmed_fraction": fraction, "n_removed": len(predictions) - len(kept),
+                         "n_kept": len(kept), "model": label, "mae": scores["mae"], "rmse": scores["rmse"]})
+        part = pd.DataFrame(part)
+        part["rank_by_rmse"] = part.rmse.rank(method="min").astype(int)
+        rows.append(part)
+    return pd.concat(rows, ignore_index=True)
+
+
 def grouped_errors(predictions, group):
     """All concentration groups are right-closed, including exact thresholds."""
     frame = predictions.copy()

@@ -15,3 +15,7 @@ Residual = y_true - y_pred. Nhóm PM2.5 đóng bên phải: <=35, (35,75], (75,1
 RF có RMSE tổng thể thấp nhất. Trong nhóm PM2.5 >250, GB và MLP có RMSE cao hơn Persistence; cần phản ánh hạn chế này trong báo cáo.
 
 Khoảng chênh lệch RMSE của RF so với LR là [-1,1251; -0,5930] µg/m³. Khoảng so với GB là [-0,7799; 0,1339], so với MLP là [-1,3431; 0,2557], đều còn chứa 0 ở hai cặp sau. Đây là kết quả có điều kiện trên dự đoán cố định, block length đã chọn, test thu–đông và các trạm đã quan sát; không chứng minh hiệu năng cho mọi mùa hoặc trạm mới.
+
+## final_test_sensitivity.csv (kiểm tra độ nhạy, chỉ để báo cáo)
+
+Tạo bởi `scripts/export_sensitivity.py` từ `final_test_predictions.csv`; không nạp mô hình và không đổi kết quả. Quy tắc cố định trước: xếp các dòng theo sai số tuyệt đối trung bình của năm mô hình, bỏ cùng một tỷ lệ dòng sai lớn nhất (0; 0,1%; 0,5%; 1%) cho mọi mô hình rồi tính lại MAE/RMSE. Dòng 0% trùng `final_test_metrics_reproduced.csv`. Không dùng để chọn lại mô hình; file này không thuộc chuỗi notebook nên không có trong `report_sources.csv`.
