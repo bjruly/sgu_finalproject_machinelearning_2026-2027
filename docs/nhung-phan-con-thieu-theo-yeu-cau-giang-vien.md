@@ -1,5 +1,7 @@
 # Yêu cầu chỉnh sửa báo cáo DOCX và slide — đồ án Beijing PM2.5
 
+> **Lưu ý (22/11/2026):** tài liệu này là bản rà soát lịch sử của bản giữa kỳ. Các mục thiếu đã được xử lý trong báo cáo và slide cuối kỳ; danh sách tồn đọng hiện hành nằm trong [ra-soat-bao-cao-slide-cuoi-ky-2026-11-22.md](ra-soat-bao-cao-slide-cuoi-ky-2026-11-22.md).
+
 **Ngày cập nhật:** 21/11/2026.  
 **Đối tượng cần sửa:** Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx và Nhom10__Slide.pptx.  
 **Mục đích:** hướng dẫn sửa nội dung tài liệu sau khi code/CSV đã được rà soát và chạy kiểm chứng.

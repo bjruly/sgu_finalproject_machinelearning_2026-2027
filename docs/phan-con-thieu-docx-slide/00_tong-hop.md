@@ -1,5 +1,7 @@
 # Phần còn thiếu trong DOCX và slide — tổng hợp (22/11/2026)
 
+> **Lưu ý (22/11/2026):** tài liệu này là bản rà soát lịch sử của bản giữa kỳ. Các mục thiếu đã được xử lý trong báo cáo và slide cuối kỳ; danh sách tồn đọng hiện hành nằm trong [ra-soat-bao-cao-slide-cuoi-ky-2026-11-22.md](../ra-soat-bao-cao-slide-cuoi-ky-2026-11-22.md).
+
 Kết quả rà soát toàn bộ đồ án (code, kiểm thử, notebook 01–08, CSV, DOCX, PPTX). Mọi số trong các file 02–06 đã được tính lại từ CSV; chỗ chưa kiểm chứng được ghi `[cần xác nhận]` / `[CẦN NHÓM XÁC NHẬN]`. Chưa có file DOCX/PPTX nào bị sửa.
 
 ## 1. Sai/lỗi thời cần sửa trước (cao nhất)

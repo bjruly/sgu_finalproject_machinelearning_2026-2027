@@ -5,6 +5,7 @@
 - [Proposal](Nhom10_BeijingAirQuality_Proposal.pdf): kế hoạch đã nộp, giữ nguyên để đối chiếu.
 - [Báo cáo cuối kỳ](Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx): báo cáo hoàn chỉnh gồm hai trang bìa, kết quả tuning, test, phân tích sai số và phân công theo lịch sử commit.
 - [Slide trình bày](Nhom10__Slide.pptx): trình bày dữ liệu, phương pháp, validation, tuning và test.
+- [Rà soát bản cuối kỳ ngày 22/11/2026](ra-soat-bao-cao-slide-cuoi-ky-2026-11-22.md): các lỗi và yêu cầu còn lại sau khi đối chiếu DOCX/PPTX mới với notebook/CSV; ghi rõ phạm vi kiểm chứng.
 - [Bản rà soát và kế hoạch khắc phục](ra-soat-do-an-va-ke-hoach-khac-phuc.md): phát hiện, checklist và trạng thái khắc phục.
 - [Phân công](phan-cong-cong-viec.docx): phân công theo lịch sử commit, khớp Mục 8 của báo cáo.
 - TLTK/: tài liệu tham khảo cách trình bày, không dùng số liệu của đề tài khác làm kết quả nhóm.

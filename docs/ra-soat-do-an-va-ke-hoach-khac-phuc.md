@@ -1,5 +1,7 @@
 # Rà soát toàn bộ đồ án và kế hoạch khắc phục
 
+> **Lưu ý (22/11/2026):** tài liệu này là bản rà soát lịch sử của bản giữa kỳ. Các mục thiếu đã được xử lý trong báo cáo và slide cuối kỳ; danh sách tồn đọng hiện hành nằm trong [ra-soat-bao-cao-slide-cuoi-ky-2026-11-22.md](ra-soat-bao-cao-slide-cuoi-ky-2026-11-22.md).
+
 ## Phạm vi mới theo yêu cầu người dùng — 20/11/2026
 
 Danh sách cũ bên dưới là lịch sử rà soát. Phạm vi đang áp dụng: chưa cần W&B/MLflow và không tự thêm công nghệ mới; các yêu cầu riêng của bài MRI không áp dụng cho đồ án PM2.5.
