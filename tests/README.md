@@ -10,3 +10,13 @@ Nơi chứa kiểm thử tự động cho pipeline dữ liệu và tạo đặc 
 - [`test_integration.py`](test_integration.py) chạy pipeline trên CSV PRSA chuẩn hóa, kiểm tra thời điểm chia test và các fold theo timestamp.
 
 Kiểm thử tích hợp dùng [CSV chuẩn hóa](../data/processed/README.md) do notebook 01 tạo. [Notebook 08](../notebooks/08_final_evaluation.ipynb) đo chất lượng dự báo bằng MAE, RMSE và R². Điểm đã lưu nằm trong [hồ sơ đánh giá cuối](../outputs/experiments/final_test/README.md).
+
+## Kiểm thử vòng đời mô hình và phân tích
+
+test_model_evaluation.py bổ sung fit–lưu–nạp–predict cho bốn họ mô hình, kiểm tra model lưu sẵn trong môi trường tương thích, đường dẫn fallback baseline, ngưỡng PM2.5, timestamp nhãn, bootstrap ghép cặp, ACF theo trạm và source đồng nhất giữa hai bộ notebook.
+
+Dùng .venv/Scripts/python.exe -m pytest -q. Kiểm thử model lưu sẵn sẽ báo lỗi rõ ràng nếu chạy nhầm scikit-learn; không tự bỏ qua lỗi tương thích. Các mạng/cây nhỏ trong smoke test chỉ kiểm tra tích hợp, không dùng làm kết quả chất lượng dự báo.
+
+## Kiểm tra nguồn notebook và biên nhóm
+
+test_notebook_evidence.py kiểm tra mẫu đúng tại các ngưỡng PM2.5 và phát hiện CSV/source notebook bị thay đổi sau khi xuất. Dữ liệu nhỏ trong unit test chỉ dùng kiểm tra chức năng, không dùng làm số liệu thực nghiệm của đồ án.
