@@ -1,300 +1,164 @@
-# Beijing Multi-Site Air Quality Prediction
+# Dự báo PM2.5 trước một giờ tại Bắc Kinh
 
-Đồ án cuối kỳ môn Máy học, xây dựng hệ thống phân tích và dự đoán nồng độ bụi mịn PM2.5 từ bộ dữ liệu Beijing Multi-Site Air Quality. Đây là bài toán hồi quy chuỗi thời gian đa trạm: dự đoán PM2.5 ở giờ kế tiếp (t+1) cho cùng trạm dựa trên thông tin tại thời điểm hiện tại và các đặc trưng chỉ sử dụng dữ liệu quá khứ.
+**Đồ án cuối kỳ môn Máy học** · Nhóm 10 · Đại học Sài Gòn  
+**Giảng viên hướng dẫn** · TS. Đỗ Như Tài  
+**Bộ dữ liệu** · Beijing Multi-Site Air Quality
 
-## Mục tiêu
+| Thành viên | MSSV |
+| --- | --- |
+| Trần Lê Gia Bảo (nhóm trưởng) | 3124411038 |
+| Tô Thành Nhân | 3124411198 |
+| Đào Hữu Tài | 3124411261 |
+| Huỳnh Nhật Quang | 3124411245 |
+| Nguyễn Thanh Tuấn | 3124411337 |
 
-Mục tiêu là dự đoán liên tục nồng độ PM2.5 (µg/m³) tại giờ kế tiếp `t+1` cho cùng trạm, từ dữ liệu ô nhiễm, khí tượng và thời gian đến giờ `t`. Các câu hỏi nghiên cứu theo proposal:
+Đồ án dự báo nồng độ bụi mịn PM2.5 (µg/m³) ở giờ kế tiếp cho cùng một trạm, dựa trên số đo ô nhiễm, khí tượng và thông tin thời gian đến giờ hiện tại. Trên 51.063 mẫu test, **Random Forest sau tinh chỉnh có RMSE thấp nhất trong 5 mô hình được đánh giá**.
 
-1. Random Forest và Gradient Boosting cải thiện bao nhiêu so với baseline Linear Regression?
-2. Nhóm đặc trưng nào (PM2.5 trễ, khí tượng, thời gian, trạm) đóng góp vào độ chính xác?
-3. Sai số thay đổi thế nào theo trạm, mùa và các đợt PM2.5 cao?
+## Báo cáo đồ án
 
-Các phương pháp được đề xuất gồm Linear Regression làm baseline, Random Forest Regressor và Gradient Boosting Regressor để so sánh. Persistence là mốc tham chiếu đơn giản. Thực nghiệm bổ sung MLP cho bài toán hồi quy PM2.5. Chọn cấu hình theo RMSE validation, đồng thời báo cáo MAE và R². Phân tích kết quả gồm sai số theo trạm/mùa/PM2.5 cao, dự đoán so với thực tế, residual theo thời gian và permutation importance. Không dùng Accuracy cho bài toán hồi quy.
+- [Đề cương](docs/Nhom10_BeijingAirQuality_Proposal.pdf) trình bày mục tiêu và thiết kế thực nghiệm.
+- [Báo cáo cập nhật tiến độ](docs/Nhom10_BeijingAirQuality_BaoCaoGiuaKy.docx) và [slide trình bày](docs/Nhom10__Slide.pptx) tổng hợp phương pháp và kết quả.
+- [Tài liệu dự án](docs/README.md) tập hợp phần phân công, các mục cần cập nhật và nguồn số liệu.
 
-## Dữ liệu
+## Cách chạy
 
-Bộ dữ liệu PRSA gồm 12 tệp CSV, mỗi tệp là dữ liệu theo giờ của một trạm trong khoảng 01/03/2013–28/02/2017. Các cột gồm thời gian, PM2.5, PM10, SO2, NO2, CO, O3 và các thông số khí tượng. Giá trị khuyết được ghi là `NA`.
+1. **Cài môi trường.** Mở PowerShell tại thư mục gốc của repo. Dùng Python 3.13 và scikit-learn 1.7.2 để nạp các mô hình đã lưu. [Danh sách thư viện](requirements.txt) · [Bản khóa đầy đủ trên Windows](requirements-lock.txt).
 
-Dữ liệu thô dùng cho đồ án gồm 12 CSV PRSA tại [`data/raw/`](data/raw/README.md). Notebook 01 gộp và chuẩn hóa dữ liệu, rồi ghi [`beijing_air_quality_standardized.csv`](data/processed/beijing_air_quality_standardized.csv) trong `data/processed/`.
+   ```powershell
+   py -3.13 -m venv .venv
+   .\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
+   ```
 
-Kế hoạch chính là gộp dữ liệu của 12 trạm thành một bộ dữ liệu đa trạm và mã hóa `station` như một đặc trưng. Mỗi mẫu dự đoán PM2.5 ở giờ t+1 của cùng trạm; mô hình riêng theo trạm hoặc dự đoán chân trời dài hơn (ví dụ t+24) là hướng mở rộng nếu còn thời gian.
+2. **Chuẩn bị dữ liệu.** Đặt 12 CSV PRSA trong [thư mục dữ liệu gốc](data/raw/PRSA_Data_20130301-20170228/). Notebook 01 tạo [CSV chuẩn hóa](data/processed/beijing_air_quality_standardized.csv) để các notebook sau dùng chung.
 
-### Phương pháp theo proposal
+3. **Mở notebook trong VS Code.** Chọn kernel Python trong `.venv`. Xem kết quả đã lưu trong [`notebooks/`](notebooks/), hoặc mở [`notebooks_unexecuted/`](notebooks_unexecuted/) và chạy lần lượt từ 01 đến 08 để tái lập từ đầu.
 
-- **EDA:** thống kê mô tả; kiểm tra kiểu dữ liệu, missing theo cột/trạm, bản ghi trùng theo cặp trạm-thời điểm và giá trị bất thường; khảo sát phân bố PM2.5 (kể cả log-scale), biến động theo giờ/tháng/mùa/năm, tự tương quan, tương quan với biến khí tượng/ô nhiễm và quan hệ với tốc độ/hướng gió.
-- **Missing và ngoại lệ:** không impute target; bỏ các dòng thiếu target khỏi huấn luyện/đánh giá. Với feature, forward-fill có giới hạn theo từng trạm rồi điền phần còn thiếu bằng median fit trên train, đồng thời tạo cờ missing. Không loại đợt PM2.5 cao nếu có thể là ô nhiễm thực tế; chỉ xử lý giá trị vô lý hoặc nghi lỗi cảm biến sau khi xác minh.
-- **Đặc trưng và mã hóa:** dự kiến có PM2.5 lag 1, 2, 3, 6, 12, 24 giờ; rolling mean 6/24 giờ và độ lệch so với rolling mean; lag các biến khí tượng chính; thời gian giờ/tháng/thứ trong tuần/cuối tuần; `station` và `wd`. Mã hóa tuần hoàn sin/cos cho giờ/tháng, One-Hot cho trạm/hướng gió. Tất cả lag/rolling tính riêng theo trạm, chỉ từ quá khứ.
-- **Chuẩn hóa:** Pipeline thực nghiệm dùng `StandardScaler` cho đặc trưng số của Linear Regression và MLP. MLP còn chuẩn hóa giá trị mục tiêu và đổi dự đoán về µg/m³ trước khi chấm điểm. Random Forest và Gradient Boosting dùng bộ tiền xử lý với `scale=False`. Mỗi bộ tiền xử lý học từ phần train của từng fold.
-- **Chia tập:** theo trình tự thời gian, không shuffle. Dự kiến train + validation từ 03/2013 đến 08/2016, validation bằng `TimeSeriesSplit` expanding-window 5 fold; test từ 09/2016 đến 02/2017, chỉ đánh giá sau khi chốt cấu hình. Các trạm có cùng target timestamp phải cùng phía của mỗi fold. Test chủ yếu rơi vào thu-đông nên cần báo cáo theo tháng/mùa để xem xét khác biệt phân bố.
-- **Tuning và đánh giá:** dùng `RandomizedSearchCV` kết hợp `TimeSeriesSplit` để tinh chỉnh ít nhất một mô hình, dự kiến cả hai mô hình cây. Các tham số xem xét gồm `n_estimators`, `max_depth`, `min_samples_leaf`, `max_features` cho Random Forest; `n_estimators`, `learning_rate`, `max_depth`, `subsample` cho Gradient Boosting. Nếu Gradient Boosting của scikit-learn quá chậm trên toàn bộ dữ liệu, proposal cho phép cân nhắc `HistGradientBoostingRegressor` hoặc tập con có kiểm soát và phải ghi rõ. Chọn theo RMSE trung bình validation và độ ổn định giữa folds; báo cáo MAE/RMSE/R² tổng thể, theo trạm, mùa và nhóm PM2.5 cao; so sánh train với validation/test để nhận diện overfit/underfit. Cố định random seed để tái lập.
+   | Notebook | Công việc |
+   | --- | --- |
+   | [01](notebooks/01_eda_and_preprocessing.ipynb) | Khảo sát dữ liệu và xuất CSV chuẩn hóa |
+   | [02](notebooks/02_model_training_baseline.ipynb) | Đánh giá Persistence và Linear Regression trên validation |
+   | [03](notebooks/03_random_forest.ipynb), [04](notebooks/04_gradient_boosting.ipynb) | Đánh giá hai mô hình cây ở cấu hình ban đầu |
+   | [05](notebooks/05_tuning.ipynb) | Tinh chỉnh Random Forest và Gradient Boosting |
+   | [06](notebooks/06_mlp_regression.ipynb), [07](notebooks/07_mlp_tuning.ipynb) | Đánh giá MLP ban đầu rồi tinh chỉnh |
+   | [08](notebooks/08_final_evaluation.ipynb) | Đánh giá cuối trên tập test và phân tích sai số |
 
-Proposal đầy đủ: [`docs/Nhom10_BeijingAirQuality_Proposal.pdf`](docs/Nhom10_BeijingAirQuality_Proposal.pdf).
+   Bật `SAVE_ARTIFACTS=True` ở các bước cần ghi bảng, biểu đồ và mô hình. Notebook 02 mặc định để `RUN_FINAL_TEST=False`. Nếu đã có CSV chuẩn hóa và đủ mô hình, có thể mở thẳng notebook 08. Bộ nạp ưu tiên [`models/`](models/) và tìm bản lưu trong thư mục thực nghiệm khi cần. [Hướng dẫn notebook chi tiết](notebooks/README.md).
 
-## Thiết lập môi trường
+4. **Kiểm thử và đối chiếu kết quả đã lưu.** Các lệnh dưới đây kiểm tra mã nguồn và đối chiếu CSV với bằng chứng trong notebook đã thực thi.
 
-Dùng **Python 3.13** và môi trường riêng của dự án. requirements.txt khóa phiên bản thư viện; các mô hình lưu sẵn yêu cầu **scikit-learn 1.7.2**. Không dùng kernel Python hệ thống 1.8.0 để nạp các joblib này. Sau khi cài, chọn kernel trong .venv. requirements-lock.txt ghi toàn bộ phiên bản của môi trường Windows đã kiểm chứng.
+   ```powershell
+   .\.venv\Scripts\python.exe -m pytest -q
+   .\.venv\Scripts\python.exe -B scripts/verify_result_sources.py
+   ```
 
+   Tra notebook, mã ô và chế độ thực thi của từng bảng trong [`report_sources.csv`](outputs/notebooks/tables/report_sources.csv).
 
-Các lệnh sau dành cho PowerShell trên Windows, chạy từ thư mục gốc của repository:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements-lock.txt
-python -m pip install ipykernel
-```
-
-Nếu PowerShell không cho phép kích hoạt môi trường ảo, có thể gọi Python trong môi trường trực tiếp:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt ipykernel
-```
-
-Trong VS Code, mở thư mục gốc của đồ án và chọn Python trong `.venv` làm kernel của notebook.
-
-## Chạy kiểm thử
-
-Sau khi cài dependencies và kích hoạt môi trường:
+<details>
+<summary>Chạy theo lô và cập nhật bảng báo cáo</summary>
 
 ```powershell
-python -m pytest -q
-```
-
-Bộ kiểm thử tự động kiểm tra đọc dữ liệu, chia theo thời gian, tạo đặc trưng và pipeline tích hợp. Điểm đánh giá các mô hình được tính trong các notebook thực nghiệm. Xem [hướng dẫn kiểm thử](tests/README.md).
-
-**Trạng thái hiện tại** — Notebook 01 xuất dữ liệu chuẩn hóa. Notebook 02–04 đánh giá hai baseline và hai mô hình cây. Notebook 05 tinh chỉnh Random Forest và Gradient Boosting. Notebook 06 huấn luyện MLP gốc, notebook 07 tinh chỉnh MLP, và notebook 08 đánh giá cuối cả 5 mô hình trên cùng tập test.
-
-## Chạy notebook baseline
-
-Cần có `data/processed/beijing_air_quality_standardized.csv` từ notebook 01. `openpyxl` trong `requirements.txt` dùng để xuất Excel ở mục 13.
-
-Mở `notebooks/02_model_training_baseline.ipynb`, chọn kernel của đồ án và chạy các ô theo thứ tự. Bật `SAVE_ARTIFACTS = True` để lưu mô hình, bảng và biểu đồ. Mặc định RUN_FINAL_TEST = False; notebook 02 tạo baseline bằng validation, còn notebook 08 chấm test của các cấu hình đã chốt. Notebook 02 có thể tạo:
-
-- `models/baseline_linear_regression.joblib`, `outputs/notebooks/tables/baseline_metrics.csv`, `models/baseline_metadata.json`
-- `outputs/notebooks/tables/baseline_error_analysis.csv`, `outputs/notebooks/tables/baseline_model_comparison.xlsx`, `outputs/notebooks/tables/baseline_comparison_merged.csv`
-- `outputs/notebooks/figures/baseline_*.png`
-- các dòng `baseline_*` trong `experiment_log.csv` (chạy lại sẽ ghi đè, không tạo dòng trùng)
-
-Nếu thiếu `openpyxl`, notebook vẫn chạy và chỉ bỏ qua file Excel (vẫn ghi CSV). Các mô hình sau nên ghi `experiment_log.csv` theo quy ước `<tên_thí_nghiệm>_cv5` (validation) và `<tên_thí_nghiệm>_test` (test) để sheet `Nhat_ky_thuc_nghiem` ở mục 13 tự gom chúng vào bảng xếp hạng chung. Chi tiết: [`notebooks/README.md`](notebooks/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md).
-
-## Chạy notebook Random Forest và Gradient Boosting
-
-Cần có `data/processed/beijing_air_quality_standardized.csv` và, để mục so sánh chạy được, các file kết quả của notebook trước: `outputs/notebooks/tables/baseline_comparison_merged.csv` (notebook 02) và `outputs/notebooks/tables/random_forest_cv_metrics.csv` (notebook 03). Mở `notebooks/03_random_forest.ipynb` hoặc `notebooks/04_gradient_boosting.ipynb` rồi chọn `Restart & Run All`; mỗi notebook chạy khoảng vài chục giây đến vài phút. Chi tiết đầu ra: [`notebooks/README.md`](notebooks/README.md), [`models/README.md`](models/README.md), [`outputs/README.md`](outputs/README.md).
-
-## Chạy notebook tinh chỉnh, MLP và đánh giá cuối
-
-Mở repo từ thư mục gốc rồi chạy notebook theo thứ tự 01 → 08. Với các notebook tạo mô hình, bật `SAVE_ARTIFACTS` để các bước sau dùng được tệp đã lưu.
-
-1. Chạy **05** để tinh chỉnh Random Forest và Gradient Boosting trên 5 fold theo thời gian. Notebook đọc bảng điểm từng fold từ 03 và 04.
-2. Chạy **06** để xây dựng MLP gốc và lưu `outputs/notebooks/tables/mlp_cv_metrics.csv` khi bật `SAVE_ARTIFACTS` ở mục 9.
-3. Chạy **07** để tinh chỉnh MLP. Bản thực nghiệm đã thử 8 tổ hợp trên 5 fold và lưu `models/mlp_tuned.joblib`.
-4. Chạy **08** với kernel .venv sau khi đã có mô hình từ 02, 05 và 07. Bộ nạp ưu tiên models/ và tự dùng baseline lưu trong outputs/experiments/experiments01/models/ nếu bản ở models/ không có. Có thể đặt LINEAR_MODEL_PATH để dùng đường dẫn khác; không cần chép model thủ công.
-
-Xem mô tả từng notebook và đầu ra trong [`notebooks/README.md`](notebooks/README.md).
-
-### Bộ notebook chưa chạy
-
-[`notebooks_unexecuted/`](notebooks_unexecuted/) nằm cạnh `notebooks/` ở thư mục gốc và chứa đủ 8 notebook từ 01 đến 08. Các bản này đã xóa output và số thứ tự chạy của các ô. Hai bộ có cùng source và cấu hình; bộ notebooks_unexecuted/ chỉ xóa output và execution count. Sau khi sửa notebook gốc, chạy python scripts/sync_notebooks.py để đồng bộ.
-
-Để chạy lại toàn bộ quy trình, mở thư mục gốc của repo trong VS Code, chọn môi trường Python của đồ án và chạy lần lượt các file 01 → 08 trong `notebooks_unexecuted/`. Bật `SAVE_ARTIFACTS` ở các notebook tạo mô hình để notebook 08 có thể nạp mô hình đã lưu.
-
-## Hồ sơ thực nghiệm và đánh giá cuối
-
-Các notebook ghi biểu đồ vào [`outputs/notebooks/figures/`](outputs/notebooks/figures/README.md) và bảng vào [`outputs/notebooks/tables/`](outputs/notebooks/tables/). Nhóm tập hợp bảng Excel, CSV, hình và mô hình đã lưu theo từng đợt trong [`outputs/experiments/`](outputs/experiments/).
-
-| Hồ sơ                                                        | Notebook nguồn | Nội dung                                                                                         | Bảng đánh giá                                       |
-| -------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| [Thực nghiệm 01](outputs/experiments/experiments01/README.md) | 02              | Persistence và Linear Regression trên validation                                                | [Excel](outputs/experiments/experiments01/danh_gia.xlsx) |
-| [Thực nghiệm 02](outputs/experiments/experiments02/README.md) | 03, 04, 06      | Random Forest, Gradient Boosting và MLP cấu hình ban đầu, đối chiếu với thực nghiệm 01 | [Excel](outputs/experiments/experiments02/danh_gia.xlsx) |
-| [Thực nghiệm 03](outputs/experiments/experiments03/README.md) | 05, 07          | Cấu hình đã tinh chỉnh, đối chiếu với thực nghiệm 01 và 02                            | [Excel](outputs/experiments/experiments03/danh_gia.xlsx) |
-| [Đánh giá cuối](outputs/experiments/final_test/README.md)   | 08              | Chấm 5 mô hình đã chốt cấu hình trên tập test                                           | [Excel](outputs/experiments/final_test/danh_gia.xlsx)    |
-
-## Kết quả validation (5 fold theo thời gian)
-
-MAE và RMSE tính bằng µg/m³, càng thấp càng tốt. Nguồn số liệu là `experiment_log.csv` và notebook 04–07. Notebook 05 dùng `RandomizedSearchCV` với 20 tổ hợp cho Gradient Boosting và 8 cho Random Forest. Notebook 07 thử 8 tổ hợp cho MLP.
-
-| Mô hình                                                        |  RMSE TB 5 fold | RMSE TB fold 2–5 |   MAE TB 5 fold |
-| :--------------------------------------------------------------- | --------------: | ----------------: | --------------: |
-| Persistence                                                      |           19,97 |             18,92 |           10,42 |
-| Linear Regression                                                |           19,29 |             18,27 |           10,74 |
-| Random Forest (`n_estimators=20`)                              |           20,17 |   **17,74** |           10,53 |
-| Gradient Boosting (`HistGradientBoostingRegressor`, 200 vòng) |           21,97 |             18,19 |           11,07 |
-| Random Forest (đã tinh chỉnh)                                 | **19,18** |             17,74 | **10,13** |
-| Gradient Boosting (đã tinh chỉnh)                             |           20,04 |             18,25 |           10,52 |
-| MLP gốc                                                         |           20,08 |             18,09 |           11,73 |
-| MLP (đã tinh chỉnh)                                           |           19,63 |             18,00 |           11,07 |
-
-Lưu ý khi đọc bảng:
-
-- Fold 1 chỉ train trên 03–09/2013 (chưa có mùa đông) nhưng validation rơi vào mùa đông, nên sai số rất lớn (Gradient Boosting RMSE 37,11; Random Forest 29,89; Linear Regression 23,39) và kéo trung bình 5 fold lên. Vì vậy bảng có thêm cột trung bình fold 2–5.
-- Gradient Boosting yếu nhất ở PM2.5 cao: RMSE 80,9 ở mức trên 250 µg/m³ và 37,1 ở mùa Đông (Random Forest: 65,0 và 30,5).
-- Tuning cải thiện chủ yếu ở fold 1 (Gradient Boosting RMSE 37,11 → 27,19; Random Forest 29,89 → 24,92); trung bình fold 2–5 gần như không đổi (Gradient Boosting 18,19 → 18,25; Random Forest 17,74 → 17,74). Điểm CV của bộ tham số tốt nhất hơi lạc quan vì được chọn từ nhiều lần thử trên cùng các fold.
-- Trong lần chạy notebook 07, RMSE validation của MLP giảm từ 20,0840 xuống 19,6317 µg/m³ (2,25%); riêng fold 2–5 giảm 0,52%. Random Forest đã tinh chỉnh có RMSE trung bình 5 fold thấp nhất trong các cấu hình đã thử.
-
-## Kết quả đánh giá trên tập test
-
-Notebook 08 đánh giá trên **51.063 mẫu**, với nhãn từ **01/09/2016 đến 28/02/2017**. Cấu hình của các mô hình đã được chốt từ validation. Bảng dưới đây xếp theo RMSE test.
-
-| Hạng | Mô hình                            | MAE (µg/m³) |    RMSE (µg/m³) |    R² |
-| ----: | ------------------------------------ | ------------: | ----------------: | -----: |
-|     1 | Random Forest (đã tinh chỉnh)     |       10,5906 | **20,9613** | 0,9550 |
-|     2 | Gradient Boosting (đã tinh chỉnh) |       10,8195 |           21,2957 | 0,9536 |
-|     3 | MLP (đã tinh chỉnh)               |       11,1583 |           21,4967 | 0,9527 |
-|     4 | Linear Regression                    |       11,3510 |           21,8027 | 0,9513 |
-|     5 | Persistence                          |       11,5864 |           23,1133 | 0,9453 |
-
-Random Forest đã tinh chỉnh có RMSE thấp nhất, giảm **9,31%** so với Persistence. Bảng điểm và biểu đồ nằm tại [`outputs/notebooks/tables/final_test_metrics.csv`](outputs/notebooks/tables/final_test_metrics.csv) và [`outputs/notebooks/figures/final_test_rmse.png`](outputs/notebooks/figures/final_test_rmse.png). Các dòng `*_test` nằm trong [`experiment_log.csv`](experiment_log.csv).
-
-## Tái lập và phân tích bổ sung
-
-Chạy các lệnh sau từ thư mục gốc bằng PowerShell sau khi cài requirements.txt:
-
-~~~powershell
-.\.venv\Scripts\python.exe -m pytest -q
-.\.venv\Scripts\python.exe -m src.eda
-.\.venv\Scripts\python.exe -m src.evaluation
-.\.venv\Scripts\python.exe -m src.validation_diagnostics
-~~~
-
-- src.eda tạo lại bảng/hình ACF, phân bố tuyến tính/log và quan hệ gió tại outputs/eda/tables và outputs/eda/figures.
-- src.evaluation nạp các mô hình đã chốt, kiểm tra điểm với bảng test gốc và xuất phân tích vào outputs/experiments/final_test/analysis/. Gồm dự đoán từng mẫu, lỗi theo trạm/tháng/mùa/mức PM2.5, trường hợp sai số lớn, khoảng bootstrap ghép cặp theo khối 7 ngày và manifest truy vết.
-- src.validation_diagnostics tính importance theo nhóm cho RF fit riêng trên train fold 5; kiểm tra MLP với seed 7/42/2026 trên 5 fold và so sánh giới hạn epoch ở hai fold đầu. Đầu ra tại outputs/experiments/validation_diagnostics/. Mô hình cuối không bị thay thế.
-- Các lệnh tạo artifact nên chạy trong môi trường cố định. Các notebook đã sửa có thể được xóa output để tránh hiển thị kết quả cũ; chạy lại từ kernel sạch để tạo output mới.
-- Không chọn lại cấu hình theo phân tích test. Kết quả bootstrap chỉ có điều kiện trên dự đoán cố định, thời kỳ test thu–đông và các trạm đã quan sát.
-- Nhóm PM2.5 trong phân tích cuối đóng bên phải: <=35, (35,75], (75,115], (115,150], (150,250], >250. Giữ nhãn/quy tắc này khi đưa bảng vào báo cáo.
-- Điểm CV chính là trung bình số học metric của 5 folds; RMSE tính gộp OOF là thống kê khác và cần ghi nhãn riêng.
-
-## Việc cần làm tiếp theo
-
-- Đưa bảng điểm, hình và nhận xét về validation/test vào báo cáo và slide cuối kỳ. Ghi rõ giới hạn của các lần tuning và phân tích sai số đã thực hiện theo proposal.
-- Dùng các bảng Excel đã lưu theo từng đợt trong `outputs/experiments/` để đối chiếu với CSV, nhật ký và biểu đồ khi viết báo cáo.
-- Rà citation, tài liệu, cách tái lập và thống nhất nội dung báo cáo với kết quả đã lưu.
-
-Tài liệu tham khảo về cách trình bày báo cáo nằm trong [`docs/README.md`](docs/README.md).
-
-### Điều kiện hoàn thành
-
-1. So sánh công bằng Linear Regression, Random Forest, Gradient Boosting và MLP trên cùng target, đặc trưng và fold theo thời gian. Persistence là mốc tham chiếu.
-2. Tuning sử dụng validation/CV; test chỉ dùng đánh giá cuối. Không chọn cấu hình theo kết quả test.
-3. Kết quả có MAE, RMSE, R²; phân tích theo các nhóm proposal; đơn vị, số mẫu và khoảng thời gian được ghi rõ.
-4. Báo cáo, slide, workbook, experiment log, mã nguồn và hình biểu đồ truy vết được và nhất quán.
-
-## Cấu trúc thư mục dự án
-
-Sơ đồ dưới đây tóm tắt mã nguồn, dữ liệu đầu vào và các đầu ra của quy trình 01–08.
-
-```text
-data/
-├── raw/                                      Dữ liệu PRSA gốc theo 12 trạm
-│   └── PRSA_Data_20130301-20170228/          CSV theo 12 trạm
-├── processed/                                Bản gộp/chuẩn hóa; giữ missing, chưa phải feature matrix
-notebooks/
-├── 01_eda_and_preprocessing.ipynb            EDA, so sánh trước/sau pipeline và xuất CSV chuẩn hóa
-├── 02_model_training_baseline.ipynb           Baseline Persistence và Linear Regression, merge kết quả và xuất file so sánh
-├── 03_random_forest.ipynb        Random Forest, 5 fold CV (chưa tuning, chưa dùng test)
-├── 04_gradient_boosting.ipynb                 Gradient Boosting (HistGradientBoosting), 5 fold CV (chưa tuning)
-├── 05_tuning.ipynb                            Tinh chỉnh Gradient Boosting và Random Forest
-├── 06_mlp_regression.ipynb                    MLP gốc và phân tích validation
-├── 07_mlp_tuning.ipynb                        Tinh chỉnh MLP trên 5 fold
-└── 08_final_evaluation.ipynb                  Đánh giá cuối 5 mô hình trên tập test
-notebooks_unexecuted/                          8 notebook đã xóa output để chạy lại
-├── 01_eda_and_preprocessing.ipynb
-├── 02_model_training_baseline.ipynb
-├── 03_random_forest.ipynb
-├── 04_gradient_boosting.ipynb
-├── 05_tuning.ipynb
-├── 06_mlp_regression.ipynb
-├── 07_mlp_tuning.ipynb
-└── 08_final_evaluation.ipynb
-src/
-├── data_loader.py                             Nạp dữ liệu, chia thời gian và CV theo timestamp
-└── features.py                                Tạo target/đặc trưng và tiền xử lý train-only
-tests/
-├── test_data_pipeline.py                      Kiểm thử nạp dữ liệu và chia thời gian
-├── test_feature_engineering.py                Kiểm thử target, feature và preprocessing
-└── test_integration.py                        Kiểm thử tích hợp pipeline dữ liệu
-models/                                        Nơi lưu mô hình đã huấn luyện
-├── baseline_linear_regression.joblib          Pipeline Linear Regression (baseline)
-├── baseline_metadata.json                     Thông tin nạp lại và truy vết mô hình
-├── random_forest.joblib                       Pipeline Random Forest (fit trên Train/Validation)
-├── random_forest_metadata.json                Thông tin truy vết Random Forest
-├── gradient_boosting.joblib                   Pipeline Gradient Boosting (fit trên Train/Validation)
-├── gradient_boosting_metadata.json            Thông tin truy vết Gradient Boosting
-├── random_forest_tuned.joblib                 Pipeline Random Forest đã tinh chỉnh
-├── random_forest_tuned_metadata.json          Thông tin truy vết Random Forest đã tinh chỉnh
-├── gradient_boosting_tuned.joblib             Pipeline Gradient Boosting đã tinh chỉnh
-├── gradient_boosting_tuned_metadata.json      Thông tin truy vết Gradient Boosting đã tinh chỉnh
-├── mlp.joblib                                 MLP gốc
-├── mlp_metadata.json                          Thông tin truy vết MLP gốc
-├── mlp_tuned.joblib                           MLP đã tinh chỉnh
-└── mlp_tuned_metadata.json                    Thông tin truy vết MLP đã tinh chỉnh
-outputs/
-├── eda/                                       Nhật ký và kết luận EDA
-├── notebooks/                                 Đầu ra trực tiếp từ notebook
-│   ├── figures/                               Biểu đồ validation, tinh chỉnh và test
-│   └── tables/                                Bảng CSV/Excel, gồm final_test_metrics.csv
-└── experiments/                               Hồ sơ kết quả theo từng đợt
-    ├── experiments01/                         Baseline trên validation
-    ├── experiments02/                         Ba mô hình với cấu hình ban đầu
-    ├── experiments03/                         So sánh trước và sau tinh chỉnh
-    └── final_test/                             Đánh giá cuối trên tập test
-docs/                                          Tài liệu đồ án
-experiment_log.csv                             Nhật ký validation (*_cv5) và test (*_test)
-requirements.txt                               Danh sách thư viện Python
-pytest.ini                                     Cấu hình pytest
-README.md                                      Giới thiệu và hướng dẫn dự án
-```
-
-### Hướng dẫn theo thư mục
-
-- [Dữ liệu](data/README.md), [dữ liệu gốc](data/raw/README.md) và [dữ liệu chuẩn hóa](data/processed/README.md).
-- [Notebook](notebooks/README.md), [pipeline dữ liệu](src/README.md), [kiểm thử](tests/README.md) và [mô hình đã lưu](models/README.md).
-- [Đầu ra](outputs/README.md), [EDA](outputs/eda/README.md), [biểu đồ](outputs/notebooks/figures/README.md) và [tài liệu đồ án](docs/README.md).
-
-## Phân công công việc
-
-Giảng viên hướng dẫn: TS. Đỗ Như Tài
-
-| STT | Họ và tên        |    MSSV    | Vai trò       | Phần việc phụ trách                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| :-: | :------------------ | :--------: | :------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|  1  | Trần Lê Gia Bảo  | 3124411038 | Nhóm trưởng | Tổ chức repository và tài liệu theo proposal; khảo sát và phân tích dữ liệu (EDA); chuẩn hóa, xuất bản dữ liệu và ghi lại kết luận; xây dựng pipeline dữ liệu, tạo đặc trưng, chia tập theo thời gian và kiểm thử pipeline. Phạm vi phụ trách kết thúc ở pipeline dữ liệu, không bao gồm xây dựng, huấn luyện hay đánh giá mô hình.                                                                                                                        |
-|  2  | Tô Thành Nhân    | 3124411198 | Thành viên   | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-|  3  | Đào Hữu Tài     | 3124411261 | Thành viên   | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-|  4  | Huỳnh Nhật Quang  | 3124411245 | Thành viên   | Xây dựng và đánh giá mô hình Gradient Boosting (notebook 04, dùng HistGradientBoostingRegressor, 5-fold CV theo thời gian); tinh chỉnh tham số bằng RandomizedSearchCV cho Gradient Boosting và Random Forest (notebook 05, không dùng tập Test); lưu mô hình, kết quả CV và nhật ký thực nghiệm; cập nhật README của các phần này. Bổ sung và tinh chỉnh MLP (notebook 06–07), thực hiện đánh giá cuối cùng theo notebook 08 và ghi nhận kết quả thực nghiệm. |
-|  5  | Nguyễn Thanh Tuấn | 3124411337 | Thành viên   | Phần việc cụ thể sẽ được nhóm thống nhất và cập nhật.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-
-Chi tiết phạm vi công việc của nhóm trưởng được ghi tại [`docs/phan-cong-cong-viec.docx`](docs/phan-cong-cong-viec.docx). Nhật ký EDA để các thành viên đọc lại quy trình và quyết định nằm tại [`outputs/eda/eda_worklog.md`](outputs/eda/eda_worklog.md); bảng kết luận nằm tại [`outputs/eda/eda_conclusions.csv`](outputs/eda/eda_conclusions.csv).
-
-## Nguồn dữ liệu
-
-Chen, S. (2017). *Beijing Multi-Site Air Quality* [Dataset]. UCI Machine Learning Repository. [https://doi.org/10.24432/C5RK5G](https://doi.org/10.24432/C5RK5G). Dữ liệu được phát hành theo giấy phép [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-
-### Bản tham khảo trên Kaggle
-
-Thành viên có thể tham khảo trang [Beijing Multi-Site Air-Quality Data Set trên Kaggle](https://www.kaggle.com/datasets/sid321axn/beijing-multisite-airquality-data-set). Khi sử dụng dữ liệu trong báo cáo, cần kiểm tra nội dung và giấy phép của bản tải xuống; trích dẫn bộ dữ liệu gốc UCI ở trên theo proposal.
-
-## Nguồn số liệu báo cáo từ notebook
-
-Theo phạm vi đã thống nhất: tạm chưa dùng W&B/MLflow; không thêm công nghệ, dependency hoặc mô hình mới nếu chưa được người dùng đồng ý. Góp ý từ bài MRI chỉ được áp dụng khi phù hợp với hồi quy PM2.5.
-
-Quy trình dùng các thư viện hiện có:
-
-~~~powershell
 .\.venv\Scripts\python.exe -B scripts/run_notebooks.py 01 02 03 04 06 08
 .\.venv\Scripts\python.exe -B scripts/run_notebooks.py 05 07 --verify-searches
 .\.venv\Scripts\python.exe -B scripts/verify_result_sources.py
 .\.venv\Scripts\python.exe -B scripts/refresh_experiment_tables.py
 .\.venv\Scripts\python.exe -B scripts/build_report_requirements.py
-~~~
+```
 
-Lệnh thứ hai chỉ đối chiếu search đã lưu, không chạy lại tuning và không nhận là run mới. Muốn chạy lại search thật, chạy 05/07 đầy đủ theo hướng dẫn notebook.
+Quy trình này cần các mô hình tinh chỉnh và kết quả tìm kiếm đã lưu. Cờ `--verify-searches` chỉ đối chiếu kết quả tìm kiếm của 05 và 07. Khi tái lập từ đầu theo thứ tự 01–08, chạy toàn bộ ô trong hai notebook tinh chỉnh trước khi đánh giá cuối. Sau khi sửa notebook gốc, dùng `scripts/sync_notebooks.py` để đồng bộ bản đã xóa đầu ra. Xem [các mục cần cập nhật trong báo cáo và slide](docs/nhung-phan-con-thieu-theo-yeu-cau-giang-vien.md).
 
-report_sources.csv trong outputs/notebooks/tables liên kết mỗi CSV với notebook đã thực thi, mã ô, vị trí ô, execution count, hash và chế độ computed/verified_saved_search. Bảng nhỏ có bản ghi số liệu ngay trong output JSON của notebook; artifact lớn có hash và số dòng. Script kiểm tra phát hiện việc CSV bị sửa sau khi xuất hoặc source notebook thay đổi.
+</details>
 
-Các nhóm PM2.5 được dùng chung trong src/analysis_groups.py. Baseline, GB, MLP và test hiện thống nhất biên phải, gồm <=35, (35,75], (75,115], (115,150], (150,250], >250. Vì vậy bảng baseline theo mức cũ cần cập nhật cả số mẫu lẫn metric.
+## Phương pháp dự báo
 
-Các lệnh CLI phân tích vẫn dùng cho kiểm tra; số đưa vào báo cáo cần có nguồn notebook đã thực thi và vượt qua verify_result_sources.py. Không chỉnh CSV bằng tay để làm khớp một kết luận.
+```mermaid
+flowchart LR
+    A["Số đo của 12 trạm"] --> B["27 đặc trưng đến giờ t"]
+    B --> C{"Chia theo thời điểm nhãn"}
+    C -->|"Trước tháng 9/2016"| D["Validation 5 fold và chọn cấu hình"]
+    C -->|"Từ tháng 9/2016"| E["Đánh giá trên tập test"]
+    D -->|"Cấu hình đã chốt"| E
+```
 
-File docs/nhung-phan-con-thieu-theo-yeu-cau-giang-vien.md hiện là danh sách sửa DOCX/PPTX được sinh từ các bảng đã kiểm chứng. Không coi file đó là đề nghị triển khai nền tảng mới.
+- **Đầu vào.** Số đo ở giờ `t`, PM2.5 trễ 1, 2, 3, 6, 12 và 24 giờ, trung bình trượt 6 và 24 giờ, đặc trưng thời gian, trạm và hướng gió. **Đầu ra** là PM2.5 ở giờ `t+1` tại cùng trạm.
+- **Tiền xử lý.** Điền tiếp giá trị quan trắc trong tối đa 6 giờ theo từng trạm. Giữ nguyên giá trị thiếu của nhãn rồi loại các mẫu thiếu nhãn. Bộ điền khuyết và chuẩn hóa của mỗi fold chỉ học từ phần huấn luyện.
+- **Đánh giá.** Dùng 5 fold theo thời gian với cửa sổ huấn luyện mở rộng dần. Ba mô hình được tinh chỉnh bằng `RandomizedSearchCV`, chọn theo RMSE validation trung bình. Cấu hình được chốt trước khi chấm test. [Mã xử lý dữ liệu và tạo đặc trưng](src/README.md).
+
+## Bộ dữ liệu Beijing Multi-Site Air Quality
+
+Bộ PRSA gồm **420.768 bản ghi theo giờ** từ **12 trạm**, trong giai đoạn **01/03/2013–28/02/2017**. Sau khi tạo nhãn cho giờ kế tiếp và bỏ mẫu thiếu nhãn, còn **360.954 mẫu train/validation** và **51.063 mẫu test**. Tập test dùng nhãn từ **01/09/2016 đến 28/02/2017**. [Thống kê dữ liệu](outputs/eda/tables/dataset_counts.csv) · [Tổng hợp chia tập](outputs/eda/tables/target_split_summary.csv) · [Nguồn UCI](https://doi.org/10.24432/C5RK5G).
+
+**Phân bố PM2.5 trên thang tuyến tính và thang log**
+
+![Phân bố PM2.5 trên thang tuyến tính và thang log](outputs/eda/figures/pm25_distribution_linear_log.png)
+
+**Tự tương quan PM2.5 theo độ trễ**
+
+![Tự tương quan của PM2.5 theo độ trễ giờ](outputs/eda/figures/pm25_autocorrelation.png)
+
+Xem thêm [phân tích khám phá dữ liệu](outputs/eda/README.md) và [biểu đồ quan hệ giữa gió và PM2.5](outputs/eda/figures/pm25_wind_relationships.png).
+
+## Mô hình và kết quả
+
+### Danh sách mô hình
+
+| Mô hình | Cách dự báo | Số tổ hợp tinh chỉnh |
+| --- | --- | ---: |
+| Persistence | Dùng PM2.5 ở giờ hiện tại làm dự báo | — |
+| Linear Regression | Hồi quy tuyến tính với đặc trưng số được chuẩn hóa | — |
+| Random Forest | Hồi quy bằng tổ hợp cây quyết định | 8 |
+| Gradient Boosting | Hồi quy tăng cường theo histogram với `HistGradientBoostingRegressor` | 20 |
+| MLP | Mạng nơ-ron truyền thẳng, chuẩn hóa đầu vào số và biến mục tiêu | 8 |
+
+### Kết quả validation
+
+RMSE tính bằng µg/m³, lấy trung bình số học trên 5 fold. Mức giảm được tính từ số liệu trước khi làm tròn.
+
+| Mô hình | RMSE ban đầu | RMSE sau tinh chỉnh | Mức giảm |
+| --- | ---: | ---: | ---: |
+| Persistence | 19,9665 | — | — |
+| Linear Regression | 19,2950 | — | — |
+| Random Forest | 20,1707 | **19,1779** | 4,92% |
+| Gradient Boosting | 21,9726 | 20,0384 | 8,80% |
+| MLP | 20,0840 | 19,6317 | 2,25% |
+
+Các điểm theo fold, MAE và R² nằm trong [thực nghiệm 01](outputs/experiments/experiments01/README.md), [thực nghiệm 02](outputs/experiments/experiments02/README.md) và [thực nghiệm 03](outputs/experiments/experiments03/README.md). Xem [chẩn đoán validation](outputs/experiments/validation_diagnostics/README.md) để tra độ quan trọng của các nhóm đặc trưng với Random Forest và độ ổn định của MLP theo seed.
+
+### Kết quả trên tập test
+
+| Hạng | Mô hình | MAE (µg/m³) | RMSE (µg/m³) | R² |
+| ---: | --- | ---: | ---: | ---: |
+| 1 | Random Forest tinh chỉnh | 10,5906 | **20,9613** | 0,9550 |
+| 2 | Gradient Boosting tinh chỉnh | 10,8195 | 21,2957 | 0,9536 |
+| 3 | MLP tinh chỉnh | 11,1583 | 21,4967 | 0,9527 |
+| 4 | Linear Regression | 11,3510 | 21,8027 | 0,9513 |
+| 5 | Persistence | 11,5864 | 23,1133 | 0,9453 |
+
+![So sánh RMSE trên tập test của năm mô hình](outputs/notebooks/figures/final_test_rmse.png)
+
+Random Forest tinh chỉnh giảm RMSE **9,31%** so với Persistence. Khoảng tin cậy bootstrap ghép cặp 95% của chênh lệch RMSE giữa Random Forest và Gradient Boosting, cũng như giữa Random Forest và MLP, đều chứa 0. Trên nhóm có PM2.5 thực tế trên 250 µg/m³, hai mô hình Gradient Boosting và MLP có RMSE cao hơn Persistence. [Bảng test gốc](outputs/notebooks/tables/final_test_metrics.csv) · [Phân tích sai số và bootstrap](outputs/experiments/final_test/analysis/README.md).
+
+### Tệp kết quả
+
+| Đợt | Hồ sơ | Bảng đánh giá |
+| --- | --- | --- |
+| 01 | [Persistence và Linear Regression](outputs/experiments/experiments01/README.md) | [Excel](outputs/experiments/experiments01/danh_gia.xlsx) |
+| 02 | [Random Forest, Gradient Boosting và MLP ban đầu](outputs/experiments/experiments02/README.md) | [Excel](outputs/experiments/experiments02/danh_gia.xlsx) |
+| 03 | [So sánh trước và sau tinh chỉnh](outputs/experiments/experiments03/README.md) | [Excel](outputs/experiments/experiments03/danh_gia.xlsx) |
+| Test | [Đánh giá cuối](outputs/experiments/final_test/README.md) | [Excel](outputs/experiments/final_test/danh_gia.xlsx) |
+
+[Bảng CSV và Excel](outputs/notebooks/tables/) · [Biểu đồ notebook](outputs/notebooks/figures/README.md) · [Nhật ký CSV](experiment_log.csv) · [Hướng dẫn lưu từng lượt chạy](Experimental%20Log/README.md).
+
+## Trích dẫn dữ liệu
+
+Chen, S. (2017). *Beijing Multi-Site Air Quality*. UCI Machine Learning Repository. [DOI 10.24432/C5RK5G](https://doi.org/10.24432/C5RK5G) · [Giấy phép CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+```bibtex
+@misc{chen2017beijing,
+  author    = {Chen, Song},
+  title     = {Beijing Multi-Site Air Quality},
+  year      = {2017},
+  publisher = {UCI Machine Learning Repository},
+  doi       = {10.24432/C5RK5G},
+  url       = {https://doi.org/10.24432/C5RK5G}
+}
+```
