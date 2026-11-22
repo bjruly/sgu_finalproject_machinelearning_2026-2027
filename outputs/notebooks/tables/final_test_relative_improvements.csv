@@ -1,0 +1,11 @@
+﻿model,reference,rmse_reduction_percent,mae_reduction_percent
+Random Forest - tuned,Persistence,9.310698433968534,8.595105174028394
+Gradient Boosting - tuned,Persistence,7.863838879957685,6.6195561219973715
+MLP - tuned,Persistence,6.994254198745442,3.6951932504642238
+Linear Regression,Persistence,5.670247323680133,2.0322826557839346
+Persistence,Persistence,0.0,0.0
+Random Forest - tuned,Linear Regression,3.8592819412769264,6.698964410067399
+Gradient Boosting - tuned,Linear Regression,2.325450342061819,4.682433755290793
+MLP - tuned,Linear Regression,1.4035941338767843,1.6974066965728563
+Linear Regression,Linear Regression,0.0,0.0
+Persistence,Linear Regression,-6.011091053251083,-2.074441163759455

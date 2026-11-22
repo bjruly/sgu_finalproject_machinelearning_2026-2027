@@ -1,0 +1,5 @@
+﻿model,estimator,raw_input_columns,transformed_columns,layer_shapes,loss,criterion,alpha
+Linear Regression,LinearRegression,27,79,,,,
+Random Forest - tuned,RandomForestRegressor,27,79,,,squared_error,
+Gradient Boosting - tuned,HistGradientBoostingRegressor,27,79,,squared_error,,
+MLP - tuned,MLPRegressor,27,79,"[[79, 32], [32, 16], [16, 1]]",squared_error,,0.0001
