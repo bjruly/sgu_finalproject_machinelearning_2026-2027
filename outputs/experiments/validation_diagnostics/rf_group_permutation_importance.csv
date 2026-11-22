@@ -1,0 +1,7 @@
+﻿model,fold,feature_group,baseline_sample_rmse,rmse_increase_mean,rmse_increase_std,n_repeats,n_validation_sample,seed
+Random Forest - tuned; refitted on fold 5 training only,5,current_pm25,17.551847675922335,51.86165721172686,0.09624239330560458,5,30000,42
+Random Forest - tuned; refitted on fold 5 training only,5,other_pollutants,17.551847675922335,5.939792881150073,0.050296828493273174,5,30000,42
+Random Forest - tuned; refitted on fold 5 training only,5,pm25_lags_rolling,17.551847675922335,2.090541176593379,0.06578114912782766,5,30000,42
+Random Forest - tuned; refitted on fold 5 training only,5,weather,17.551847675922335,1.441548156733073,0.03348261639731128,5,30000,42
+Random Forest - tuned; refitted on fold 5 training only,5,time,17.551847675922335,0.07996440585914258,0.011028215223420146,5,30000,42
+Random Forest - tuned; refitted on fold 5 training only,5,station,17.551847675922335,0.0029519853220918435,0.0006136815244138254,5,30000,42

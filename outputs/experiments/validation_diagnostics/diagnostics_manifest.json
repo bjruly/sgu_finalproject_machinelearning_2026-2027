@@ -1,0 +1,64 @@
+{
+  "created_at_utc": "2026-11-20T16:20:03.482504+00:00",
+  "operator": null,
+  "operator_note": "Not inferred from account, Git author or machine name.",
+  "python_version": "3.13.12",
+  "packages": {
+    "numpy": "2.3.3",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.17.1",
+    "joblib": "1.5.3",
+    "threadpoolctl": "3.6.0"
+  },
+  "scope": "train/validation only; test labels not scored; final joblib files not replaced",
+  "feature_columns": [
+    "PM2.5",
+    "PM10",
+    "SO2",
+    "NO2",
+    "CO",
+    "O3",
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "RAIN",
+    "WSPM",
+    "PM2.5_lag_1",
+    "PM2.5_lag_2",
+    "PM2.5_lag_3",
+    "PM2.5_lag_6",
+    "PM2.5_lag_12",
+    "PM2.5_lag_24",
+    "PM2.5_rolling_mean_6",
+    "PM2.5_rolling_mean_24",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "station",
+    "wd"
+  ],
+  "seeds": [
+    7,
+    42,
+    2026
+  ],
+  "dataset_sha256": "5ed503c3e0ea0c91eac200cc290dac598cc2886aa2ef5adb8dcd971432dce76e",
+  "fold_5_train_target_end": "2016-01-31 14:00:00",
+  "fold_5_validation_target_start": "2016-01-31 15:00:00",
+  "feature_importance": {
+    "sample_size": 30000,
+    "n_repeats": 5,
+    "seed": 42,
+    "limitations": "correlated features; model dependence, not causality"
+  },
+  "mlp": {
+    "configured_max_iter": 40,
+    "epoch_diagnostic_max_iter": 100,
+    "loss_scale": "MLP objective on training-standardized target; not µg/m³ RMSE",
+    "model_selection": "no replacement configuration selected by this diagnostic"
+  }
+}

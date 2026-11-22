@@ -1,0 +1,5 @@
+﻿model_a,model_b,rmse_difference_a_minus_b,ci_95_low,ci_95_high,n_bootstrap,block_days,seed,n_calendar_days,method
+Random Forest - tuned,Persistence,-2.152006796160208,-2.5553243557494416,-1.7699198439077437,2000,7,42,181,paired moving calendar-day blocks; all stations together
+Random Forest - tuned,Linear Regression,-0.8414272662776341,-1.1251390560951413,-0.5930132733598514,2000,7,42,181,paired moving calendar-day blocks; all stations together
+Random Forest - tuned,Gradient Boosting - tuned,-0.33441654408663624,-0.7799408424010148,0.13386394973926355,2000,7,42,181,paired moving calendar-day blocks; all stations together
+Random Forest - tuned,MLP - tuned,-0.5354059926309311,-1.343127641458826,0.2556975582667299,2000,7,42,181,paired moving calendar-day blocks; all stations together
