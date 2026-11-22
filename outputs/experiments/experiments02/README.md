@@ -16,3 +16,9 @@ Bảng tổng hợp là trung bình cộng điểm của 5 fold từ các tệp 
 ## So sánh với các thực nghiệm trước
 
 Sheet `So_sanh` đối chiếu ba cấu hình ban đầu với Persistence và Linear Regression từ [thực nghiệm 01](../experiments01/README.md). Các bảng dùng cùng 5 fold validation. Chênh lệch RMSE âm cho biết mô hình có RMSE thấp hơn mốc đối chiếu.
+
+## Đồng bộ từ nguồn notebook
+
+CSV/XLSX tổng hợp hiện hành được tạo bằng scripts/refresh_experiment_tables.py sau khi scripts/verify_result_sources.py kiểm tra nguồn. Các bản sao ket_qua_goc và figures được đồng bộ từ outputs/notebooks; nguồn gốc tra trong outputs/notebooks/tables/report_sources.csv.
+
+Các model lưu theo đợt và thư mục Experimental Log là hồ sơ trước đó, không bị đổi thành lần huấn luyện mới. Khi viết báo cáo, dùng bảng hiện hành có mã ô notebook; không trộn số nhóm cũ khác quy tắc biên.

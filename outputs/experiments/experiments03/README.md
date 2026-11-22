@@ -18,3 +18,9 @@ Số liệu cấu hình ban đầu lấy từ notebook 03, 04 và 06. Số liệ
 Sheet `So_sanh` đối chiếu từng cấu hình đã tinh chỉnh với cấu hình ban đầu tương ứng ở [thực nghiệm 02](../experiments02/README.md) và hai baseline ở [thực nghiệm 01](../experiments01/README.md). Các bảng dùng cùng 5 fold validation. Chênh lệch RMSE âm cho biết mô hình có RMSE thấp hơn mốc đối chiếu.
 
 Sau khi chốt cấu hình từ validation, notebook 08 dùng các pipeline đã lưu để chấm [tập test](../final_test/README.md).
+
+## Đồng bộ từ nguồn notebook
+
+CSV/XLSX tổng hợp hiện hành được tạo bằng scripts/refresh_experiment_tables.py sau khi scripts/verify_result_sources.py kiểm tra nguồn. Các bản sao ket_qua_goc và figures được đồng bộ từ outputs/notebooks; nguồn gốc tra trong outputs/notebooks/tables/report_sources.csv.
+
+Các model lưu theo đợt và thư mục Experimental Log là hồ sơ trước đó, không bị đổi thành lần huấn luyện mới. Khi viết báo cáo, dùng bảng hiện hành có mã ô notebook; không trộn số nhóm cũ khác quy tắc biên.

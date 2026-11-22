@@ -18,3 +18,9 @@ Persistence là quy tắc lấy PM2.5 hiện tại làm giá trị dự báo, v�
 Notebook 02 dùng các dự đoán từng mẫu trong bộ nhớ để tính sai số và vẽ hình. Bản nguồn chỉ xuất các bảng tổng hợp và biểu đồ từ những dự đoán đó.
 
 Hai baseline là mốc đối chiếu của [thực nghiệm 02](../experiments02/README.md) và [thực nghiệm 03](../experiments03/README.md). Điểm trên tập test được ghi riêng trong [hồ sơ đánh giá cuối](../final_test/README.md).
+
+## Đồng bộ từ nguồn notebook
+
+CSV/XLSX tổng hợp hiện hành được tạo bằng scripts/refresh_experiment_tables.py sau khi scripts/verify_result_sources.py kiểm tra nguồn. Các bản sao ket_qua_goc và figures được đồng bộ từ outputs/notebooks; nguồn gốc tra trong outputs/notebooks/tables/report_sources.csv.
+
+Các model lưu theo đợt và thư mục Experimental Log là hồ sơ trước đó, không bị đổi thành lần huấn luyện mới. Khi viết báo cáo, dùng bảng hiện hành có mã ô notebook; không trộn số nhóm cũ khác quy tắc biên.
