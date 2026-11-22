@@ -4,7 +4,7 @@
 
 - [Proposal](Nhom10_BeijingAirQuality_Proposal.pdf): kế hoạch đã nộp, giữ nguyên để đối chiếu.
 - [Báo cáo cuối kỳ](Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx): dữ liệu, phương pháp, thiết lập thực nghiệm, kết quả validation/test, phân tích sai số, độ chắc chắn và phân công thành viên.
-- [Slide trình bày](Nhom10__Slide.pptx): trình bày dữ liệu, phương pháp, validation, tuning và test.
+- [Slide trình bày](Nhom10_Slide.pptx): trình bày dữ liệu, phương pháp, validation, tuning và test.
 - [Phân công](phan-cong-cong-viec.docx): vai trò, công việc đã thực hiện và tỷ lệ đóng góp, tổng bằng 100%; đối chiếu với Bảng 1 và Mục 8 của báo cáo.
 
 ## Nguồn số liệu cập nhật

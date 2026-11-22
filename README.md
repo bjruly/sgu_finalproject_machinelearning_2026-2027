@@ -17,7 +17,7 @@
 ## Báo cáo đồ án
 
 - [Đề cương](docs/Nhom10_BeijingAirQuality_Proposal.pdf) trình bày mục tiêu và thiết kế thực nghiệm.
-- [Báo cáo cuối kỳ](docs/Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx) và [slide trình bày](docs/Nhom10__Slide.pptx) tổng hợp phương pháp và kết quả.
+- [Báo cáo cuối kỳ](docs/Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx) và [slide trình bày](docs/Nhom10_Slide.pptx) tổng hợp phương pháp và kết quả.
 - [Tài liệu dự án](docs/README.md) tập hợp phần phân công, tài liệu tham khảo và nguồn số liệu.
 
 ## Cách chạy
