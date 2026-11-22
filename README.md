@@ -33,13 +33,16 @@ Proposal đầy đủ: [`docs/Nhom10_BeijingAirQuality_Proposal.pdf`](docs/Nhom1
 
 ## Thiết lập môi trường
 
+Dùng **Python 3.13** và môi trường riêng của dự án. requirements.txt khóa phiên bản thư viện; các mô hình lưu sẵn yêu cầu **scikit-learn 1.7.2**. Không dùng kernel Python hệ thống 1.8.0 để nạp các joblib này. Sau khi cài, chọn kernel trong .venv. requirements-lock.txt ghi toàn bộ phiên bản của môi trường Windows đã kiểm chứng.
+
+
 Các lệnh sau dành cho PowerShell trên Windows, chạy từ thư mục gốc của repository:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-lock.txt
 python -m pip install ipykernel
 ```
 
@@ -67,9 +70,9 @@ Bộ kiểm thử tự động kiểm tra đọc dữ liệu, chia theo thời g
 
 Cần có `data/processed/beijing_air_quality_standardized.csv` từ notebook 01. `openpyxl` trong `requirements.txt` dùng để xuất Excel ở mục 13.
 
-Mở `notebooks/02_model_training_baseline.ipynb`, chọn kernel của đồ án và chạy các ô theo thứ tự. Bật `SAVE_ARTIFACTS = True` để lưu mô hình, bảng và biểu đồ. Bản gửi đặt `RUN_FINAL_TEST = True` để notebook 02 có thể chấm thêm hai baseline trên test. Khi tái lập quy trình và muốn chấm test tập trung ở notebook 08, đặt `RUN_FINAL_TEST = False` trước khi chạy notebook 02. Notebook 02 có thể tạo:
+Mở `notebooks/02_model_training_baseline.ipynb`, chọn kernel của đồ án và chạy các ô theo thứ tự. Bật `SAVE_ARTIFACTS = True` để lưu mô hình, bảng và biểu đồ. Mặc định RUN_FINAL_TEST = False; notebook 02 tạo baseline bằng validation, còn notebook 08 chấm test của các cấu hình đã chốt. Notebook 02 có thể tạo:
 
-- `models/baseline_linear_regression.joblib`, `models/baseline_metrics.csv`, `models/baseline_metadata.json`
+- `models/baseline_linear_regression.joblib`, `outputs/notebooks/tables/baseline_metrics.csv`, `models/baseline_metadata.json`
 - `outputs/notebooks/tables/baseline_error_analysis.csv`, `outputs/notebooks/tables/baseline_model_comparison.xlsx`, `outputs/notebooks/tables/baseline_comparison_merged.csv`
 - `outputs/notebooks/figures/baseline_*.png`
 - các dòng `baseline_*` trong `experiment_log.csv` (chạy lại sẽ ghi đè, không tạo dòng trùng)
@@ -87,13 +90,13 @@ Mở repo từ thư mục gốc rồi chạy notebook theo thứ tự 01 → 08.
 1. Chạy **05** để tinh chỉnh Random Forest và Gradient Boosting trên 5 fold theo thời gian. Notebook đọc bảng điểm từng fold từ 03 và 04.
 2. Chạy **06** để xây dựng MLP gốc và lưu `outputs/notebooks/tables/mlp_cv_metrics.csv` khi bật `SAVE_ARTIFACTS` ở mục 9.
 3. Chạy **07** để tinh chỉnh MLP. Bản thực nghiệm đã thử 8 tổ hợp trên 5 fold và lưu `models/mlp_tuned.joblib`.
-4. Chạy **08** khi đã có `baseline_linear_regression.joblib`, `random_forest_tuned.joblib`, `gradient_boosting_tuned.joblib` và `mlp_tuned.joblib` trong `models/`. Bản ZIP đã có đủ bốn tệp. Nếu clone repo và thiếu Linear Regression do `.gitignore`, chép lại bản mô hình đã lưu từ [thực nghiệm 01](outputs/experiments/experiments01/models/) vào `models/` nếu có. Dùng notebook 02 với `SAVE_ARTIFACTS = True` để tạo lại khi không còn bản lưu.
+4. Chạy **08** với kernel .venv sau khi đã có mô hình từ 02, 05 và 07. Bộ nạp ưu tiên models/ và tự dùng baseline lưu trong outputs/experiments/experiments01/models/ nếu bản ở models/ không có. Có thể đặt LINEAR_MODEL_PATH để dùng đường dẫn khác; không cần chép model thủ công.
 
 Xem mô tả từng notebook và đầu ra trong [`notebooks/README.md`](notebooks/README.md).
 
 ### Bộ notebook chưa chạy
 
-[`notebooks_unexecuted/`](notebooks_unexecuted/) nằm cạnh `notebooks/` ở thư mục gốc và chứa đủ 8 notebook từ 01 đến 08. Các bản này đã xóa output và số thứ tự chạy của các ô. Notebook 06 trong bộ này đang đặt `SAVE_ARTIFACTS = False` ở mục 9. Chuyển sang `True` khi cần xuất lại mô hình và kết quả MLP gốc.
+[`notebooks_unexecuted/`](notebooks_unexecuted/) nằm cạnh `notebooks/` ở thư mục gốc và chứa đủ 8 notebook từ 01 đến 08. Các bản này đã xóa output và số thứ tự chạy của các ô. Hai bộ có cùng source và cấu hình; bộ notebooks_unexecuted/ chỉ xóa output và execution count. Sau khi sửa notebook gốc, chạy python scripts/sync_notebooks.py để đồng bộ.
 
 Để chạy lại toàn bộ quy trình, mở thư mục gốc của repo trong VS Code, chọn môi trường Python của đồ án và chạy lần lượt các file 01 → 08 trong `notebooks_unexecuted/`. Bật `SAVE_ARTIFACTS` ở các notebook tạo mô hình để notebook 08 có thể nạp mô hình đã lưu.
 
@@ -143,6 +146,25 @@ Notebook 08 đánh giá trên **51.063 mẫu**, với nhãn từ **01/09/2016 đ
 |     5 | Persistence                          |       11,5864 |           23,1133 | 0,9453 |
 
 Random Forest đã tinh chỉnh có RMSE thấp nhất, giảm **9,31%** so với Persistence. Bảng điểm và biểu đồ nằm tại [`outputs/notebooks/tables/final_test_metrics.csv`](outputs/notebooks/tables/final_test_metrics.csv) và [`outputs/notebooks/figures/final_test_rmse.png`](outputs/notebooks/figures/final_test_rmse.png). Các dòng `*_test` nằm trong [`experiment_log.csv`](experiment_log.csv).
+
+## Tái lập và phân tích bổ sung
+
+Chạy các lệnh sau từ thư mục gốc bằng PowerShell sau khi cài requirements.txt:
+
+~~~powershell
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m src.eda
+.\.venv\Scripts\python.exe -m src.evaluation
+.\.venv\Scripts\python.exe -m src.validation_diagnostics
+~~~
+
+- src.eda tạo lại bảng/hình ACF, phân bố tuyến tính/log và quan hệ gió tại outputs/eda/tables và outputs/eda/figures.
+- src.evaluation nạp các mô hình đã chốt, kiểm tra điểm với bảng test gốc và xuất phân tích vào outputs/experiments/final_test/analysis/. Gồm dự đoán từng mẫu, lỗi theo trạm/tháng/mùa/mức PM2.5, trường hợp sai số lớn, khoảng bootstrap ghép cặp theo khối 7 ngày và manifest truy vết.
+- src.validation_diagnostics tính importance theo nhóm cho RF fit riêng trên train fold 5; kiểm tra MLP với seed 7/42/2026 trên 5 fold và so sánh giới hạn epoch ở hai fold đầu. Đầu ra tại outputs/experiments/validation_diagnostics/. Mô hình cuối không bị thay thế.
+- Các lệnh tạo artifact nên chạy trong môi trường cố định. Các notebook đã sửa có thể được xóa output để tránh hiển thị kết quả cũ; chạy lại từ kernel sạch để tạo output mới.
+- Không chọn lại cấu hình theo phân tích test. Kết quả bootstrap chỉ có điều kiện trên dự đoán cố định, thời kỳ test thu–đông và các trạm đã quan sát.
+- Nhóm PM2.5 trong phân tích cuối đóng bên phải: <=35, (35,75], (75,115], (115,150], (150,250], >250. Giữ nhãn/quy tắc này khi đưa bảng vào báo cáo.
+- Điểm CV chính là trung bình số học metric của 5 folds; RMSE tính gộp OOF là thống kê khác và cần ghi nhãn riêng.
 
 ## Việc cần làm tiếp theo
 
@@ -252,3 +274,27 @@ Chen, S. (2017). *Beijing Multi-Site Air Quality* [Dataset]. UCI Machine Learnin
 ### Bản tham khảo trên Kaggle
 
 Thành viên có thể tham khảo trang [Beijing Multi-Site Air-Quality Data Set trên Kaggle](https://www.kaggle.com/datasets/sid321axn/beijing-multisite-airquality-data-set). Khi sử dụng dữ liệu trong báo cáo, cần kiểm tra nội dung và giấy phép của bản tải xuống; trích dẫn bộ dữ liệu gốc UCI ở trên theo proposal.
+
+## Nguồn số liệu báo cáo từ notebook
+
+Theo phạm vi đã thống nhất: tạm chưa dùng W&B/MLflow; không thêm công nghệ, dependency hoặc mô hình mới nếu chưa được người dùng đồng ý. Góp ý từ bài MRI chỉ được áp dụng khi phù hợp với hồi quy PM2.5.
+
+Quy trình dùng các thư viện hiện có:
+
+~~~powershell
+.\.venv\Scripts\python.exe -B scripts/run_notebooks.py 01 02 03 04 06 08
+.\.venv\Scripts\python.exe -B scripts/run_notebooks.py 05 07 --verify-searches
+.\.venv\Scripts\python.exe -B scripts/verify_result_sources.py
+.\.venv\Scripts\python.exe -B scripts/refresh_experiment_tables.py
+.\.venv\Scripts\python.exe -B scripts/build_report_requirements.py
+~~~
+
+Lệnh thứ hai chỉ đối chiếu search đã lưu, không chạy lại tuning và không nhận là run mới. Muốn chạy lại search thật, chạy 05/07 đầy đủ theo hướng dẫn notebook.
+
+report_sources.csv trong outputs/notebooks/tables liên kết mỗi CSV với notebook đã thực thi, mã ô, vị trí ô, execution count, hash và chế độ computed/verified_saved_search. Bảng nhỏ có bản ghi số liệu ngay trong output JSON của notebook; artifact lớn có hash và số dòng. Script kiểm tra phát hiện việc CSV bị sửa sau khi xuất hoặc source notebook thay đổi.
+
+Các nhóm PM2.5 được dùng chung trong src/analysis_groups.py. Baseline, GB, MLP và test hiện thống nhất biên phải, gồm <=35, (35,75], (75,115], (115,150], (150,250], >250. Vì vậy bảng baseline theo mức cũ cần cập nhật cả số mẫu lẫn metric.
+
+Các lệnh CLI phân tích vẫn dùng cho kiểm tra; số đưa vào báo cáo cần có nguồn notebook đã thực thi và vượt qua verify_result_sources.py. Không chỉnh CSV bằng tay để làm khớp một kết luận.
+
+File docs/nhung-phan-con-thieu-theo-yeu-cau-giang-vien.md hiện là danh sách sửa DOCX/PPTX được sinh từ các bảng đã kiểm chứng. Không coi file đó là đề nghị triển khai nền tảng mới.

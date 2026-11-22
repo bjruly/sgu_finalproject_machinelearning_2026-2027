@@ -1,19 +1,30 @@
-# Thư mục `docs`
+# Tài liệu đồ án
 
-Nơi tập hợp proposal, báo cáo và slide giữa kỳ, phân công công việc cùng tài liệu tham khảo của đồ án.
+## Tệp hiện hành
 
-## Tệp hiện có
+- [Proposal](Nhom10_BeijingAirQuality_Proposal.pdf): kế hoạch đã nộp, giữ nguyên để đối chiếu.
+- [Báo cáo cập nhật tiến độ](Nhom10_BeijingAirQuality_BaoCaoGiuaKy.docx): đã có kết quả tuning và test; tên tệp giữ theo bản nhóm cung cấp.
+- [Slide cập nhật](Nhom10__Slide.pptx): trình bày dữ liệu, phương pháp, validation, tuning và test.
+- [Bản rà soát và kế hoạch khắc phục](ra-soat-do-an-va-ke-hoach-khac-phuc.md): phát hiện, checklist và trạng thái khắc phục.
+- [Phân công](phan-cong-cong-viec.docx): đối chiếu với đóng góp thực tế.
+- TLTK/: tài liệu tham khảo cách trình bày, không dùng số liệu của đề tài khác làm kết quả nhóm.
 
-- [`Nhom10_BeijingAirQuality_Proposal.pdf`](Nhom10_BeijingAirQuality_Proposal.pdf): proposal giữa kỳ cho đề tài Beijing Multi-Site Air Quality, nêu bài toán dự đoán PM2.5 ở giờ kế tiếp, dữ liệu, phương pháp dự kiến, mô hình, cách đánh giá và kế hoạch thực hiện.
-- [`Nhom10_BeijingAirQuality_BaoCaoGiuaKy.docx`](Nhom10_BeijingAirQuality_BaoCaoGiuaKy.docx) là báo cáo giữa kỳ của nhóm.
-- [`Nhom10_BeijingAirQuality_GiuaKy11.pptx`](Nhom10_BeijingAirQuality_GiuaKy11.pptx) là slide giữa kỳ.
-- [`proposal-review-and-alignment.md`](proposal-review-and-alignment.md) ghi nội dung đối chiếu proposal.
-- [`phan-cong-cong-viec.docx`](phan-cong-cong-viec.docx): phân công công việc, ghi rõ phạm vi nhóm trưởng phụ trách từ tổ chức dự án và EDA đến pipeline dữ liệu; không bao gồm phần xây dựng mô hình.
-- [`TLTK/KLTN_bao_cao_sau_hoi_dong.pdf`](TLTK/KLTN_bao_cao_sau_hoi_dong.pdf): khóa luận tham khảo về dự đoán Pb/Zn trong bụi PM10 tại Hàn Quốc. Chỉ tham khảo cấu trúc báo cáo và cách trình bày dữ liệu/phương pháp/kết quả; không dùng số liệu hay kết luận làm kết quả cho đề tài Beijing PM2.5.
-- `.gitkeep`: tệp rỗng để Git giữ thư mục khi chưa có thêm tài liệu.
+## Nguồn số liệu cập nhật
 
-## Nguồn kết quả cho báo cáo cuối kỳ
+- outputs/experiments/experiments01–03/: baseline, mô hình ban đầu và tuning trên validation.
+- [Điểm test gốc](../outputs/notebooks/tables/final_test_metrics.csv): các cấu hình đã chốt.
+- [Phân tích test bổ sung](../outputs/experiments/final_test/analysis/): predictions, lỗi theo nhóm, bootstrap ghép cặp và manifest.
+- [Chẩn đoán validation](../outputs/experiments/validation_diagnostics/): importance của RF, độ ổn định theo seed và hội tụ MLP.
+- [EDA có thể tái lập](../outputs/eda/): bảng/hình được tạo từ python -m src.eda và notebook 01.
 
-- Dùng hồ sơ [thực nghiệm 01](../outputs/experiments/experiments01/README.md), [thực nghiệm 02](../outputs/experiments/experiments02/README.md) và [thực nghiệm 03](../outputs/experiments/experiments03/README.md) để trình bày kết quả validation và so sánh trước, sau tinh chỉnh.
-- Dùng [hồ sơ đánh giá cuối](../outputs/experiments/final_test/README.md), [bảng điểm test](../outputs/notebooks/tables/final_test_metrics.csv) và [biểu đồ RMSE test](../outputs/notebooks/figures/final_test_rmse.png) từ notebook 08 khi trình bày kết quả trên tập test.
-- [Nhật ký thực nghiệm](../experiment_log.csv) lưu các dòng validation và test theo mã `experiment_id`.
+Báo cáo và slide cần nhận các bảng/hình mới sau khi kiểm chứng. Giữ rõ nguồn tập dữ liệu: baseline OOF, mô hình tuned trên test, hay chẩn đoán validation. Không áp dụng kết luận importance của Linear Regression cho Random Forest.
+
+Dùng môi trường trong requirements.txt và xem hướng dẫn chạy ở [README gốc](../README.md). Các file đề cương/báo cáo lịch sử không được sửa để biến kết quả mới thành kết quả đã biết từ trước.
+
+## Phạm vi sửa tài liệu hiện tại
+
+- [Yêu cầu sửa DOCX và slide](nhung-phan-con-thieu-theo-yeu-cau-giang-vien.md): chỉ áp dụng phần phù hợp với đồ án PM2.5, số liệu lấy từ output notebook.
+- [Bảng tra nguồn CSV](../outputs/notebooks/tables/report_sources.csv): notebook, mã ô và trạng thái tính mới/đối chiếu search cũ.
+- W&B/MLflow tạm chưa cần; mọi bổ sung công nghệ phải hỏi ý kiến người dùng trước.
+- Không chuyển các yêu cầu riêng của bài đầu gối/MRI thành yêu cầu cho đề tài này.
+- Chạy scripts/build_report_requirements.py để cập nhật danh sách sửa tài liệu sau khi kiểm chứng notebook/CSV. Script không sửa trực tiếp DOCX hoặc PPTX.
