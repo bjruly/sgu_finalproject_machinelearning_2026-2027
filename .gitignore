@@ -1,3 +1,7 @@
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.venv/
+.ipynb_checkpoints/
+.notebook_runtime/
 models/baseline_linear_regression.joblib

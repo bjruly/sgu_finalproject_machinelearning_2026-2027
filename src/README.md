@@ -34,3 +34,18 @@ preprocessor.fit(X_train_validation.iloc[folds[0][0]])
 `add_features` phải chạy trước khi lọc các target thiếu để các lag vẫn được tính trên chuỗi thời gian đầy đủ. Sau khi chốt cấu hình từ validation, [notebook 08](../notebooks/08_final_evaluation.ipynb) dùng tập test để đánh giá cuối. Các transformer đã fit trên dữ liệu huấn luyện nằm trong pipeline được nạp lại. Xem [`tests/README.md`](../tests/README.md) để biết các bảo đảm được kiểm thử.
 
 Hai bộ [notebook có kết quả](../notebooks/README.md) và [notebook đã xóa output](../notebooks_unexecuted/) dùng chung các hàm trên.
+
+## Các module phân tích bổ sung
+
+- artifacts.py: tìm mô hình trong models/ hoặc hồ sơ theo đợt; kiểm tra phiên bản scikit-learn theo metadata trước khi nạp.
+- eda.py: ACF theo trạm, phân bố tuyến tính/log và bảng quan hệ gió từ số đo gốc.
+- evaluation.py: chấm mô hình cố định, xuất predictions, lỗi theo nhóm, bootstrap ghép cặp theo khối ngày và manifest.
+- validation_diagnostics.py: importance RF trên fold 5 và chẩn đoán seed/epoch MLP, chỉ fit và chấm validation.
+
+Chạy python -m src.eda, python -m src.evaluation và python -m src.validation_diagnostics bằng kernel/môi trường của dự án. Các phép phân tích không thay bộ 27 đầu vào hoặc các joblib cuối đã công bố.
+
+## Quy tắc nguồn số liệu hiện hành
+
+analysis_groups.py dùng chung biên PM2.5. notebook_evidence.py xuất/kiểm tra bảng số từ notebook bằng JSON, CSV và hash, không thêm nền tảng hoặc dependency. Bảng tra nguồn được tạo bởi scripts/verify_result_sources.py.
+
+run_diagnostics(return_tables=True) trả DataFrame để notebook 08 hiển thị và lưu bằng chứng trực tiếp; các số này không chỉ tồn tại trong một lệnh CLI.
