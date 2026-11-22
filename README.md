@@ -18,7 +18,7 @@
 
 - [Đề cương](docs/Nhom10_BeijingAirQuality_Proposal.pdf) trình bày mục tiêu và thiết kế thực nghiệm.
 - [Báo cáo cuối kỳ](docs/Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx) và [slide trình bày](docs/Nhom10__Slide.pptx) tổng hợp phương pháp và kết quả.
-- [Tài liệu dự án](docs/README.md) tập hợp phần phân công, các mục cần cập nhật và nguồn số liệu.
+- [Tài liệu dự án](docs/README.md) tập hợp phần phân công, tài liệu tham khảo và nguồn số liệu.
 
 ## Cách chạy
 
@@ -61,10 +61,9 @@
 .\.venv\Scripts\python.exe -B scripts/run_notebooks.py 05 07 --verify-searches
 .\.venv\Scripts\python.exe -B scripts/verify_result_sources.py   # chỉ đọc; thêm --write-index để ghi lại report_sources.csv
 .\.venv\Scripts\python.exe -B scripts/refresh_experiment_tables.py
-.\.venv\Scripts\python.exe -B scripts/build_report_requirements.py
 ```
 
-Quy trình này cần các mô hình tinh chỉnh và kết quả tìm kiếm đã lưu. Cờ `--verify-searches` chỉ đối chiếu kết quả tìm kiếm của 05 và 07. Khi tái lập từ đầu theo thứ tự 01–08, chạy toàn bộ ô trong hai notebook tinh chỉnh trước khi đánh giá cuối. Sau khi sửa notebook gốc, dùng `scripts/sync_notebooks.py` để đồng bộ bản đã xóa đầu ra. Xem [các mục cần cập nhật trong báo cáo và slide](docs/nhung-phan-con-thieu-theo-yeu-cau-giang-vien.md).
+Quy trình này cần các mô hình tinh chỉnh và kết quả tìm kiếm đã lưu. Cờ `--verify-searches` chỉ đối chiếu kết quả tìm kiếm của 05 và 07. Khi tái lập từ đầu theo thứ tự 01–08, chạy toàn bộ ô trong hai notebook tinh chỉnh trước khi đánh giá cuối. Sau khi sửa notebook gốc, dùng `scripts/sync_notebooks.py` để đồng bộ bản đã xóa đầu ra. Xem [tài liệu dự án và nguồn kết quả](docs/README.md).
 
 </details>
 

@@ -21,4 +21,4 @@ Thư mục [`PRSA_Data_20130301-20170228/`](PRSA_Data_20130301-20170228/) chứa
 
 Mỗi CSV có 35.064 bản ghi theo giờ từ 01/03/2013 đến 28/02/2017 và 18 cột: số thứ tự, năm/tháng/ngày/giờ, PM2.5, PM10, SO2, NO2, CO, O3, TEMP, PRES, DEWP, RAIN, hướng gió (`wd`), tốc độ gió (`WSPM`) và tên trạm. Các giá trị khuyết được biểu diễn bằng `NA`; cần chuyển chúng thành giá trị khuyết phù hợp và xử lý trong pipeline.
 
-[Notebook 01](../../notebooks/01_eda_and_preprocessing.ipynb) đọc các tệp `PRSA_Data_*_20130301-20170228.csv` trong thư mục 12 trạm. Hai tệp `data.csv` và `test.csv` ở cấp `data/raw/` trong bản ZIP chứa dữ liệu giá cổ phiếu (OHLCV), nằm ngoài quy trình dự báo PM2.5.
+[Notebook 01](../../notebooks/01_eda_and_preprocessing.ipynb) đọc các tệp `PRSA_Data_*_20130301-20170228.csv` trong thư mục 12 trạm. Bộ dữ liệu dùng trong đồ án chỉ gồm 12 tệp PRSA được liệt kê ở trên.

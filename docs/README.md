@@ -3,12 +3,9 @@
 ## Tệp hiện hành
 
 - [Proposal](Nhom10_BeijingAirQuality_Proposal.pdf): kế hoạch đã nộp, giữ nguyên để đối chiếu.
-- [Báo cáo cuối kỳ](Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx): báo cáo hoàn chỉnh gồm hai trang bìa, kết quả tuning, test, phân tích sai số và phân công theo lịch sử commit.
+- [Báo cáo cuối kỳ](Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx): dữ liệu, phương pháp, thiết lập thực nghiệm, kết quả validation/test, phân tích sai số, độ chắc chắn và phân công thành viên.
 - [Slide trình bày](Nhom10__Slide.pptx): trình bày dữ liệu, phương pháp, validation, tuning và test.
-- [Rà soát bản cuối kỳ ngày 22/11/2026](ra-soat-bao-cao-slide-cuoi-ky-2026-11-22.md): các lỗi và yêu cầu còn lại sau khi đối chiếu DOCX/PPTX mới với notebook/CSV; ghi rõ phạm vi kiểm chứng.
-- [Bản rà soát và kế hoạch khắc phục](ra-soat-do-an-va-ke-hoach-khac-phuc.md): phát hiện, checklist và trạng thái khắc phục.
-- [Phân công](phan-cong-cong-viec.docx): phân công theo lịch sử commit, khớp Mục 8 của báo cáo.
-- TLTK/: tài liệu tham khảo cách trình bày, không dùng số liệu của đề tài khác làm kết quả nhóm.
+- [Phân công](phan-cong-cong-viec.docx): vai trò, công việc đã thực hiện và tỷ lệ đóng góp, tổng bằng 100%; đối chiếu với Bảng 1 và Mục 8 của báo cáo.
 
 ## Nguồn số liệu cập nhật
 
@@ -18,14 +15,22 @@
 - [Chẩn đoán validation](../outputs/experiments/validation_diagnostics/): importance của RF, độ ổn định theo seed và hội tụ MLP.
 - [EDA có thể tái lập](../outputs/eda/): bảng/hình được tạo từ python -m src.eda và notebook 01.
 
-Báo cáo và slide cần nhận các bảng/hình mới sau khi kiểm chứng. Giữ rõ nguồn tập dữ liệu: baseline OOF, mô hình tuned trên test, hay chẩn đoán validation. Không áp dụng kết luận importance của Linear Regression cho Random Forest.
+Các bảng/hình phân biệt rõ nguồn tập dữ liệu: baseline OOF, mô hình tuned trên test, hay chẩn đoán validation. Importance của Linear Regression và Random Forest được báo cáo riêng.
 
-Dùng môi trường trong requirements.txt và xem hướng dẫn chạy ở [README gốc](../README.md). Các file đề cương/báo cáo lịch sử không được sửa để biến kết quả mới thành kết quả đã biết từ trước.
+Dùng môi trường trong [requirements.txt](../requirements.txt) và xem hướng dẫn chạy ở [README gốc](../README.md). [Nhật ký thực nghiệm](../Experimental%20Log/README.md) lưu các phiên bản và ghi chú lịch sử của quá trình làm đồ án.
 
-## Phạm vi sửa tài liệu hiện tại
+## Truy vết và kiểm chứng
 
-- [Yêu cầu sửa DOCX và slide](nhung-phan-con-thieu-theo-yeu-cau-giang-vien.md): chỉ áp dụng phần phù hợp với đồ án PM2.5, số liệu lấy từ output notebook.
 - [Bảng tra nguồn CSV](../outputs/notebooks/tables/report_sources.csv): notebook, mã ô và trạng thái tính mới/đối chiếu search cũ.
-- W&B/MLflow tạm chưa cần; mọi bổ sung công nghệ phải hỏi ý kiến người dùng trước.
-- Không chuyển các yêu cầu riêng của bài đầu gối/MRI thành yêu cầu cho đề tài này.
-- Chạy scripts/build_report_requirements.py để cập nhật danh sách sửa tài liệu sau khi kiểm chứng notebook/CSV. Script không sửa trực tiếp DOCX hoặc PPTX.
+- [Kiểm tra nguồn kết quả](../scripts/verify_result_sources.py): đối chiếu CSV với bằng chứng trong notebook đã thực thi; mặc định chỉ đọc.
+- [Bộ kiểm thử](../tests/README.md): kiểm tra dữ liệu, đặc trưng, mô hình và các phân tích thống kê.
+
+## Tài liệu tham khảo và yêu cầu môn học
+
+- [Seng và cộng sự (2021)](TLTK/1-s2.0-S1110016820306438-main.pdf): dự báo chất lượng không khí bằng LSTM.
+- [Bekkar và cộng sự (2021)](TLTK/40537_2021_Article_548.pdf): dự báo ô nhiễm không khí bằng học sâu.
+- [Wei và cộng sự (2025)](TLTK/sustainability-17-09211.pdf): so sánh mô hình học máy dự báo PM2.5 và O3.
+- [Yêu cầu đề tài cuối kỳ](TLTK/ML%20-%20De%20tai%20cuoi%20ky%20-%20Final.pdf): tài liệu môn học.
+- [Khóa luận về PM10](TLTK/KLTN_bao_cao_sau_hoi_dong.pdf): tài liệu tham khảo cùng lĩnh vực chất lượng không khí; không phải kết quả thực nghiệm của nhóm.
+
+Danh mục trích dẫn đầy đủ được trình bày trong báo cáo. Số liệu thực nghiệm của nhóm lấy từ notebook và CSV trong kho mã nguồn.
