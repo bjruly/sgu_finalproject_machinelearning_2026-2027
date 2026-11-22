@@ -1,19 +1,19 @@
 {
-  "created_at_utc": "2026-11-20T16:16:23.317882+00:00",
-  "run_id": "final-analysis-20261120T161623317892Z",
+  "created_at_utc": "2026-11-22T13:28:59.916299+00:00",
+  "run_id": "final-analysis-20261122T132859916308Z",
   "purpose": "diagnostic reevaluation of existing frozen models; no tuning on test",
   "selection_rule": "original mean RMSE over five chronological validation folds",
-  "git_commit": "ceacd7bfdf54af299374e61ddeb2ccfa308e25a2",
+  "git_commit": "581ca53ef03395f94cb23a91abef00fdfea51149",
   "working_tree_dirty": true,
   "source_sha256": {
     "src/__init__.py": "e17034d71c0c83eb3da9feb3e841a1cb0b4c27ca677737877f52e960a91f2eb6",
     "src/analysis_groups.py": "f92dae4aa4249ac90ea5daa66939397488f3533734b8702eae631bdb60125797",
     "src/artifacts.py": "d0f0b4bdbe7a7fff8f8ed18bb9e8e6576b3c8cbd72c2a9aa3d0c73f70c3d9404",
-    "src/data_loader.py": "78cb54f1c07e793f0896dab2bab9fcaea26159a2552391f0f9c952e34a6255d2",
+    "src/data_loader.py": "15566a0a60f5f15bf6ac230591872a60f51a943b4c58d2fa706181a167063f26",
     "src/eda.py": "657c114c16d80d179d37bebb284f193e9137773c8b54bd6426f95e2c082476ce",
-    "src/evaluation.py": "4b8895c58b8a88ce0b164a4fe03b3ddd9eac7df9fcceea634c1ef06f31fc07a9",
+    "src/evaluation.py": "7835e8258b47fd856460528a7cf9de8eddf30009ae23fcf8e320801d4d186666",
     "src/features.py": "b1009d738e1055b85c1f38683c97d89d3de5be557b2455d4727315f196d354e0",
-    "src/notebook_evidence.py": "48656153408f21349015babe2bd811deb8172bc7a46261d10f9da1794794b3e5",
+    "src/notebook_evidence.py": "e49e45508fd96a72eb095f2e96fb3a65ea36f92dbfe0cd58cbaa49968f15fd71",
     "src/validation_diagnostics.py": "c72581dbb31de69c50d1dc3498ed9cdd9f8f5c22f5fa2567c6f92508ac7c235b"
   },
   "python_version": "3.13.12",
@@ -26,7 +26,7 @@
     "matplotlib": "3.10.8",
     "threadpoolctl": "3.6.0"
   },
-  "dataset": "data\\processed\\beijing_air_quality_standardized.csv",
+  "dataset": "data/processed/beijing_air_quality_standardized.csv",
   "dataset_sha256": "5ed503c3e0ea0c91eac200cc290dac598cc2886aa2ef5adb8dcd971432dce76e",
   "feature_columns": [
     "PM2.5",
@@ -83,9 +83,9 @@
   },
   "models": {
     "baseline_linreg": {
-      "path": "models\\baseline_linear_regression.joblib",
+      "path": "models/baseline_linear_regression.joblib",
       "sha256": "61e4c90845ecffe8c480d22776d876a2d7d60ed92838e6c85bf5ba54c3105fe6",
-      "metadata_path": "C:\\Users\\ASUS TUF\\Documents\\GitHub\\sgu_finalproject_machinelearning_2026-2027\\models\\baseline_metadata.json",
+      "metadata_path": "models/baseline_metadata.json",
       "metadata_sha256": "c9d0c3fe2272898edfec02e5b9ff9f0c739ee6c168fbb00fdcda9c3af2577f4e",
       "metadata": {
         "model": "LinearRegression + build_preprocessor(scale=True)",
@@ -132,9 +132,9 @@
       }
     },
     "random_forest_tuned": {
-      "path": "models\\random_forest_tuned.joblib",
+      "path": "models/random_forest_tuned.joblib",
       "sha256": "cf5c63716b718388e6846bb7acc84b3c7c693aedeb57d0eb961e9e8b64b2646a",
-      "metadata_path": "C:\\Users\\ASUS TUF\\Documents\\GitHub\\sgu_finalproject_machinelearning_2026-2027\\models\\random_forest_tuned_metadata.json",
+      "metadata_path": "models/random_forest_tuned_metadata.json",
       "metadata_sha256": "304e91381f180f51ee231a822e8e8cb8a4c7b7226d50a525b83a5ff320982e19",
       "metadata": {
         "model": "Random Forest Regressor",
@@ -304,9 +304,9 @@
       }
     },
     "gradient_boosting_tuned": {
-      "path": "models\\gradient_boosting_tuned.joblib",
+      "path": "models/gradient_boosting_tuned.joblib",
       "sha256": "55e36f73a2374bb09378748c57d89d3b1945618813e089ab8df6bfb803937f80",
-      "metadata_path": "C:\\Users\\ASUS TUF\\Documents\\GitHub\\sgu_finalproject_machinelearning_2026-2027\\models\\gradient_boosting_tuned_metadata.json",
+      "metadata_path": "models/gradient_boosting_tuned_metadata.json",
       "metadata_sha256": "2367009b0484872af83f4138ec87dd51a20719b4474e48e5bf816ea9a88a6755",
       "metadata": {
         "model": "Gradient Boosting Regressor (HistGradientBoostingRegressor)",
@@ -480,9 +480,9 @@
       }
     },
     "mlp_tuned": {
-      "path": "models\\mlp_tuned.joblib",
+      "path": "models/mlp_tuned.joblib",
       "sha256": "ee2f2b17ec7fa996646480edda8b63c683fef8f5117347c3e5f495088a606fb8",
-      "metadata_path": "C:\\Users\\ASUS TUF\\Documents\\GitHub\\sgu_finalproject_machinelearning_2026-2027\\models\\mlp_tuned_metadata.json",
+      "metadata_path": "models/mlp_tuned_metadata.json",
       "metadata_sha256": "9ebd1a6d36abb8bf09fc5c94131a81a08a6e2260fa2e363329e963171406c760",
       "metadata": {
         "model": "MLPRegressor",
@@ -604,14 +604,16 @@
     }
   },
   "outputs": {
-    "final_test_predictions.csv": "1467b0a0173c1a7ffec5d9a6d351f51ffed3ea7632090ac2b2fef733898593cf",
-    "final_test_metrics_reproduced.csv": "d0a56ae3fcb8352a5a4e5eb6b2836964753dcc9bb970cc7ed1f56f47b8123c76",
-    "final_test_error_by_station.csv": "0034a2850da3628f7bf080319c78df318ee1e432183877b08f590957ff400397",
-    "final_test_error_by_month.csv": "31f12f4242b36beec3cadf35f111333d25287deff6880549b6407b33ddcd0f50",
-    "final_test_error_by_season.csv": "8ccf51b2b05cd9f510ef82dcfcb7198bc9262c9e115a9359d46b4653c140a167",
-    "final_test_error_by_pm25_level.csv": "82a99b04be781f42194d5db23266b2892b7a855974b091efb37c2713967c622a",
-    "paired_model_uncertainty.csv": "d7a77e5812ae44f19e897fcbc349830b4980a4675140ebd6e7a6f1675ed19ddc",
-    "final_test_worst_cases.csv": "f43db9b3c79ac83762e1b05f17f4f27c752bdd675a4c319145350fe5ad79677c",
+    "final_test_predictions.csv": "3a3cf3c7645a4081947a6d2355c2d9edab0380e1f72b9b5e5ea10c4d5490bfbc",
+    "final_test_metrics_reproduced.csv": "95f12add15e354860ce70d72b714f3d3d8367a92b593daba96137d385bb94626",
+    "final_test_error_by_station.csv": "208da153120c3bdcc4286996503b30a32701e1bf9d6f23d3f2dcdb82ef4fef15",
+    "final_test_error_by_month.csv": "6ff0eefda73aa6ff621a0c6a40d6963d2953a5805fdc4b76eb2b06a4fa0772eb",
+    "final_test_error_by_season.csv": "bfa86e662970631d8d165443903bea1372d794598b31ea92a284a692bec95754",
+    "final_test_error_by_pm25_level.csv": "a3b7c9717ae7655fd50bc86de33317a1f9ecab10e44477ca4fca97395c27e072",
+    "final_test_sensitivity.csv": "398f0c4a062d8fb5d56ac0093c240ce09fccd301e4d879e0cfc577d0a0515b0e",
+    "train_vs_validation_vs_test.csv": "b7da97fd2f11dc1bd37c3bf56a216683e71487b678732c2eec8fc1394044faa5",
+    "paired_model_uncertainty.csv": "e4b28c68ebe5eabc0897d750d8075293cd8f5d6cdc806b7901f9f1f6f47d41a3",
+    "final_test_worst_cases.csv": "3cb74a2c01d66869af888f4e493f6486730553f22612afa80b23da7fb23ab009",
     "figures/final_test_rmse.png": "51a1fd3a657331d8ca1c4df3f311ea6816a5e4485409108ed68580a2c57268e2",
     "figures/final_test_rmse_by_station.png": "8b2a1cde99c714ed77d10e1fd7f727245cc1216ab0f928cdc9576aa764de02c7",
     "figures/final_test_rmse_by_month.png": "4fef00a164e068e1d83c3caba9c78feb9a0a77c296c963458769a7c6c50a3a4d",

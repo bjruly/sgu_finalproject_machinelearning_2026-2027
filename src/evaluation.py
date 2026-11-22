@@ -249,13 +249,38 @@ def _manifest_path(path, root):
         return path.name
 
 
+def train_validation_test_table(train_validation, model_paths, experiment_log, test_metrics):
+    """Compare in-sample, 5-fold validation and test RMSE of the frozen models.
+
+    Only predicts; nothing is re-trained or re-tuned. In-sample error is computed
+    on the rows the final models were fitted on, so it is an optimistic reference
+    for judging over/under-fitting, not a score. ``experiment_log`` and
+    ``test_metrics`` are indexed by ``experiment_id`` and carry an ``rmse`` column.
+    """
+    in_sample = predict_test(train_validation, train_validation, model_paths)
+    rows = []
+    for key, label in MODEL_LABELS.items():
+        train = regression_metrics(in_sample.y_true, in_sample[f"pred_{key}"])
+        rows.append({
+            "model": label, "n_train_validation": len(in_sample),
+            "train_mae": train["mae"], "train_rmse": train["rmse"], "train_r2": train["r2"],
+            "validation_cv_rmse_mean": float(experiment_log.loc[f"{key}_cv5", "rmse"]),
+            "test_rmse": float(test_metrics.loc[f"{key}_test", "rmse"]),
+        })
+    result = pd.DataFrame(rows)
+    result["test_minus_train_rmse"] = result.test_rmse - result.train_rmse
+    result["test_over_train_rmse"] = result.test_rmse / result.train_rmse
+    return result
+
+
 def export_analysis(predictions, model_paths, output_dir=None, n_bootstrap=2000, block_days=7,
-                    project_root=None, data_path=None):
+                    project_root=None, data_path=None, train_validation=None):
     """Save diagnostics separately from the original final_test metric table.
 
     ``project_root`` and ``data_path`` default to the repository and processed
     dataset; they exist so the manifest can be tested against a temporary tree.
     Every path written to the manifest is repo-relative with forward slashes.
+    Pass ``train_validation`` to also export the train/validation/test comparison.
     """
     project_root = Path(project_root or PROJECT_ROOT)
     data_path = Path(data_path or DEFAULT_DATA_PATH)
@@ -268,6 +293,11 @@ def export_analysis(predictions, model_paths, output_dir=None, n_bootstrap=2000,
     for group in ("station", "month", "season", "pm25_level"):
         groups[group] = grouped_errors(predictions, group)
         tables[f"final_test_error_by_{group}.csv"] = groups[group]
+    tables["final_test_sensitivity.csv"] = trimmed_sensitivity(predictions)
+    if train_validation is not None:
+        log = pd.read_csv(project_root / "experiment_log.csv").set_index("experiment_id")
+        tables["train_vs_validation_vs_test.csv"] = train_validation_test_table(
+            train_validation, model_paths, log, metrics.set_index("experiment_id"))
     tables["paired_model_uncertainty.csv"] = paired_block_intervals(
         predictions, n_bootstrap=n_bootstrap, block_days=block_days)
     worst_parts = []
