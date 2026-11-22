@@ -137,4 +137,8 @@ rf_tuned = joblib.load("models/random_forest_tuned.joblib")
 - `random_forest_tuned.joblib` và `gradient_boosting_tuned.joblib` — notebook 05
 - `mlp_tuned.joblib` — notebook 07
 
-Persistence lấy PM2.5 giờ hiện tại, với trung vị nhãn train + validation làm giá trị dự phòng. Bản ZIP đã có đủ bốn pipeline. Nếu clone repo và thiếu Linear Regression do `.gitignore`, chép [bản lưu của thực nghiệm 01](../outputs/experiments/experiments01/models/baseline_linear_regression.joblib) vào `models/` nếu có, hoặc trỏ `LINEAR_MODEL_PATH` tới tệp đó. Khi không còn bản lưu, bật `SAVE_ARTIFACTS = True` trong notebook 02 để xuất lại. [Bảng điểm test](../outputs/notebooks/tables/final_test_metrics.csv) được lưu khi chạy notebook 08 với chế độ xuất file.
+Persistence lấy PM2.5 giờ hiện tại, với trung vị nhãn train + validation làm giá trị dự phòng. Notebook 08 tự dùng baseline trong hồ sơ experiments01 nếu models/ thiếu tệp, không cần chép thủ công. Khi không còn bản lưu, bật `SAVE_ARTIFACTS = True` trong notebook 02 để xuất lại. [Bảng điểm test](../outputs/notebooks/tables/final_test_metrics.csv) được lưu khi chạy notebook 08 với chế độ xuất file.
+
+## Nạp model qua bộ kiểm tra tương thích
+
+Notebook 08 và python -m src.evaluation dùng src.artifacts.resolve_model_paths và load_saved_model. Chúng tự dùng baseline từ experiments01 khi models/ thiếu bản sao, và yêu cầu phiên bản scikit-learn khớp metadata (bộ hiện tại: 1.7.2). Cài requirements.txt trong .venv trước khi nạp. Các lệnh phân tích bổ sung không ghi đè joblib hoặc metadata lúc huấn luyện.
