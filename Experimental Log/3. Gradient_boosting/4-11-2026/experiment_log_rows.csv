@@ -1,0 +1,2 @@
+﻿experiment_id,model_name,dataset_version,mae,rmse,r2,notes
+gradient_boosting_cv5,Gradient Boosting Regressor (HistGradientBoostingRegressor),beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24; features=v2 (PM2.5 hiện tại + lag + rolling); supplementary run 19-11-2026,11.606517218934943,21.82520194024756,0.9207579149659212,"Mean of 5 validation folds; fixed parameters max_iter=30, learning_rate=0.1, early_stopping=False (reduced-iteration supplementary run); supplementary run 19-11-2026; not a restored historical run."

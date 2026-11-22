@@ -1,0 +1,69 @@
+{
+  "model": "MLPRegressor",
+  "parameters": {
+    "hidden_layer_sizes": [
+      64,
+      32
+    ],
+    "activation": "relu",
+    "solver": "adam",
+    "alpha": 0.001,
+    "batch_size": 512,
+    "learning_rate_init": 0.001,
+    "max_iter": 60,
+    "tol": 0.0002,
+    "n_iter_no_change": 8,
+    "early_stopping": false,
+    "random_state": 42
+  },
+  "sklearn_version": "1.7.2",
+  "feature_columns": [
+    "PM2.5",
+    "PM10",
+    "SO2",
+    "NO2",
+    "CO",
+    "O3",
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "RAIN",
+    "WSPM",
+    "PM2.5_lag_1",
+    "PM2.5_lag_2",
+    "PM2.5_lag_3",
+    "PM2.5_lag_6",
+    "PM2.5_lag_12",
+    "PM2.5_lag_24",
+    "PM2.5_rolling_mean_6",
+    "PM2.5_rolling_mean_24",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "station",
+    "wd"
+  ],
+  "train_rows": 360954,
+  "test_evaluated": false,
+  "validation_mean": {
+    "mae": 11.728150831945761,
+    "rmse": 20.083995112176567,
+    "r2": 0.9313906689549392
+  },
+  "final_fit_epochs": 25,
+  "saved_outputs": [
+    "models/mlp.joblib",
+    "models/mlp_metadata.json",
+    "outputs/notebooks/tables/mlp_cv_metrics.csv",
+    "outputs/notebooks/tables/mlp_cv_summary.csv",
+    "outputs/notebooks/tables/mlp_error_by_group.csv",
+    "outputs/notebooks/figures/mlp_cv_rmse_by_fold.png",
+    "outputs/notebooks/figures/mlp_pred_vs_actual.png",
+    "outputs/notebooks/figures/mlp_residuals.png",
+    "outputs/notebooks/figures/mlp_rmse_by_pm25_level.png",
+    "outputs/notebooks/tables/mlp_validation_oof_predictions.csv"
+  ]
+}

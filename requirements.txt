@@ -1,8 +1,15 @@
-   pandas
-   numpy
-   scikit-learn
-   matplotlib
-   seaborn
-   pytest
-   joblib
-   openpyxl
+# Verified with Python 3.13 on Windows; saved estimators require sklearn 1.7.2.
+numpy==2.3.3
+pandas==2.3.3
+scikit-learn==1.7.2
+scipy==1.17.1
+matplotlib==3.10.8
+pillow==13.0.0
+seaborn==0.13.2
+pytest==9.0.3
+joblib==1.5.3
+threadpoolctl==3.6.0
+openpyxl==3.1.5
+ipykernel==7.1.0
+nbclient==0.10.2
+nbformat==5.10.4

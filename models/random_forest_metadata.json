@@ -1,8 +1,8 @@
 {
   "model": "RandomForestRegressor",
   "pipeline": "build_preprocessor(scale=False) + RandomForestRegressor",
-  "created_at": "2026-11-09T14:41:37",
-  "python_version": "3.13.9",
+  "created_at": "2026-11-20T23:13:04",
+  "python_version": "3.13.12",
   "sklearn_version": "1.7.2",
   "pandas_version": "2.3.3",
   "target": "PM2.5 at t+1 (same station)",
@@ -108,7 +108,7 @@
       "mae": 14.9380661458,
       "rmse": 29.8862663179,
       "r2": 0.8925442204,
-      "runtime_seconds": 1.9307438,
+      "runtime_seconds": 11.9034589001,
       "train_rows": 60258,
       "validation_rows": 60595
     },
@@ -117,7 +117,7 @@
       "mae": 9.1973866576,
       "rmse": 16.0491337779,
       "r2": 0.9492656164,
-      "runtime_seconds": 4.5671755,
+      "runtime_seconds": 25.0621584001,
       "train_rows": 120853,
       "validation_rows": 59958
     },
@@ -126,7 +126,7 @@
       "mae": 10.1817759356,
       "rmse": 18.994012755,
       "r2": 0.9310205471,
-      "runtime_seconds": 6.4724189,
+      "runtime_seconds": 31.5858546001,
       "train_rows": 180811,
       "validation_rows": 59858
     },
@@ -135,7 +135,7 @@
       "mae": 9.7558228678,
       "rmse": 18.6388892833,
       "r2": 0.9596373185,
-      "runtime_seconds": 9.0464047,
+      "runtime_seconds": 8.3899314,
       "train_rows": 240669,
       "validation_rows": 60217
     },
@@ -144,7 +144,7 @@
       "mae": 8.5549223972,
       "rmse": 17.2853188865,
       "r2": 0.9221023272,
-      "runtime_seconds": 12.0083117,
+      "runtime_seconds": 10.1496564,
       "train_rows": 300886,
       "validation_rows": 60068
     }
@@ -155,31 +155,31 @@
     "r2": 0.9309140059047148
   },
   "cv_metrics_std": {
-    "mae": 2.5410799970390823,
-    "rmse": 5.555087715599897,
-    "r2": 0.02603703016948408
+    "mae": 2.541079997039083,
+    "rmse": 5.555087715599898,
+    "r2": 0.026037030169484072
   },
   "cv_runtime_seconds": [
-    1.930743800000073,
-    4.567175500000303,
-    6.472418899999866,
-    9.04640470000004,
-    12.008311699999922
+    11.903458900051191,
+    25.06215840007644,
+    31.58585460006725,
+    8.389931399957277,
+    10.14965639996808
   ],
-  "cv_total_runtime_seconds": 34.1754463999996,
-  "final_fit_seconds": 14.212612800000443,
+  "cv_total_runtime_seconds": 87.48057210003026,
+  "final_fit_seconds": 14.653843299951404,
   "saved_outputs": {
     "model": "models\\random_forest.joblib",
-    "cv_metrics": "outputs\\random_forest_cv_metrics.csv",
-    "cv_summary": "outputs\\random_forest_cv_summary.csv",
-    "fold_overview": "outputs\\random_forest_fold_overview.csv",
-    "validation_oof_predictions": "outputs\\random_forest_validation_oof_predictions.csv",
+    "cv_metrics": "outputs\\notebooks\\tables\\random_forest_cv_metrics.csv",
+    "cv_summary": "outputs\\notebooks\\tables\\random_forest_cv_summary.csv",
+    "fold_overview": "outputs\\notebooks\\tables\\random_forest_fold_overview.csv",
+    "validation_oof_predictions": "outputs\\notebooks\\tables\\random_forest_validation_oof_predictions.csv",
     "figures": [
-      "outputs/figures/random_forest_cv_rmse_by_fold.png",
-      "outputs/figures/random_forest_cv_metrics_by_fold.png",
-      "outputs/figures/random_forest_feature_importance.png",
-      "outputs/figures/random_forest_pred_vs_actual.png",
-      "outputs/figures/random_forest_residuals.png"
+      "outputs/notebooks/figures/random_forest_cv_rmse_by_fold.png",
+      "outputs/notebooks/figures/random_forest_cv_metrics_by_fold.png",
+      "outputs/notebooks/figures/random_forest_feature_importance.png",
+      "outputs/notebooks/figures/random_forest_pred_vs_actual.png",
+      "outputs/notebooks/figures/random_forest_residuals.png"
     ]
   }
 }

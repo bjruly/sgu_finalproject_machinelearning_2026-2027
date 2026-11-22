@@ -162,9 +162,9 @@
   "final_fit_seconds": 8.20744010002818,
   "saved_outputs": {
     "model": "models/gradient_boosting_tuned.joblib",
-    "cv_metrics": "outputs/gradient_boosting_tuned_cv_metrics.csv",
-    "cv_summary": "outputs/gradient_boosting_tuned_cv_summary.csv",
-    "search_results": "outputs/tuning_gradient_boosting_search_results.csv",
+    "cv_metrics": "outputs/notebooks/tables/gradient_boosting_tuned_cv_metrics.csv",
+    "cv_summary": "outputs/notebooks/tables/gradient_boosting_tuned_cv_summary.csv",
+    "search_results": "outputs/notebooks/tables/tuning_gradient_boosting_search_results.csv",
     "validation_oof_predictions": null
   }
 }

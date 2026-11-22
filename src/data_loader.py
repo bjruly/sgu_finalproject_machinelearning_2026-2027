@@ -25,7 +25,8 @@ def load_data(path: str | Path | None = None) -> pd.DataFrame:
 
     Raises:
         FileNotFoundError: If the requested CSV does not exist.
-        ValueError: If required columns or unique station-hour keys are missing.
+        ValueError: If the file has no rows, or required columns or unique
+            station-hour keys are missing.
     """
     csv_path = Path(path) if path is not None else DEFAULT_DATA_PATH
     if not csv_path.is_file():
@@ -35,6 +36,8 @@ def load_data(path: str | Path | None = None) -> pd.DataFrame:
         )
 
     data = pd.read_csv(csv_path)
+    if data.empty:
+        raise ValueError(f"Dataset at {csv_path} contains no rows.")
     missing_columns = REQUIRED_COLUMNS.difference(data.columns)
     if missing_columns:
         raise ValueError(f"Dataset is missing required columns: {sorted(missing_columns)}")

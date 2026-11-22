@@ -1,0 +1,2 @@
+﻿rmse_mean_5,rmse_mean_fold2_5,rmse_std_5,mean_fit_seconds_per_fold,rmse_fold1,rmse_fold2,rmse_fold3,rmse_fold4,rmse_fold5,hidden_layer_sizes,learning_rate_init,alpha,batch_size,max_iter
+21.17930714999421,19.23341637139574,4.5216760372550455,1.71727800259996,28.962870264388062,18.864646607983055,20.95778116944212,19.56163929491111,17.54959841324668,"(16,)",0.001,0.001,2048,10

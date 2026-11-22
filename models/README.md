@@ -1,11 +1,10 @@
 # Thư mục `models`
 
-Nơi lưu các mô hình đã huấn luyện và các thành phần cần thiết để nạp lại mô hình, ví dụ tệp `.joblib`, `.pkl` hoặc `.pt`, cùng bảng tóm tắt kết quả của các mô hình đó.
+Nơi lưu các pipeline đã huấn luyện dưới dạng `.joblib`, metadata dạng JSON và bảng điểm baseline. Notebook 08 nạp pipeline từ thư mục này. Các bản lưu theo đợt nằm trong [hồ sơ thực nghiệm](../outputs/experiments/).
 
 ## Tệp hiện có
 
 - `baseline_linear_regression.joblib`: pipeline Linear Regression (`build_preprocessor(scale=True)` + `LinearRegression`) đã fit trên **toàn bộ** tập train/validation (nhãn từ 01/03/2013 đến 31/08/2016). Tệp được tạo bởi [`02_model_training_baseline.ipynb`](../notebooks/02_model_training_baseline.ipynb).
-- `baseline_metrics.csv`: MAE, RMSE, R² của các baseline. Cột `split` có hai giá trị: `cv_validation_mean_5fold` (trung bình 5 fold validation, kèm `*_std` là độ lệch chuẩn giữa các fold) và `test` (tập test từ 01/09/2016, các cột `*_std` để trống). Cột `n_rows` là số dòng dùng để tính.
 - `baseline_metadata.json`: thông tin để nạp lại và truy vết mô hình: danh sách feature, khoảng thời gian train, mốc bắt đầu test, cách chia CV và phiên bản scikit-learn đã dùng.
 - `.gitkeep`: tệp rỗng giúp Git lưu thư mục.
 
@@ -13,12 +12,12 @@ Baseline **Persistence** (dự đoán PM2.5 giờ t+1 bằng PM2.5 giờ t) khô
 
 ## Kết quả baseline ở lần chạy gần nhất
 
-RMSE (µg/m³). Đây là số ghi lại tại thời điểm viết; nếu chạy lại notebook, `baseline_metrics.csv` là nguồn chính xác.
+RMSE (µg/m³). Đây là số ghi lại tại thời điểm viết; nếu chạy lại notebook, `outputs/notebooks/tables/baseline_metrics.csv` là nguồn chính xác.
 
 | Mô hình         | CV 5 fold (validation) |  Test |
 | ----------------- | ---------------------: | ----: |
 | Persistence       |                  19.97 | 23.11 |
-| Linear Regression |                  19.30 | 21.80 |
+| Linear Regression |                  19.29 | 21.80 |
 
 Mô hình `Linear Regression (clip at 0)` trong `baseline_metrics.csv` là cùng mô hình nhưng cắt các dự đoán âm về 0 khi tính độ đo; tệp `.joblib` lưu mô hình gốc không cắt.
 
@@ -122,5 +121,24 @@ rf_tuned = joblib.load("models/random_forest_tuned.joblib")
 ### Lưu ý về các mô hình đã tinh chỉnh
 
 - Trước khi dùng kết quả, mở file `*_tuned_metadata.json` kiểm tra `tuning.n_iter` (mặc định 20 cho Gradient Boosting, 8 cho Random Forest). Nếu là 2 thì đó là lần chạy thử.
-- Chạy lại Notebook 05 sẽ ghi đè `*_tuned.*`.
-- Test chưa được dùng; cần chốt cấu hình rồi mới đánh giá Test đúng một lần.
+- Chạy lại notebook 05 có thể cập nhật hai pipeline cây và metadata tương ứng. Các cấu hình được chốt từ CV trước khi notebook 08 chấm trên tập test.
+
+## Các tệp MLP (notebook 06 và 07)
+
+- `mlp.joblib` và `mlp_metadata.json` lưu MLP gốc từ [notebook 06](../notebooks/06_mlp_regression.ipynb). Mạng có hai lớp ẩn với 64 và 32 nơ-ron.
+- `mlp_tuned.joblib` và `mlp_tuned_metadata.json` lưu MLP đã tinh chỉnh từ [notebook 07](../notebooks/07_mlp_tuning.ipynb). Cấu hình được chọn trong lần chạy đã lưu gồm `hidden_layer_sizes=(32, 16)`, `learning_rate_init=0.003`, `alpha=0.0001`, `batch_size=256` và `max_iter=40`.
+- Pipeline MLP chuẩn hóa đặc trưng số. Bộ bọc `TransformedTargetRegressor` chuẩn hóa giá trị mục tiêu khi fit và trả dự đoán theo µg/m³.
+
+## Mô hình dùng trong notebook 08
+
+[Notebook 08](../notebooks/08_final_evaluation.ipynb) nạp bốn tệp đã huấn luyện từ `models/`:
+
+- `baseline_linear_regression.joblib` — notebook 02
+- `random_forest_tuned.joblib` và `gradient_boosting_tuned.joblib` — notebook 05
+- `mlp_tuned.joblib` — notebook 07
+
+Persistence lấy PM2.5 giờ hiện tại, với trung vị nhãn train + validation làm giá trị dự phòng. Notebook 08 tự dùng baseline trong hồ sơ experiments01 nếu models/ thiếu tệp, không cần chép thủ công. Khi không còn bản lưu, bật `SAVE_ARTIFACTS = True` trong notebook 02 để xuất lại. [Bảng điểm test](../outputs/notebooks/tables/final_test_metrics.csv) được lưu khi chạy notebook 08 với chế độ xuất file.
+
+## Nạp model qua bộ kiểm tra tương thích
+
+Notebook 08 và python -m src.evaluation dùng src.artifacts.resolve_model_paths và load_saved_model. Chúng tự dùng baseline từ experiments01 khi models/ thiếu bản sao, và yêu cầu phiên bản scikit-learn khớp metadata (bộ hiện tại: 1.7.2). Cài requirements.txt trong .venv trước khi nạp. Các lệnh phân tích bổ sung không ghi đè joblib hoặc metadata lúc huấn luyện.

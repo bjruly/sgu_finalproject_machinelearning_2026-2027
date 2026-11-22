@@ -1,0 +1,166 @@
+{
+  "model": "Random Forest Regressor",
+  "pipeline": "build_preprocessor(scale=False) + Regressor",
+  "created_at": "2026-11-11T08:45:47",
+  "python_version": "3.13.9",
+  "sklearn_version": "1.7.2",
+  "pandas_version": "2.3.3",
+  "target": "PM2.5 at t+1 (same station)",
+  "dataset_version": "beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24",
+  "train_validation_rows": 360954,
+  "train_validation_target_period": [
+    "2013-03-01 01:00:00",
+    "2016-08-31 23:00:00"
+  ],
+  "test_start": "2016-09-01 00:00:00",
+  "test_rows_reserved": 51063,
+  "test_used_for_tuning": false,
+  "test_evaluated": false,
+  "feature_columns": [
+    "PM2.5",
+    "PM10",
+    "SO2",
+    "NO2",
+    "CO",
+    "O3",
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "RAIN",
+    "WSPM",
+    "PM2.5_lag_1",
+    "PM2.5_lag_2",
+    "PM2.5_lag_3",
+    "PM2.5_lag_6",
+    "PM2.5_lag_12",
+    "PM2.5_lag_24",
+    "PM2.5_rolling_mean_6",
+    "PM2.5_rolling_mean_24",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "station",
+    "wd"
+  ],
+  "random_state": 42,
+  "tuning": {
+    "method": "RandomizedSearchCV",
+    "n_iter": 8,
+    "scoring": "neg_root_mean_squared_error",
+    "cv": "src.cv_folds(n_splits=5), expanding window, same folds as Notebooks 02-04",
+    "selection_rule": "lowest mean RMSE over 5 validation folds",
+    "search_space": {
+      "model__n_estimators": [
+        50,
+        100,
+        200
+      ],
+      "model__max_depth": [
+        12,
+        16,
+        24,
+        null
+      ],
+      "model__min_samples_leaf": [
+        2,
+        5,
+        10,
+        20
+      ],
+      "model__max_features": [
+        0.3,
+        0.5,
+        0.7,
+        1.0
+      ]
+    },
+    "untuned_params": {
+      "n_estimators": 20,
+      "max_depth": 16,
+      "min_samples_leaf": 5,
+      "max_features": 0.7
+    },
+    "best_params": {
+      "model__n_estimators": 50,
+      "model__min_samples_leaf": 20,
+      "model__max_features": 0.7,
+      "model__max_depth": null
+    },
+    "search_seconds": 1532.5290060999687
+  },
+  "cv_fold_metrics": [
+    {
+      "fold": 1,
+      "mae": 13.3300967232,
+      "rmse": 24.9224783657,
+      "r2": 0.9252744861,
+      "runtime_seconds": 3.4441942,
+      "train_rows": 60258,
+      "validation_rows": 60595,
+      "train_rmse": 17.23596212
+    },
+    {
+      "fold": 2,
+      "mae": 9.0778092844,
+      "rmse": 16.093751903,
+      "r2": 0.9489831314,
+      "runtime_seconds": 8.436635,
+      "train_rows": 120853,
+      "validation_rows": 59958,
+      "train_rmse": 18.2269593215
+    },
+    {
+      "fold": 3,
+      "mae": 10.0585366559,
+      "rmse": 19.0455406998,
+      "r2": 0.9306457773,
+      "runtime_seconds": 14.30902,
+      "train_rows": 180811,
+      "validation_rows": 59858,
+      "train_rmse": 16.8828413263
+    },
+    {
+      "fold": 4,
+      "mae": 9.6869672536,
+      "rmse": 18.822569856,
+      "r2": 0.9588378748,
+      "runtime_seconds": 20.4177609,
+      "train_rows": 240669,
+      "validation_rows": 60217,
+      "train_rmse": 16.7459733768
+    },
+    {
+      "fold": 5,
+      "mae": 8.4736225996,
+      "rmse": 17.0049629914,
+      "r2": 0.9246087275,
+      "runtime_seconds": 27.6028964,
+      "train_rows": 300886,
+      "validation_rows": 60068,
+      "train_rmse": 16.5450765297
+    }
+  ],
+  "cv_metrics_mean": {
+    "mae": 10.12540650335631,
+    "rmse": 19.17786076316406,
+    "r2": 0.9376699994286455
+  },
+  "cv_metrics_std": {
+    "mae": 1.8902770931296533,
+    "rmse": 3.441568821615442,
+    "r2": 0.015408205374327785
+  },
+  "cv_rmse_mean_fold2_5": 17.7417063625249,
+  "cv_total_runtime_seconds": 76.23604680004064,
+  "final_fit_seconds": 33.83523980004247,
+  "saved_outputs": {
+    "model": "models/random_forest_tuned.joblib",
+    "cv_metrics": "outputs/random_forest_tuned_cv_metrics.csv",
+    "cv_summary": "outputs/random_forest_tuned_cv_summary.csv",
+    "search_results": "outputs/tuning_random_forest_search_results.csv",
+    "validation_oof_predictions": null
+  }
+}

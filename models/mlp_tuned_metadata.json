@@ -1,0 +1,117 @@
+{
+  "model": "MLPRegressor",
+  "created_at": "2026-11-18T23:28:59",
+  "sklearn_version": "1.7.2",
+  "dataset_version": "beijing_air_quality_standardized.csv; ffill<=6h; lags=1/2/3/6/12/24; rolling=6/24",
+  "feature_columns": [
+    "PM2.5",
+    "PM10",
+    "SO2",
+    "NO2",
+    "CO",
+    "O3",
+    "TEMP",
+    "PRES",
+    "DEWP",
+    "RAIN",
+    "WSPM",
+    "PM2.5_lag_1",
+    "PM2.5_lag_2",
+    "PM2.5_lag_3",
+    "PM2.5_lag_6",
+    "PM2.5_lag_12",
+    "PM2.5_lag_24",
+    "PM2.5_rolling_mean_6",
+    "PM2.5_rolling_mean_24",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "day_of_week_sin",
+    "day_of_week_cos",
+    "station",
+    "wd"
+  ],
+  "train_validation_rows": 360954,
+  "test_start": "2016-09-01 00:00:00",
+  "test_evaluated": false,
+  "tuning": {
+    "method": "RandomizedSearchCV",
+    "n_iter": 8,
+    "random_state": 42,
+    "selection_rule": "Lowest mean RMSE over 5 chronological validation folds",
+    "search_space": {
+      "hidden_layer_sizes": [
+        [
+          32,
+          16
+        ],
+        [
+          64,
+          32
+        ],
+        [
+          128,
+          64
+        ]
+      ],
+      "learning_rate_init": [
+        0.0003,
+        0.001,
+        0.003
+      ],
+      "alpha": [
+        0.0001,
+        0.001,
+        0.01
+      ],
+      "batch_size": [
+        256,
+        512,
+        1024
+      ],
+      "max_iter": [
+        40,
+        60,
+        100
+      ]
+    },
+    "baseline_params": {
+      "hidden_layer_sizes": [
+        64,
+        32
+      ],
+      "learning_rate_init": 0.001,
+      "alpha": 0.001,
+      "batch_size": 512,
+      "max_iter": 60
+    },
+    "best_params": {
+      "max_iter": 40,
+      "learning_rate_init": 0.003,
+      "hidden_layer_sizes": [
+        32,
+        16
+      ],
+      "batch_size": 256,
+      "alpha": 0.0001
+    },
+    "search_seconds": 931.0316440999741
+  },
+  "cv_metrics_mean": {
+    "mae": 11.071820430706499,
+    "rmse": 19.631728345176178,
+    "r2": 0.9339021709784342
+  },
+  "cv_total_runtime_seconds": 38.99763790005818,
+  "final_fit_seconds": 11.35289570002351,
+  "final_fit_epochs": 19,
+  "saved_outputs": [
+    "models/mlp_tuned.joblib",
+    "models/mlp_tuned_metadata.json",
+    "outputs/notebooks/tables/tuning_mlp_search_results.csv",
+    "outputs/notebooks/tables/mlp_tuned_cv_metrics.csv",
+    "outputs/notebooks/tables/mlp_tuned_cv_summary.csv",
+    "outputs/notebooks/figures/mlp_tuning_rmse_by_fold.png"
+  ]
+}

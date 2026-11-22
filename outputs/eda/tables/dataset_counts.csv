@@ -1,0 +1,7 @@
+﻿quantity,value
+raw_rows,420768
+stations,12
+raw_missing_pm25,8739
+labeled_rows,412017
+train_validation_rows,360954
+test_rows,51063
