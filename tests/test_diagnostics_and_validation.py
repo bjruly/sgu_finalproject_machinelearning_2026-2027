@@ -83,11 +83,11 @@ def test_load_data_unparseable_datetime_raises(tmp_path):
         load_data(path)
 
 
-def test_load_data_header_only_file_currently_returns_empty_frame(tmp_path):
-    # Documents actual behaviour: load_data does NOT reject an empty (header-only) file.
+def test_load_data_rejects_header_only_file(tmp_path):
     path = tmp_path / "d.csv"
     pd.DataFrame({"station": [], "datetime": [], "PM2.5": []}).to_csv(path, index=False)
-    assert load_data(path).empty
+    with pytest.raises(ValueError, match="no rows"):
+        load_data(path)
 
 
 def test_cv_folds_rejects_empty_frame_and_split_rejects_missing_values():

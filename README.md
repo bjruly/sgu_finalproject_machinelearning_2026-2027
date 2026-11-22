@@ -284,7 +284,7 @@ Quy trình dùng các thư viện hiện có:
 ~~~powershell
 .\.venv\Scripts\python.exe -B scripts/run_notebooks.py 01 02 03 04 06 08
 .\.venv\Scripts\python.exe -B scripts/run_notebooks.py 05 07 --verify-searches
-.\.venv\Scripts\python.exe -B scripts/verify_result_sources.py
+.\.venv\Scripts\python.exe -B scripts/verify_result_sources.py   # chỉ đọc; thêm --write-index để ghi lại report_sources.csv
 .\.venv\Scripts\python.exe -B scripts/refresh_experiment_tables.py
 .\.venv\Scripts\python.exe -B scripts/build_report_requirements.py
 ~~~

@@ -1,5 +1,9 @@
-"""Verify CSV values against executed notebook outputs and write a source index."""
+"""Verify CSV values against executed notebook outputs.
 
+Read-only by default; pass --write-index to rewrite report_sources.csv.
+"""
+
+import argparse
 import sys
 from pathlib import Path
 
@@ -13,7 +17,11 @@ from src.notebook_evidence import verify_evidence
 
 
 def main():
-    sources = verify_evidence(ROOT, write_index=True)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--write-index", action="store_true",
+                        help="rewrite outputs/notebooks/tables/report_sources.csv")
+    args = parser.parse_args()
+    sources = verify_evidence(ROOT, write_index=args.write_index)
     if sources.empty or sources.notebook.nunique() != 8:
         raise ValueError("All eight notebooks must have executed evidence cells.")
     tables = ROOT / "outputs/notebooks/tables"
