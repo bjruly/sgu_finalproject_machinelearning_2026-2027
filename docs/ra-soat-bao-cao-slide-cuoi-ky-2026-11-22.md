@@ -1,5 +1,29 @@
 # Rà soát báo cáo và slide cuối kỳ — 22/11/2026
 
+## Cập nhật sau khi nhóm chỉnh DOCX ngày 22/11/2026
+
+**Bản mới được kiểm tra:** `Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx`, SHA-256 `6a1f86438925e4d43e52f33a661873078d15c67605d197b0737b2fc1fb73043b`. Đã đối chiếu thay đổi văn bản/bảng với bản trước và mở lại ảnh pipeline trong DOCX. Lượt này chỉ kết luận cho DOCX, không rà lại slide.
+
+**Kết luận cập nhật:** phần thực nghiệm đã sửa đúng các lỗi diễn giải quan trọng. Bảng thành viên đã có tỷ lệ 30% / 15% / 20% / 20% / 15%, tổng 100%, khớp tài liệu phân công. Hai bảng train–validation–test và độ nhạy đã có output/bằng chứng trong notebook 08. Chạy lại `verify_result_sources.py` đạt **52 CSV / 8 notebook**; đối chiếu lại **338 ô số** trong DOCX và tính lại bảng độ nhạy từ dự đoán cố định đều khớp. Không chạy lại pytest trong lượt kiểm tra DOCX này.
+
+Các mục đã khắc phục trên DOCX: bỏ phân rã “một nửa” nguyên nhân chênh lệch train–test; không gán mức overfitting/underfitting khi chưa đủ bằng chứng; sửa diễn giải thứ tự theo seed và epoch; sửa chiều tốt/xấu của R² và đơn vị; phân biệt người commit với người chạy; bỏ lời hướng dẫn biên tập; sửa tham chiếu Bảng 19/20/B1 và Bảng 26/27; ghi đúng độ nhạy là hậu kiểm; ảnh Hình 7 đã sửa chữ tràn/cắt và ghi rõ importance dùng validation fold 5.
+
+**Những chỗ còn cần đồng bộ:**
+
+| Ưu tiên | Vị trí DOCX | Phát hiện còn lại và cách sửa |
+| --- | --- | --- |
+| Cao | Phụ lục A, Bảng A3 | Dòng notebook 08 vẫn ghi **15 CSV, 20/11/2026 16:20:04 UTC**. Chỉ mục hiện ghi **17 CSV, 22/11/2026 13:31:45 UTC**, mã ô `evidence-nb-08`, execution count 9. Tổng các dòng hiện in trong Bảng A3 là 50, trong khi Bảng 33/Phụ lục C đã ghi đúng tổng mới 52. Cập nhật dòng 08; giữ nguyên dữ liệu lịch sử của 01–07. |
+| Cao | Mục 5.4, đoạn “Nguồn gốc số liệu”; đoạn ngay sau Bảng A3 | Phần kể thời điểm chạy vẫn ghi notebook 08 ngày 20/11 và manifest cũ. Hiện `evaluation_manifest.json` có `created_at_utc = 2026-11-22T13:28:59.916299+00:00`, commit nền `581ca53ef03395f94cb23a91abef00fdfea51149`, `working_tree_dirty = true`; `diagnostics_manifest.json` có `created_at_utc = 2026-11-22T13:31:44.978616+00:00`. Cập nhật câu trích manifest hiện hành, không tiếp tục dẫn `ceacd7b` và các giờ cũ như thông tin của tệp hiện tại. |
+| Vừa | Phụ lục A, Bảng A2 | Danh sách phân tích bổ sung chưa thêm `train_vs_validation_vs_test.csv` và `final_test_sensitivity.csv`, dù hai tệp đã được dùng ở Bảng 15/25 và đã có nguồn notebook. Thêm hai dòng, nguồn notebook 08 / `evidence-nb-08`. |
+| Nhỏ | Mục 7.3, Bảng 33, dòng “Phân công và nguồn số liệu” | Câu “Phân công phần việc **và tỷ lệ đóng góp theo lịch sử commit**” dễ mâu thuẫn với đoạn sau Bảng 1 nói tỷ lệ dựa trên khối lượng gói công việc. Đổi thành “Phân công phần việc có đối chiếu lịch sử commit; tỷ lệ đóng góp theo khối lượng công việc”. |
+| Nhỏ | Mục 5.1, đoạn liệt kê bảy khối ngay sau Hình 7 | Đoạn mở đầu và hình đã phân biệt đúng tập dữ liệu; nhưng câu liệt kê khối (7) vẫn gom “permutation importance” vào đánh giá test. Bỏ cụm đó khỏi khối (7), hoặc thêm ngay tại đó rằng importance dùng validation fold 5. |
+
+Hai điểm hoàn thiện câu chữ có thể làm cùng lúc: Mục 6.9 nên nói chính xác hai cặp **RF–GB và RF–MLP** chưa tách khỏi 0, thay vì để người đọc hiểu đã tính cả cặp GB–MLP; chỉ xác nhận ngắt trang và mục lục sau khi xuất PDF. Chưa render toàn bộ DOCX trong lần kiểm tra này.
+
+**Trạng thái xử lý các điểm trên (sau lượt sửa tiếp theo):** đã sửa dòng notebook 08 ở Bảng A3 (17 CSV, 22/11/2026 13:31:45 UTC; tổng 52); cập nhật Mục 5.4 và đoạn manifest (13:28:59 và 13:31:44 UTC, commit nền 581ca53); thêm hai dòng vào Bảng A2; đổi câu ở Bảng 33 thành "tỷ lệ đóng góp theo khối lượng công việc"; bỏ permutation importance khỏi khối (7) ở Mục 5.1; Mục 6.9 nêu rõ hai cặp RF–GB và RF–MLP, chưa tính GB–MLP. Mục lục và số trang đã tính lại từ PDF.
+
+**Không cần huấn luyện thêm để sửa các điểm còn lại trên. Không sửa trực tiếp DOCX trong lượt rà soát.** Các mục R01–R12 và số 50 CSV ở phần bên dưới là hồ sơ của lần kiểm tra trước; dùng cập nhật này làm trạng thái hiện hành cho DOCX mới, không tiếp tục coi các lỗi đã khắc phục là còn tồn đọng.
+
 ## 1. Bản được kiểm tra và kết luận
 
 Đã đọc bản đang lưu trên đĩa, không dùng danh sách lỗi của bản giữa kỳ để kết luận cho bản mới:
