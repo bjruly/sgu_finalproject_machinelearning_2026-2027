@@ -22,12 +22,17 @@
 
 ## Cách chạy
 
-1. **Cài môi trường.** Mở PowerShell tại thư mục gốc của repo. Dùng Python 3.13 và scikit-learn 1.7.2 để nạp các mô hình đã lưu. [Danh sách thư viện](requirements.txt) · [Bản khóa đầy đủ trên Windows](requirements-lock.txt).
+1. **Cài môi trường.** Mở PowerShell tại thư mục gốc của repo. Môi trường đã kiểm chứng là Windows x64, Python 3.13 và scikit-learn 1.7.2. [Danh sách thư viện](requirements.txt) · [Bản khóa đầy đủ trên Windows](requirements-lock.txt).
 
    ```powershell
    py -3.13 -m venv .venv
+   .\.venv\Scripts\python.exe -m pip install --upgrade pip
    .\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
+   .\.venv\Scripts\python.exe -m pip check
+   .\.venv\Scripts\python.exe -c "import sys, PIL; from PIL import Image; print(sys.executable); print('Pillow', PIL.__version__); print('Image check:', Image.new('RGB', (1, 1)).size)"
    ```
+
+   Tạo `.venv` trên chính máy chạy, không sao chép môi trường ảo từ máy khác. Lệnh cuối kiểm tra Pillow nạp được thành phần xử lý ảnh; kết quả ảnh thử là `(1, 1)`. Nếu báo lỗi `_imaging`, xem cách sửa bên dưới trước khi chạy notebook hoặc pytest.
 
 2. **Chuẩn bị dữ liệu.** Đặt 12 CSV PRSA trong [thư mục dữ liệu gốc](data/raw/PRSA_Data_20130301-20170228/). Notebook 01 tạo [CSV chuẩn hóa](data/processed/beijing_air_quality_standardized.csv) để các notebook sau dùng chung.
 
@@ -64,6 +69,23 @@
 ```
 
 Quy trình này cần các mô hình tinh chỉnh và kết quả tìm kiếm đã lưu. Cờ `--verify-searches` chỉ đối chiếu kết quả tìm kiếm của 05 và 07. Khi tái lập từ đầu theo thứ tự 01–08, chạy toàn bộ ô trong hai notebook tinh chỉnh trước khi đánh giá cuối. Sau khi sửa notebook gốc, dùng `scripts/sync_notebooks.py` để đồng bộ bản đã xóa đầu ra. Xem [tài liệu dự án và nguồn kết quả](docs/README.md).
+
+</details>
+
+<details>
+<summary>Sửa lỗi Pillow: cannot import name '_imaging' from 'PIL'</summary>
+
+Pillow có thành phần nhị phân phụ thuộc phiên bản Python và kiến trúc máy. Khi thành phần này không nạp được, test `test_manifest_paths_are_repo_relative_posix` có thể dừng lúc import thư viện vẽ biểu đồ. Để sửa, kiểm tra đang dùng Python 3.13 rồi cài lại Pillow trong đúng `.venv` bằng bản nhị phân:
+
+```powershell
+.\.venv\Scripts\python.exe --version
+.\.venv\Scripts\python.exe -m pip install --force-reinstall --no-cache-dir --only-binary=:all: "Pillow==13.0.0"
+.\.venv\Scripts\python.exe -c "from PIL import Image; print(Image.new('RGB', (1, 1)).size)"
+.\.venv\Scripts\python.exe -m pytest -q tests/test_metrics_and_bootstrap.py::test_manifest_paths_are_repo_relative_posix
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+Phiên bản Pillow 13.0.0 đã có trong `requirements-lock.txt` và `requirements.txt`. Nếu đang mở notebook, khởi động lại kernel sau khi cài lại. Khi báo lỗi, gửi nguyên phần traceback cùng kết quả `python.exe --version`; không sửa số liệu CSV hoặc bỏ test để làm mất thông báo lỗi.
 
 </details>
 
