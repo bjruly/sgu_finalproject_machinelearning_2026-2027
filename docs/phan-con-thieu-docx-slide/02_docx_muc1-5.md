@@ -1,6 +1,6 @@
 # DOCX phần 1 (bìa, Mục 1 đến Mục 5): nội dung đề xuất, sẵn dán
 
-Phạm vi: dòng 1-213 của docx_clean.txt (bản gốc docs/Nhom10_BeijingAirQuality_BaoCaoGiuaKy.docx). Mọi số liệu dưới đây đã đối chiếu với CSV/JSON/joblib trong repo (nguồn ghi ngay sau từng khối). Chỗ có `[kiểm tra bản gốc]` hoặc `[nhóm xác nhận]` là chỗ chưa thể xác nhận từ repo.
+Phạm vi: dòng 1-213 của docx_clean.txt (bản gốc docs/Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx). Mọi số liệu dưới đây đã đối chiếu với CSV/JSON/joblib trong repo (nguồn ghi ngay sau từng khối). Chỗ có `[kiểm tra bản gốc]` hoặc `[nhóm xác nhận]` là chỗ chưa thể xác nhận từ repo.
 
 Số liệu thể hiện theo kiểu Việt Nam (dấu phẩy thập phân, dấu chấm phân cách nghìn). Giá trị trong CSV dùng dấu chấm thập phân.
 
@@ -36,7 +36,7 @@ Nguồn: outputs/notebooks/tables/final_test_metrics.csv (cột mae, rmse, r2, n
 
 ### 1.B. Bìa
 
-- Tiêu đề "BÁO CÁO CẬP NHẬT TIẾN ĐỘ ĐỒ ÁN" không còn khớp nội dung (đã có kết quả đánh giá cuối). Nếu đây là bản nộp chính thức, đổi thành "BÁO CÁO ĐỒ ÁN MÔN MÁY HỌC" [nhóm xác nhận loại báo cáo]. Tên tệp "BaoCaoGiuaKy" cũng nên thống nhất.
+- Tiêu đề "BÁO CÁO CẬP NHẬT TIẾN ĐỘ ĐỒ ÁN" không còn khớp nội dung (đã có kết quả đánh giá cuối). Nếu đây là bản nộp chính thức, đổi thành "BÁO CÁO ĐỒ ÁN MÔN MÁY HỌC" [nhóm xác nhận loại báo cáo]. Tên tệp "BaoCaoCuoiKy" cũng nên thống nhất.
 - Mục lục: cập nhật sau khi chèn mục mới.
 
 ### 1.C. Mục 1.1 giữ lại dạng bảng ngắn; Bảng 1 và Bảng 2 chuyển sang Phụ lục D

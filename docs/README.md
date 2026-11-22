@@ -3,10 +3,10 @@
 ## Tệp hiện hành
 
 - [Proposal](Nhom10_BeijingAirQuality_Proposal.pdf): kế hoạch đã nộp, giữ nguyên để đối chiếu.
-- [Báo cáo cập nhật tiến độ](Nhom10_BeijingAirQuality_BaoCaoGiuaKy.docx): đã có kết quả tuning và test; tên tệp giữ theo bản nhóm cung cấp.
-- [Slide cập nhật](Nhom10__Slide.pptx): trình bày dữ liệu, phương pháp, validation, tuning và test.
+- [Báo cáo cuối kỳ](Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx): báo cáo hoàn chỉnh gồm hai trang bìa, kết quả tuning, test, phân tích sai số và phân công theo lịch sử commit.
+- [Slide trình bày](Nhom10__Slide.pptx): trình bày dữ liệu, phương pháp, validation, tuning và test.
 - [Bản rà soát và kế hoạch khắc phục](ra-soat-do-an-va-ke-hoach-khac-phuc.md): phát hiện, checklist và trạng thái khắc phục.
-- [Phân công](phan-cong-cong-viec.docx): đối chiếu với đóng góp thực tế.
+- [Phân công](phan-cong-cong-viec.docx): phân công theo lịch sử commit, khớp Mục 8 của báo cáo.
 - TLTK/: tài liệu tham khảo cách trình bày, không dùng số liệu của đề tài khác làm kết quả nhóm.
 
 ## Nguồn số liệu cập nhật

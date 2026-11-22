@@ -62,7 +62,7 @@ def main():
     text = f"""# Yêu cầu chỉnh sửa báo cáo DOCX và slide — đồ án Beijing PM2.5
 
 **Ngày cập nhật:** {args.review_date}.  
-**Đối tượng cần sửa:** Nhom10_BeijingAirQuality_BaoCaoGiuaKy.docx và Nhom10__Slide.pptx.  
+**Đối tượng cần sửa:** Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx và Nhom10__Slide.pptx.  
 **Mục đích:** hướng dẫn sửa nội dung tài liệu sau khi code/CSV đã được rà soát và chạy kiểm chứng.
 
 ## 1. Phạm vi đã thống nhất với người dùng
