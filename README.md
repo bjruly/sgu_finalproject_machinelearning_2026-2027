@@ -14,11 +14,20 @@
 
 Đồ án dự báo nồng độ bụi mịn PM2.5 (µg/m³) ở giờ kế tiếp cho cùng một trạm, dựa trên số đo ô nhiễm, khí tượng và thông tin thời gian đến giờ hiện tại. Trên 51.063 mẫu test, **Random Forest sau tinh chỉnh có RMSE thấp nhất trong 5 mô hình được đánh giá**.
 
-## Báo cáo đồ án
+## Tài liệu đồ án
 
-- [Đề cương](docs/Nhom10_BeijingAirQuality_Proposal.pdf) trình bày mục tiêu và thiết kế thực nghiệm.
-- [Báo cáo cuối kỳ](docs/Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx) và [slide trình bày](docs/Nhom10_Slide.pptx) tổng hợp phương pháp và kết quả.
-- [Tài liệu dự án](docs/README.md) tập hợp phần phân công, tài liệu tham khảo và nguồn số liệu.
+| Tài liệu | Nội dung | Tệp |
+| --- | --- | --- |
+| Báo cáo cuối kỳ | Phương pháp, thực nghiệm, kết quả và phân tích sai số | [Báo cáo (Word)](docs/Nhom10_BeijingAirQuality_BaoCaoCuoiKy.docx) |
+| Drawing | Sơ đồ quy trình dự báo, cách chia tập theo thời gian và các mô hình | [Drawing (PowerPoint)](docs/Nhom10_Drawing.pptx) |
+| Kế hoạch dự án | Mục tiêu, phạm vi và tiến độ thực hiện | [Kế hoạch dự án (Word)](docs/Nhom10_KeHoach_DuAn.docx) |
+| Slide trình bày | Tóm tắt dữ liệu, phương pháp và kết quả | [Slide (PowerPoint)](docs/Nhom10_Slide.pptx) |
+| Phân công công việc | Vai trò, nhiệm vụ và đóng góp của thành viên | [Phân công (Word)](docs/phan-cong-cong-viec.docx) |
+| Theo dõi công việc | Nhiệm vụ, sản phẩm bàn giao, commit và nhật ký liên quan | [Working Details (Excel)](docs/Nhom10_Working_details.xlsx) |
+| Poster | Tóm tắt bài toán, phương pháp và kết quả chính | [Poster (PowerPoint)](docs/Poster_PM25_Beijing_Nhom10.pptx) |
+| Video demo | Chọn CSV, chạy dự báo và xem kết quả trên Streamlit | [Video demo (MP4)](docs/Demo_DuBao_PM25_BacKinh_Nhom10.mp4) |
+
+Xem thêm [đề cương đồ án](docs/Nhom10_BeijingAirQuality_Proposal.pdf) và [danh mục tài liệu tham khảo, nguồn số liệu](docs/README.md).
 
 ## Cách chạy
 
@@ -88,6 +97,30 @@ Pillow có thành phần nhị phân phụ thuộc phiên bản Python và kiế
 Phiên bản Pillow 13.0.0 đã có trong `requirements-lock.txt` và `requirements.txt`. Nếu đang mở notebook, khởi động lại kernel sau khi cài lại. Khi báo lỗi, gửi nguyên phần traceback cùng kết quả `python.exe --version`; không sửa số liệu CSV hoặc bỏ test để làm mất thông báo lỗi.
 
 </details>
+
+## Chạy demo bằng Streamlit
+
+[`demo.py`](demo.py) tái hiện bước đánh giá cuối của notebook 08 trên trình duyệt. Demo nạp mô hình đã huấn luyện, chấm dự báo PM2.5 cho giờ kế tiếp và hiển thị MAE, RMSE và R² của năm mô hình.
+
+1. Mở PowerShell ở thư mục gốc của đồ án. Ở lần đầu, tạo môi trường Conda và cài thư viện.
+
+   ```powershell
+   conda create -n pm25-demo python=3.13 pip
+   conda activate pm25-demo
+   python -m pip install "streamlit==1.67.0" "numpy==2.3.3" "pandas==2.3.3" "scipy==1.17.1" "scikit-learn==1.7.2" "joblib==1.5.3" "threadpoolctl==3.6.0"
+   ```
+
+   Ở những lần chạy sau, kích hoạt lại môi trường bằng `conda activate pm25-demo`. Phiên bản scikit-learn 1.7.2 khớp với các mô hình trong [`models/`](models/).
+
+2. Chạy lệnh sau và mở địa chỉ **Local URL** hiện trong Terminal, thường là `http://localhost:8501`.
+
+   ```powershell
+   python -m streamlit run demo.py
+   ```
+
+3. Bấm **Upload**, chọn [`beijing_air_quality_standardized.csv`](data/processed/beijing_air_quality_standardized.csv) trong `data/processed/` rồi bấm **Chạy dự báo**.
+
+Với bộ dữ liệu của đồ án, trang demo hiển thị bảng điểm trên **51.063 mẫu test** và biểu đồ so sánh PM2.5 thực tế với dự báo của Random Forest tinh chỉnh trên 72 mẫu test đầu tiên tại trạm Aotizhongxin. Xem [bảng điểm test đã lưu](outputs/notebooks/tables/final_test_metrics.csv) để đối chiếu.
 
 ## Phương pháp dự báo
 
