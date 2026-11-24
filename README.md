@@ -4,13 +4,20 @@
 **Giảng viên hướng dẫn** · TS. Đỗ Như Tài  
 **Bộ dữ liệu** · Beijing Multi-Site Air Quality
 
-| Thành viên | MSSV |
-| --- | --- |
-| Trần Lê Gia Bảo (nhóm trưởng) | 3124411038 |
-| Tô Thành Nhân | 3124411198 |
-| Đào Hữu Tài | 3124411261 |
-| Huỳnh Nhật Quang | 3124411245 |
-| Nguyễn Thanh Tuấn | 3124411337 |
+**Repository chính:** [github.com/bjruly/sgu_finalproject_machinelearning_2026-2027](https://github.com/bjruly/sgu_finalproject_machinelearning_2026-2027)
+
+## Thành viên và phân công
+
+| Họ và tên | MSSV | Vai trò | Phần công việc đã thực hiện | Đóng góp | GitHub |
+| --- | --- | --- | --- | ---: | --- |
+| Trần Lê Gia Bảo | 3124411038 | Nhóm trưởng | Tổ chức kho mã nguồn và tài liệu; khảo sát và chuẩn hóa dữ liệu 12 trạm (notebook 01); pipeline chống rò rỉ; mô-đun đánh giá, bootstrap, chẩn đoán validation, kiểm tra nguồn số liệu và kiểm thử; tổng hợp báo cáo và slide | 20% | [bjruly](https://github.com/bjruly) |
+| Tô Thành Nhân | 3124411198 | Thành viên | MLP: huấn luyện và đánh giá ban đầu (notebook 06), tinh chỉnh siêu tham số trên 5 fold (notebook 07) | 20% | [nhanto2n-byte](https://github.com/nhanto2n-byte) |
+| Đào Hữu Tài | 3124411261 | Thành viên | Persistence và Linear Regression (notebook 02); kiểm thử cho pipeline dữ liệu, đặc trưng và baseline; bảng so sánh baseline; nhật ký thực nghiệm (Experimental Log) | 20% | [daohuutai](https://github.com/daohuutai) |
+| Huỳnh Nhật Quang | 3124411245 | Thành viên | Gradient Boosting (notebook 04); tinh chỉnh Random Forest và Gradient Boosting (notebook 05); đánh giá cuối trên tập test (notebook 08); tổ chức đầu ra thực nghiệm | 20% | [ITSGU20](https://github.com/ITSGU20) |
+| Nguyễn Thanh Tuấn | 3124411337 | Thành viên | Random Forest ở cấu hình ban đầu (notebook 03): 5 fold expanding-window, lưu mô hình và kết quả | 20% | [BinBin826](https://github.com/BinBin826) |
+| **Tổng cộng** | | | | **100%** | |
+
+Phần việc của từng người được xác định theo lịch sử commit của repository; tỷ lệ đóng góp do nhóm thống nhất chia đều (tổng 100%). Lịch sử commit cho biết ai viết và đưa kết quả vào kho, không cho biết ai đã chạy từng lượt notebook. Chi tiết xem [bảng phân công](docs/phan-cong-cong-viec.docx) và [Working Details](docs/Nhom10_Working_details.xlsx).
 
 Đồ án dự báo nồng độ bụi mịn PM2.5 (µg/m³) ở giờ kế tiếp cho cùng một trạm, dựa trên số đo ô nhiễm, khí tượng và thông tin thời gian đến giờ hiện tại. Trên 51.063 mẫu test, **Random Forest sau tinh chỉnh có RMSE thấp nhất trong 5 mô hình được đánh giá**.
 
